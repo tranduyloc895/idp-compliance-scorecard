@@ -27,14 +27,6 @@ idp-platform/
 
 👉 Xem [**SETUP.md**](SETUP.md) — Hướng dẫn chi tiết từng bước setup toàn bộ dự án.
 
-## Milestones
-
-| Milestone | Mô tả | Code | Deploy |
-|---|---|---|---|
-| **M1: Foundation** | GitHub Actions CI + GitOps pipeline E2E | ✅ Done | ⏳ Chưa deploy |
-| **M2: IDP Core** | Backstage portal + Golden Path Template | ✅ Done (thiếu scaffold) | ⏳ Chưa deploy |
-| **M3: Compliance** | Scorecard Framework + AI Recommendation | ✅ Done | ⏳ Chưa deploy |
-
 ## Tech Stack
 
 | Layer | Technology |
