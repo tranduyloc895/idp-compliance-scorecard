@@ -1,0 +1,17 @@
+# Local development
+.env
+node_modules/
+dist/
+.yarn/cache/
+.yarn/install-state.gz
+
+# Docker build artifacts
+*.tar
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,176 @@
+{
+  "apiVersion": "wgpolicyk8s.io/v1alpha2",
+  "kind": "PolicyReport",
+  "metadata": {
+    "name": "cpol-report-web-api",
+    "namespace": "compliance-test",
+    "creationTimestamp": "2026-09-07T00:00:00Z"
+  },
+  "scope": {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "name": "web-api",
+    "namespace": "compliance-test"
+  },
+  "summary": {
+    "pass": 3,
+    "fail": 5,
+    "warn": 0,
+    "error": 0,
+    "skip": 0
+  },
+  "results": [
+    {
+      "policy": "disallow-privilege-escalation",
+      "rule": "deny-privilege-escalation",
+      "message": "Privilege escalation is not allowed. Found allowPrivilegeEscalation=true in container 'api'.",
+      "result": "fail",
+      "severity": "high",
+      "timestamp": {
+        "seconds": 1757289600,
+        "nanos": 0
+      },
+      "resources": [
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "web-api",
+          "namespace": "compliance-test"
+        }
+      ]
+    },
+    {
+      "policy": "require-run-as-non-root",
+      "rule": "run-as-non-root",
+      "message": "Container 'api' must not run as root. Set runAsNonRoot: true.",
+      "result": "fail",
+      "severity": "high",
+      "timestamp": {
+        "seconds": 1757289600,
+        "nanos": 0
+      },
+      "resources": [
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "web-api",
+          "namespace": "compliance-test"
+        }
+      ]
+    },
+    {
+      "policy": "require-read-only-rootfs",
+      "rule": "read-only-rootfs",
+      "message": "Container 'api' must have readOnlyRootFilesystem: true.",
+      "result": "fail",
+      "severity": "medium",
+      "timestamp": {
+        "seconds": 1757289600,
+        "nanos": 0
+      },
+      "resources": [
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "web-api",
+          "namespace": "compliance-test"
+        }
+      ]
+    },
+    {
+      "policy": "drop-all-capabilities",
+      "rule": "drop-capabilities",
+      "message": "Container 'api' must drop ALL capabilities.",
+      "result": "fail",
+      "severity": "high",
+      "timestamp": {
+        "seconds": 1757289600,
+        "nanos": 0
+      },
+      "resources": [
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "web-api",
+          "namespace": "compliance-test"
+        }
+      ]
+    },
+    {
+      "policy": "disallow-latest-tag",
+      "rule": "no-latest-tag",
+      "message": "Container 'api' uses image 'nginx:latest'. Use a specific image tag.",
+      "result": "fail",
+      "severity": "high",
+      "timestamp": {
+        "seconds": 1757289600,
+        "nanos": 0
+      },
+      "resources": [
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "web-api",
+          "namespace": "compliance-test"
+        }
+      ]
+    },
+    {
+      "policy": "require-resource-limits",
+      "rule": "resource-limits-required",
+      "message": "Container 'api' has no resource limits defined.",
+      "result": "pass",
+      "severity": "medium",
+      "timestamp": {
+        "seconds": 1757289600,
+        "nanos": 0
+      },
+      "resources": [
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "web-api",
+          "namespace": "compliance-test"
+        }
+      ]
+    },
+    {
+      "policy": "require-labels",
+      "rule": "app-labels-required",
+      "message": "Deployment 'web-api' is missing required label 'app.kubernetes.io/version'.",
+      "result": "pass",
+      "severity": "low",
+      "timestamp": {
+        "seconds": 1757289600,
+        "nanos": 0
+      },
+      "resources": [
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "web-api",
+          "namespace": "compliance-test"
+        }
+      ]
+    },
+    {
+      "policy": "require-probes",
+      "rule": "probes-required",
+      "message": "Deployment 'web-api' has liveness and readiness probes.",
+      "result": "pass",
+      "severity": "medium",
+      "timestamp": {
+        "seconds": 1757289600,
+        "nanos": 0
+      },
+      "resources": [
+        {
+          "apiVersion": "apps/v1",
+          "kind": "Deployment",
+          "name": "web-api",
+          "namespace": "compliance-test"
+        }
+      ]
+    }
+  ]
+}

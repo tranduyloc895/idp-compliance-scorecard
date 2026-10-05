@@ -1,0 +1,90 @@
+app:
+  title: IDP Portal — Retail Store
+  baseUrl: http://${BACKSTAGE_HOST}:3000
+
+organization:
+  name: Retail Store Platform
+
+backend:
+  baseUrl: http://${BACKSTAGE_HOST}:7007
+  listen:
+    port: 7007
+    host: 0.0.0.0
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+  cors:
+    origin: http://${BACKSTAGE_HOST}:3000
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+  database:
+    client: pg
+    connection:
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      ssl:
+        require: false
+        rejectUnauthorized: false
+
+auth:
+  environment: development
+  providers:
+    github:
+      development:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
+
+proxy:
+  endpoints:
+    /argocd/api:
+      target: ${ARGOCD_URL}/api/v1/
+      changeOrigin: true
+      headers:
+        Cookie:
+          $env: ARGOCD_AUTH_TOKEN
+    '/compliance-engine':
+      target: http://compliance-engine:8000
+      changeOrigin: true
+      pathRewrite:
+        '^/api/proxy/compliance-engine': '/api/v1'
+
+catalog:
+  import:
+    entityFilename: catalog-info.yaml
+    pullRequestBranchName: backstage-integration
+  rules:
+    - allow: [Component, System, API, Resource, Location, Template, Group, User]
+  locations:
+    - type: file
+      target: ./catalog/all.yaml
+
+scaffolder:
+  defaultAuthor:
+    name: Backstage
+    email: backstage@idp-platform.internal
+  defaultCommitMessage: "chore: scaffold new service via Backstage"
+
+# ─── ArgoCD Plugin ──────────────────────────────────────────────────────────
+argocd:
+  username: admin
+  password: ${ARGOCD_ADMIN_PASSWORD}
+  appLocatorMethods:
+    - type: config
+      instances:
+        - name: main
+          url: ${ARGOCD_URL}
+          token: ${ARGOCD_AUTH_TOKEN}
+
+# ─── Kubernetes (future) ────────────────────────────────────────────────────
+# kubernetes:
+#   serviceLocatorMethod:
+#     type: multiTenant
+#   clusterLocatorMethods:
+#     - type: config
+#       clusters: []

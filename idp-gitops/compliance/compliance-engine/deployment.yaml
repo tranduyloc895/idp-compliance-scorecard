@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: compliance-engine
+  namespace: compliance
+  labels:
+    app.kubernetes.io/name: compliance-engine
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/part-of: idp-platform
+    app.kubernetes.io/component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: compliance-engine
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: compliance-engine
+        app.kubernetes.io/version: "1.0.0"
+    spec:
+      serviceAccountName: compliance-engine
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 2000
+      containers:
+        - name: compliance-engine
+          image: YOUR_ECR_REGISTRY/compliance-engine:latest  # Replace with actual image
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              name: http
+          env:
+            - name: POSTGRES_HOST
+              value: "postgresql.backstage.svc.cluster.local"  # Shared PostgreSQL
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: compliance-engine-secrets
+                  key: postgres-user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: compliance-engine-secrets
+                  key: postgres-password
+            - name: POSTGRES_DB
+              value: "compliance"
+            - name: REDIS_URL
+              value: "redis://compliance-redis:6379/0"
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: compliance-engine-secrets
+                  key: gemini-api-key
+            - name: K8S_IN_CLUSTER
+              value: "true"
+            - name: LOG_LEVEL
+              value: "INFO"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

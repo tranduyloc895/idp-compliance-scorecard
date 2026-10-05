@@ -1,0 +1,115 @@
+name: "CI — ${{ values.serviceName }}"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  id-token: write      # Required for OIDC authentication to AWS
+  contents: read
+  security-events: write  # Required for uploading Trivy SARIF results
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REGISTRY: ${{ values.ecrRegistry }}
+  ECR_REPO: ${{ values.ecrRepo }}
+  SERVICE: ${{ values.serviceName }}
+  GITOPS_REPO: ${{ values.gitopsRepo }}
+  IMAGE_TAG: ${{ '{{' }} github.sha {{ '}}' }}
+
+jobs:
+  build-push:
+    name: Build, Scan & Push
+    runs-on: ubuntu-latest
+
+    steps:
+      # ─── Checkout ───────────────────────────────────────────────────
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      # ─── OIDC Auth to AWS ───────────────────────────────────────────
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::736508008585:role/github-actions-oidc-role
+          aws-region: ${{ '{{' }} env.AWS_REGION {{ '}}' }}
+
+      # ─── ECR Login ──────────────────────────────────────────────────
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # ─── Docker Build ───────────────────────────────────────────────
+      - name: Build Docker image
+        run: |
+          docker build \
+            --tag "$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG" \
+            --tag "$ECR_REGISTRY/$ECR_REPO:latest" \
+            --label "git-commit=$IMAGE_TAG" \
+            --label "service=$SERVICE" \
+            .
+
+      # ─── Security Scan (Trivy) ──────────────────────────────────────
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "${{ '{{' }} env.ECR_REGISTRY {{ '}}' }}/${{ '{{' }} env.ECR_REPO {{ '}}' }}:${{ '{{' }} env.IMAGE_TAG {{ '}}' }}"
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          exit-code: "0"   # Don't fail — upload results for visibility
+
+      - name: Upload Trivy SARIF to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy-results.sarif
+
+      # ─── Push to ECR ────────────────────────────────────────────────
+      - name: Push image to ECR
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          docker push "$ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG"
+          docker push "$ECR_REGISTRY/$ECR_REPO:latest"
+
+      # ─── GitOps Update ──────────────────────────────────────────────
+      - name: Install yq
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: mikefarah/yq@v4.44.2   # pinned version, cached by actions runner
+
+      - name: Update GitOps values
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          GITOPS_TOKEN: ${{ '{{' }} secrets.GITOPS_TOKEN {{ '}}' }}
+        run: |
+          set -euo pipefail
+
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+          git clone "https://x-access-token:${GITOPS_TOKEN}@github.com/${GITOPS_REPO}.git" gitops-repo
+          cd gitops-repo
+
+          VALUES_FILE="apps/${SERVICE}/values.yaml"
+          if [ -f "${VALUES_FILE}" ]; then
+            # --exit-status: fail nếu path .image.tag không tồn tại trong file
+            # (tránh yq silently tạo key sai khi values.yaml có cấu trúc khác)
+            yq e ".image.tag" --exit-status "${VALUES_FILE}" > /dev/null \
+              || { echo "❌ .image.tag không tồn tại trong ${VALUES_FILE}. Kiểm tra cấu trúc Helm values."; exit 1; }
+
+            yq e ".image.tag = \"${IMAGE_TAG}\"" -i "${VALUES_FILE}"
+            git add "${VALUES_FILE}"
+
+            # Chỉ commit nếu có thay đổi thực sự
+            if git diff --staged --quiet; then
+              echo "No changes in ${VALUES_FILE} — skipping commit."
+            else
+              git commit -m "ci(${SERVICE}): update image tag to ${IMAGE_TAG} [skip ci]"
+              git push origin main
+              echo "✅ GitOps updated: ${VALUES_FILE}"
+            fi
+          else
+            echo "⚠️  values file not found at ${VALUES_FILE} — skipping GitOps update"
+          fi

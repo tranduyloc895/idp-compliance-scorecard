@@ -1,0 +1,28 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: catalog-svc
+  title: Catalog Service
+  description: "Product catalog backend — Go. Handles product listings, search, and inventory."
+  annotations:
+    github.com/project-slug: tranduyloc895/idp-microservices
+    github.com/workflows: ci-catalog.yml
+    argocd/app-name: catalog
+  tags:
+    - go
+    - backend
+    - products
+  links:
+    - url: https://github.com/tranduyloc895/idp-microservices/tree/main/src/catalog
+      title: Source Code
+      icon: github
+    - url: https://github.com/tranduyloc895/idp-microservices/actions/workflows/ci-catalog.yml
+      title: CI Pipeline
+      icon: github
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: retail-store
+  providesApis: []

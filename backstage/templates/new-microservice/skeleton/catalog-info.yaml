@@ -1,0 +1,25 @@
+---
+# catalog-info.yaml — Auto-registered by Backstage Golden Path Template
+# This file is read by Backstage to register the service in the Software Catalog.
+
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.serviceName }}
+  title: ${{ values.serviceName | title }}
+  description: ${{ values.description }}
+  annotations:
+    # GitHub integration — CI workflow runs + PR list
+    github.com/project-slug: "tranduyloc895/${{ values.serviceName }}"
+    github.com/workflows: ci.yml
+    # ArgoCD integration — sync status + resource tree
+    argocd/app-name: ${{ values.serviceName }}
+    # TechDocs (future)
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - ${{ values.language }}
+spec:
+  type: service
+  lifecycle: production
+  owner: ${{ values.owner }}
+  system: retail-store

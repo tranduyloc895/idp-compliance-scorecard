@@ -1,0 +1,29 @@
+# Fix Template: drop-capabilities
+# CIS Kubernetes Benchmark 5.2.7
+# Apply: Drop ALL capabilities, add back only what's needed
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  namespace: YOUR_NAMESPACE
+spec:
+  template:
+    spec:
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          securityContext:
+            capabilities:
+              drop:
+                - ALL               # Drop every Linux capability
+
+              # Only add back capabilities your app specifically requires:
+              # add:
+              #   - NET_BIND_SERVICE  # Bind to ports < 1024
+              #   - SYS_PTRACE        # ptrace (only if debugging tool)
+              # DO NOT add: SYS_ADMIN, NET_ADMIN, SYS_MODULE
+
+# Common capabilities and when they're needed:
+# NET_BIND_SERVICE: Needed if app binds to port < 1024 (e.g., :80, :443)
+#                   Better alternative: Use port 8080 + Kubernetes Service :80 → :8080
+# None others are typically needed for standard microservices

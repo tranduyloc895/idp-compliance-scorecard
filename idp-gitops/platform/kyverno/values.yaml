@@ -1,0 +1,33 @@
+replicaCount: 1
+
+admissionController:
+  replicas: 1
+
+backgroundController:
+  enabled: true
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+reportsController:
+  enabled: true   # Generates PolicyReport CRDs — required by Compliance Engine
+
+cleanupController:
+  enabled: true
+
+features:
+  policyExceptions:
+    enabled: true  # Allow per-namespace exceptions
+
+grafana:
+  enabled: false   # Disable — using Backstage for monitoring
+
+crds:
+  install: true
+  groups:
+    kyverno: true
+    reports: true   # PolicyReport CRDs

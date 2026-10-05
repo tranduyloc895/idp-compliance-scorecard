@@ -1,0 +1,45 @@
+name: ui
+
+image:
+  repository: 736508008585.dkr.ecr.us-east-1.amazonaws.com/retail-store/ui
+  tag: "c8fb5e3"
+
+resources:
+  requests:
+    cpu: 256m
+    memory: 512Mi
+  limits:
+    cpu: 512m
+    memory: 1Gi
+
+probes:
+  readiness:
+    path: /actuator/health/readiness
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  liveness:
+    path: /actuator/health/liveness
+    initialDelaySeconds: 60
+    periodSeconds: 15
+
+service:
+  type: LoadBalancer
+
+monitoring:
+  path: /actuator/prometheus
+
+# Endpoint 4 service backend (gọi qua Service ClusterIP, port 80).
+env:
+  - {name: RETAIL_UI_ENDPOINTS_CATALOG,  value: "http://catalog:80"}
+  - {name: RETAIL_UI_ENDPOINTS_CARTS,    value: "http://cart:80"}
+  - {name: RETAIL_UI_ENDPOINTS_CHECKOUT, value: "http://checkout:80"}
+  - {name: RETAIL_UI_ENDPOINTS_ORDERS,   value: "http://orders:80"}
+
+# Tự co giãn số pod UI theo CPU (cần metrics-server). Khi bật, chart không render
+# replicas; HPA giữ trong khoảng min–max. Kết hợp Cluster Autoscaler: pod tăng ->
+# nếu hết chỗ thì CA thêm node.
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 60

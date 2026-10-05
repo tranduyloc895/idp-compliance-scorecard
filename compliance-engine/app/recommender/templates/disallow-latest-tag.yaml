@@ -1,0 +1,32 @@
+# Fix Template: disallow-latest-tag
+# CIS Kubernetes Benchmark 5.4.1
+# Apply: Replace :latest with specific version tag or SHA digest
+
+# ---- BEFORE (non-compliant) ----
+# image: nginx:latest                      # ❌ Mutable tag
+# image: myapp                             # ❌ No tag = implies latest
+
+# ---- AFTER (compliant) ----
+# Option 1: Specific version tag (recommended for most cases)
+# image: nginx:1.27.0                      # ✅ Pinned version
+
+# Option 2: SHA256 digest (most secure - truly immutable)
+# image: nginx@sha256:a484819eb60211f5299034ac80f6a681b06f89e65866ce91f356ed7c72af059c   # ✅ Immutable
+
+# Full deployment example:
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  namespace: YOUR_NAMESPACE
+spec:
+  template:
+    spec:
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          image: YOUR_IMAGE:1.0.0    # Replace :latest with specific version
+
+# How to find the correct image tag:
+# 1. Check Docker Hub or your registry for available tags
+# 2. For SHA: docker inspect --format='{{index .RepoDigests 0}}' image:tag
+# 3. For CI/CD: build with git commit SHA: image: myapp:${GITHUB_SHA::8}

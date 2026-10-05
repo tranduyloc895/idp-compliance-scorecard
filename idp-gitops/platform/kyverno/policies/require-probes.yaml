@@ -1,0 +1,37 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-probes
+  annotations:
+    policies.kyverno.io/title: Require Liveness and Readiness Probes
+    policies.kyverno.io/category: Platform Config
+    policies.kyverno.io/severity: medium
+    policies.kyverno.io/subject: Deployment
+    policies.kyverno.io/description: >-
+      Liveness and readiness probes must be defined. Without probes, Kubernetes cannot
+      detect and recover from application failures.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: probes-required
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+      validate:
+        message: "Deployment must define both livenessProbe and readinessProbe for all containers."
+        pattern:
+          spec:
+            template:
+              spec:
+                containers:
+                  - livenessProbe:
+                      httpGet:
+                        path: "?*"
+                        port: "?*"
+                    readinessProbe:
+                      httpGet:
+                        path: "?*"
+                        port: "?*"

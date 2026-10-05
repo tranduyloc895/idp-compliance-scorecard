@@ -1,0 +1,194 @@
+{
+  "Controls": [
+    {
+      "id": "1",
+      "version": "cis-1.8",
+      "text": "Control Plane Components",
+      "node_type": "master",
+      "tests": [
+        {
+          "section": "1.1",
+          "desc": "Control Plane Node Configuration Files",
+          "results": [
+            {
+              "test_number": "1.1.1",
+              "test_desc": "Ensure that the API server pod specification file permissions are set to 600 or more restrictive",
+              "audit": "stat -c %a /etc/kubernetes/manifests/kube-apiserver.yaml",
+              "AuditConfig": "",
+              "type": "",
+              "remediation": "Run the below command: chmod 600 /etc/kubernetes/manifests/kube-apiserver.yaml",
+              "test_info": [""],
+              "status": "PASS",
+              "actual_value": "600",
+              "scored": true,
+              "IsMultiple": false,
+              "expected_result": "'600' is equal to '600'",
+              "reason": ""
+            },
+            {
+              "test_number": "1.1.2",
+              "test_desc": "Ensure that the API server pod specification file ownership is set to root:root",
+              "audit": "stat -c %U:%G /etc/kubernetes/manifests/kube-apiserver.yaml",
+              "remediation": "Run the below command: chown root:root /etc/kubernetes/manifests/kube-apiserver.yaml",
+              "status": "PASS",
+              "actual_value": "root:root",
+              "scored": true,
+              "expected_result": "root:root",
+              "reason": ""
+            }
+          ]
+        },
+        {
+          "section": "1.2",
+          "desc": "API Server",
+          "results": [
+            {
+              "test_number": "1.2.1",
+              "test_desc": "Ensure that the --anonymous-auth argument is set to false",
+              "audit": "ps -ef | grep kube-apiserver | grep -v grep",
+              "remediation": "Edit the API server pod specification file and set --anonymous-auth=false",
+              "status": "FAIL",
+              "actual_value": "--anonymous-auth=true",
+              "scored": true,
+              "expected_result": "'false' is equal to 'false'",
+              "reason": "Anonymous authentication is enabled"
+            },
+            {
+              "test_number": "1.2.6",
+              "test_desc": "Ensure that the --kubelet-certificate-authority argument is set as appropriate",
+              "remediation": "Edit the API server pod specification file and set --kubelet-certificate-authority=/path/to/ca.crt",
+              "status": "FAIL",
+              "actual_value": "",
+              "scored": true,
+              "expected_result": "not empty",
+              "reason": "kubelet-certificate-authority is not set"
+            },
+            {
+              "test_number": "1.2.9",
+              "test_desc": "Ensure that the admission control plugin EventRateLimit is set",
+              "remediation": "Enable the EventRateLimit admission controller plugin",
+              "status": "WARN",
+              "actual_value": "missing EventRateLimit",
+              "scored": false,
+              "expected_result": "EventRateLimit is in admission-plugins",
+              "reason": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "version": "cis-1.8",
+      "text": "Worker Node Security Configuration",
+      "node_type": "node",
+      "tests": [
+        {
+          "section": "4.1",
+          "desc": "Worker Node Configuration Files",
+          "results": [
+            {
+              "test_number": "4.1.1",
+              "test_desc": "Ensure that the kubelet service file permissions are set to 600 or more restrictive",
+              "status": "PASS",
+              "actual_value": "600",
+              "scored": true,
+              "expected_result": "'600' is equal to '600'",
+              "reason": ""
+            }
+          ]
+        },
+        {
+          "section": "4.2",
+          "desc": "Kubelet",
+          "results": [
+            {
+              "test_number": "4.2.1",
+              "test_desc": "Ensure that the --anonymous-auth argument is set to false",
+              "remediation": "Edit the kubelet configuration file and set --anonymous-auth=false",
+              "status": "FAIL",
+              "actual_value": "anonymous-auth=true",
+              "scored": true,
+              "expected_result": "'false' is equal to 'false'",
+              "reason": "Kubelet allows anonymous authentication"
+            },
+            {
+              "test_number": "4.2.6",
+              "test_desc": "Ensure that the --protect-kernel-defaults argument is set to true",
+              "remediation": "Edit the kubelet configuration file and set --protect-kernel-defaults=true",
+              "status": "FAIL",
+              "actual_value": "not set",
+              "scored": true,
+              "expected_result": "'true' is equal to 'true'",
+              "reason": "Kernel defaults are not protected"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "version": "cis-1.8",
+      "text": "Kubernetes Policies",
+      "node_type": "policies",
+      "tests": [
+        {
+          "section": "5.1",
+          "desc": "RBAC and Service Accounts",
+          "results": [
+            {
+              "test_number": "5.1.1",
+              "test_desc": "Ensure that the cluster-admin role is only used where required",
+              "status": "WARN",
+              "actual_value": "manual",
+              "scored": false,
+              "expected_result": "manual verification required",
+              "reason": ""
+            },
+            {
+              "test_number": "5.1.6",
+              "test_desc": "Ensure that Service Account Tokens are not automatically mounted",
+              "remediation": "Set automountServiceAccountToken: false in service account and pod specs",
+              "status": "FAIL",
+              "actual_value": "automountServiceAccountToken not set to false",
+              "scored": true,
+              "expected_result": "'false' is equal to 'false'",
+              "reason": "Service account tokens are auto-mounted"
+            }
+          ]
+        },
+        {
+          "section": "5.2",
+          "desc": "Pod Security Standards",
+          "results": [
+            {
+              "test_number": "5.2.1",
+              "test_desc": "Ensure that the cluster has at least one active policy control mechanism in place",
+              "status": "PASS",
+              "actual_value": "Kyverno is running",
+              "scored": true,
+              "expected_result": "policy engine is running",
+              "reason": ""
+            },
+            {
+              "test_number": "5.2.6",
+              "test_desc": "Minimize the admission of root containers",
+              "remediation": "Create a Kyverno policy to restrict containers running as root",
+              "status": "PASS",
+              "actual_value": "Kyverno policy disallows root",
+              "scored": false,
+              "expected_result": "manual verification required",
+              "reason": ""
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "node_type": "master",
+  "timestamp": "2026-09-07T00:00:00Z",
+  "total_pass": 6,
+  "total_fail": 5,
+  "total_warn": 2,
+  "total_info": 0
+}

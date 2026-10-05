@@ -1,0 +1,25 @@
+# Fix Template: disallow-privilege-escalation
+# CIS Kubernetes Benchmark 5.2.5
+# Apply: Set allowPrivilegeEscalation: false
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  namespace: YOUR_NAMESPACE
+spec:
+  template:
+    spec:
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          securityContext:
+            allowPrivilegeEscalation: false    # <-- Main fix
+            runAsNonRoot: true
+            runAsUser: 1000
+
+# What is privilege escalation?
+# A process can gain more privileges than its parent (e.g., via setuid binaries).
+# Setting allowPrivilegeEscalation: false prevents this even if the binary has setuid.
+#
+# Impact: Almost always safe to disable.
+# Only exception: Containers that intentionally use setuid programs (very rare).

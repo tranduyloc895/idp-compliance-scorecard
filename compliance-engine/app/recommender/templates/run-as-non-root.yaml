@@ -1,0 +1,28 @@
+# Fix Template: run-as-non-root
+# CIS Kubernetes Benchmark 5.2.6
+# Apply: Copy the securityContext section into your container spec
+
+# ---- Container-level fix ----
+# In your Deployment/StatefulSet/DaemonSet spec:
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  namespace: YOUR_NAMESPACE
+spec:
+  template:
+    spec:
+      # Option 1: Pod-level security context (applies to all containers)
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000          # Non-root UID
+        runAsGroup: 3000         # Non-root GID
+        fsGroup: 2000            # Shared volume GID
+
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          # Option 2: Container-level (overrides pod-level)
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false

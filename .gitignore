@@ -1,0 +1,52 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
+errored.tfstate
+
+# Secrets & keys
+*.pem
+*.key
+*.secret
+*.pub
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node.js
+node_modules/
+dist/
+.yarn/cache
+
+# Java
+target/
+*.class
+
+# Go
+*.exe
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Reports / scan output
+reports/
+oss-output/
+
+# Claude
+.claude/

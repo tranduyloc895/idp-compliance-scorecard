@@ -1,0 +1,50 @@
+# Fix Template: require-probes
+# Platform Config Standard | Kubernetes Best Practices
+# Apply: Add liveness and readiness probes to container spec
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  namespace: YOUR_NAMESPACE
+spec:
+  template:
+    spec:
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          ports:
+            - containerPort: 8080
+
+          # Readiness Probe: When is the container ready to serve traffic?
+          # K8s won't route traffic until this passes.
+          readinessProbe:
+            httpGet:
+              path: /health        # Change to your health check endpoint
+              port: 8080
+            initialDelaySeconds: 10   # Wait before first check
+            periodSeconds: 5          # Check every 5 seconds
+            failureThreshold: 3       # Mark not-ready after 3 failures
+            successThreshold: 1       # Mark ready after 1 success
+
+          # Liveness Probe: Is the container still alive / responding?
+          # K8s restarts the container if this fails.
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30   # Give app more time to start
+            periodSeconds: 10
+            failureThreshold: 3
+            timeoutSeconds: 5
+
+          # Optional: Startup Probe (for slow-starting apps)
+          # startupProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 8080
+          #   failureThreshold: 30    # Allow 30 * 10s = 5min startup
+          #   periodSeconds: 10
+
+# Alternative probe types:
+# tcpSocket: { port: 5432 }          # For DB connections
+# exec: { command: ["pg_isready"] }  # For custom scripts

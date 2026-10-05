@@ -1,0 +1,62 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-kyverno
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: platform-kyverno
+    app.kubernetes.io/part-of: idp-platform
+spec:
+  project: default
+  source:
+    repoURL: https://kyverno.github.io/kyverno/
+    chart: kyverno
+    targetRevision: "3.*"
+    helm:
+      releaseName: kyverno
+      valueFiles:
+        - $values/idp-gitops/platform/kyverno/values.yaml
+  sources:
+    - repoURL: https://kyverno.github.io/kyverno/
+      chart: kyverno
+      targetRevision: "3.*"
+      helm:
+        releaseName: kyverno
+        valueFiles:
+          - $values/idp-gitops/platform/kyverno/values.yaml
+    - repoURL: https://github.com/YOUR_ORG/idp-platform
+      targetRevision: HEAD
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true   # Required for Kyverno CRDs
+---
+# Separate Application for Kyverno custom policies
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-kyverno-policies
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: platform-kyverno-policies
+    app.kubernetes.io/part-of: idp-platform
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_ORG/idp-platform
+    targetRevision: HEAD
+    path: idp-gitops/platform/kyverno/policies
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,31 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: require-labels
+  annotations:
+    policies.kyverno.io/title: Require Kubernetes Standard Labels
+    policies.kyverno.io/category: Platform Config
+    policies.kyverno.io/severity: low
+    policies.kyverno.io/subject: Deployment, StatefulSet, DaemonSet
+    policies.kyverno.io/description: >-
+      Kubernetes-recommended labels must be present on Deployments, StatefulSets, and DaemonSets.
+      Required: app.kubernetes.io/name and app.kubernetes.io/version.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: app-labels-required
+      match:
+        any:
+          - resources:
+              kinds:
+                - Deployment
+                - StatefulSet
+                - DaemonSet
+      validate:
+        message: "Resource must have labels: app.kubernetes.io/name and app.kubernetes.io/version."
+        pattern:
+          metadata:
+            labels:
+              app.kubernetes.io/name: "?*"
+              app.kubernetes.io/version: "?*"

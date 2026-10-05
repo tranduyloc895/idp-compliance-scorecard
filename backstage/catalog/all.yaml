@@ -1,0 +1,18 @@
+---
+# catalog/all.yaml — Location manifest
+# This file is the single entry-point for the Backstage catalog.
+# All entity files are referenced here so Backstage discovers them automatically.
+
+apiVersion: backstage.io/v1alpha1
+kind: Location
+metadata:
+  name: retail-store-catalog
+  description: "All entities for the Retail Store IDP platform"
+spec:
+  targets:
+    - ./system.yaml
+    - ./ui.yaml
+    - ./catalog-svc.yaml
+    - ./cart.yaml
+    - ./orders.yaml
+    - ./checkout.yaml

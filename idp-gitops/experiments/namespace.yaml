@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: compliance-test
+  labels:
+    app.kubernetes.io/part-of: idp-experiments
+    purpose: compliance-testing

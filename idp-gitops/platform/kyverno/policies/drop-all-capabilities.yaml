@@ -1,0 +1,30 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: drop-all-capabilities
+  annotations:
+    policies.kyverno.io/title: Drop All Linux Capabilities
+    policies.kyverno.io/category: Workload Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      All Linux capabilities must be dropped. CIS Kubernetes Benchmark 5.2.7.
+spec:
+  validationFailureAction: Audit
+  background: true
+  rules:
+    - name: drop-capabilities
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Container must drop ALL capabilities. Add securityContext.capabilities.drop: [ALL]."
+        pattern:
+          spec:
+            containers:
+              - securityContext:
+                  capabilities:
+                    drop:
+                      - ALL

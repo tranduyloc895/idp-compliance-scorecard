@@ -1,0 +1,83 @@
+# Workload B — EXCELLENT compliance target: ~90-95 score (🟢 Excellent)
+# All security controls applied:
+#   ✅ runAsNonRoot: true, runAsUser: 1000
+#   ✅ allowPrivilegeEscalation: false
+#   ✅ readOnlyRootFilesystem: true
+#   ✅ Drop ALL capabilities
+#   ✅ Specific image tag (pinned version)
+#   ✅ Resource limits set
+#   ✅ Liveness + readiness probes
+#   ✅ All required labels
+#   ✅ NetworkPolicy applied
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workload-b-excellent
+  namespace: compliance-test
+  labels:
+    app.kubernetes.io/name: workload-b-excellent
+    app.kubernetes.io/version: "1.27.0"         # ✅ Required label
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: idp-experiments
+    app.kubernetes.io/managed-by: argocd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: workload-b-excellent
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: workload-b-excellent
+        app.kubernetes.io/version: "1.27.0"
+    spec:
+      securityContext:                            # ✅ Pod-level security context
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+        seccompProfile:
+          type: RuntimeDefault
+      automountServiceAccountToken: false         # ✅ Disable auto-mount
+      containers:
+        - name: app
+          image: nginx:1.27.0                     # ✅ Pinned version
+          securityContext:                        # ✅ Container security context
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL                             # ✅ Drop all capabilities
+          resources:                             # ✅ Resource limits
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+          readinessProbe:                        # ✅ Readiness probe
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:                         # ✅ Liveness probe
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: nginx-cache
+          emptyDir: {}

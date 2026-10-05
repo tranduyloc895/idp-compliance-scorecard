@@ -1,0 +1,75 @@
+services:
+  compliance-engine:
+    build: .
+    container_name: compliance-engine
+    ports:
+      - "8000:8000"
+    environment:
+      # Database (local dev: PostgreSQL on port 5433 to avoid conflict with Backstage)
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: compliance
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-compliance_dev}
+      POSTGRES_DB: compliance
+      # Redis
+      REDIS_URL: redis://redis:6379/0
+      # Gemini AI (required for AI recommendations)
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: gemini-2.5-flash
+      # Kubernetes (mount your local kubeconfig for dev)
+      KUBECONFIG: /root/.kube/config
+      K8S_IN_CLUSTER: "false"
+      # App settings
+      LOG_LEVEL: INFO
+      DEBUG: "false"
+    volumes:
+      - ~/.kube/config:/root/.kube/config:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  db:
+    image: postgres:16-alpine
+    container_name: compliance-postgres
+    environment:
+      POSTGRES_USER: compliance
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-compliance_dev}
+      POSTGRES_DB: compliance
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U compliance -d compliance"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5433:5432"   # 5433 để tránh conflict với Backstage PostgreSQL (port 5432)
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: compliance-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - redisdata:/data
+    restart: unless-stopped
+    command: redis-server --appendonly yes  # Persistence mode
+
+volumes:
+  pgdata:
+  redisdata:

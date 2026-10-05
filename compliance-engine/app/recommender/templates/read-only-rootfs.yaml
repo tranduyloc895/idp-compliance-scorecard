@@ -1,0 +1,37 @@
+# Fix Template: read-only-rootfs
+# CIS Kubernetes Benchmark 5.2.4
+# Apply: Set readOnlyRootFilesystem: true, add emptyDir for writable paths
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  namespace: YOUR_NAMESPACE
+spec:
+  template:
+    spec:
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          securityContext:
+            readOnlyRootFilesystem: true   # <-- Main fix
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+
+          # If app needs writable directories, mount emptyDir volumes:
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: cache
+              mountPath: /var/cache
+            # Add more as needed for your app's writable paths
+
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+
+# How to identify writable paths your app needs:
+# 1. Check Dockerfile for COPY/RUN commands that write to specific dirs
+# 2. Run: strace -e trace=open,openat -p <pid> 2>&1 | grep -v O_RDONLY
+# 3. Look at app logs for "read-only file system" errors

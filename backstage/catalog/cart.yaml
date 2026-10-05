@@ -1,0 +1,29 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cart
+  title: Cart Service
+  description: "Shopping cart management — Java/Spring Boot. Manages add/remove/view cart operations."
+  annotations:
+    github.com/project-slug: tranduyloc895/idp-microservices
+    github.com/workflows: ci-cart.yml
+    argocd/app-name: cart
+  tags:
+    - java
+    - spring-boot
+    - cart
+  links:
+    - url: https://github.com/tranduyloc895/idp-microservices/tree/main/src/cart
+      title: Source Code
+      icon: github
+    - url: https://github.com/tranduyloc895/idp-microservices/actions/workflows/ci-cart.yml
+      title: CI Pipeline
+      icon: github
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: retail-store
+  dependsOn:
+    - component:catalog-svc

@@ -1,0 +1,75 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: compliance-redis
+  namespace: compliance
+  labels:
+    app.kubernetes.io/name: compliance-redis
+    app.kubernetes.io/part-of: idp-platform
+    app.kubernetes.io/component: cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: compliance-redis
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: compliance-redis
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999   # Redis default user
+        fsGroup: 999
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          command: ["redis-server", "--appendonly", "yes"]
+          ports:
+            - containerPort: 6379
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false  # Redis needs to write AOF file
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          livenessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+      volumes:
+        - name: redis-data
+          emptyDir: {}   # In-memory on EKS (no persistence needed; re-fill from DB on restart)
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: compliance-redis
+  namespace: compliance
+  labels:
+    app.kubernetes.io/name: compliance-redis
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: 6379
+      name: redis
+  selector:
+    app.kubernetes.io/name: compliance-redis

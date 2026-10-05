@@ -1,0 +1,31 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: checkout
+  title: Checkout Service
+  description: "Checkout & payment orchestration — NestJS/TypeScript. Coordinates cart, orders, and payment processing."
+  annotations:
+    github.com/project-slug: tranduyloc895/idp-microservices
+    github.com/workflows: ci-checkout.yml
+    argocd/app-name: checkout
+  tags:
+    - nestjs
+    - typescript
+    - checkout
+    - payments
+  links:
+    - url: https://github.com/tranduyloc895/idp-microservices/tree/main/src/checkout
+      title: Source Code
+      icon: github
+    - url: https://github.com/tranduyloc895/idp-microservices/actions/workflows/ci-checkout.yml
+      title: CI Pipeline
+      icon: github
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: retail-store
+  dependsOn:
+    - component:cart
+    - component:catalog-svc

@@ -1,0 +1,25 @@
+# Helm chart: aquasecurity/trivy-operator v0.25.x
+trivy:
+  ignoreUnfixed: true                          # Skip vulnerabilities with no fix yet
+  severity: "CRITICAL,HIGH,MEDIUM"            # Ignore LOW and UNKNOWN
+
+operator:
+  scanJobsConcurrentLimit: 3                   # Max parallel scan jobs
+  vulnerabilityScannerEnabled: true
+  configAuditScannerEnabled: true              # Kubernetes config audit
+  rbacAssessmentEnabled: true                  # RBAC security assessment
+  exposedSecretsScannerEnabled: true           # Detect secrets in containers
+
+  # Scan interval — sync with Compliance Engine SCAN_INTERVAL_SECONDS
+  vulnerabilityScannerScanOnlyCurrentRevisions: true
+
+serviceMonitor:
+  enabled: false                               # Disable — using Backstage for monitoring
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

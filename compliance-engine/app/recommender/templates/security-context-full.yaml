@@ -1,0 +1,81 @@
+# Fix Template: security-context-full
+# CIS Kubernetes Benchmark 5.2 (complete security context)
+# Apply: Comprehensive security hardening for a production container
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  namespace: YOUR_NAMESPACE
+  labels:
+    app.kubernetes.io/name: YOUR_APP_NAME
+    app.kubernetes.io/version: "1.0.0"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: YOUR_APP_NAME
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: YOUR_APP_NAME
+        app.kubernetes.io/version: "1.0.0"
+    spec:
+      # Pod-level security context
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+        seccompProfile:
+          type: RuntimeDefault         # Enable seccomp filtering
+
+      # Disable service account token auto-mount if not needed
+      automountServiceAccountToken: false
+
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          image: YOUR_IMAGE:1.0.0       # Always pin to specific version!
+
+          # Container-level security context
+          securityContext:
+            allowPrivilegeEscalation: false   # ✅ CIS 5.2.5
+            readOnlyRootFilesystem: true      # ✅ CIS 5.2.4
+            runAsNonRoot: true                # ✅ CIS 5.2.6
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL                         # ✅ CIS 5.2.7
+              # add: []                       # Only if specifically required
+
+          # Resource limits (required)
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          # Health probes (required)
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+
+          # Writable volumes (because readOnlyRootFilesystem: true)
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+
+      volumes:
+        - name: tmp
+          emptyDir: {}

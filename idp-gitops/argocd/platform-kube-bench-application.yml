@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-kube-bench
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: platform-kube-bench
+    app.kubernetes.io/part-of: idp-platform
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_ORG/idp-platform
+    targetRevision: HEAD
+    path: idp-gitops/platform/kube-bench
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

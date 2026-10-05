@@ -1,0 +1,32 @@
+app:
+  baseUrl: http://${BACKSTAGE_HOST}:3000
+
+backend:
+  baseUrl: http://${BACKSTAGE_HOST}:7007
+  listen:
+    port: 7007
+    host: 0.0.0.0
+  cors:
+    origin: http://${BACKSTAGE_HOST}:3000
+  database:
+    client: pg
+    connection:
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      ssl:
+        require: false
+
+auth:
+  environment: production
+  providers:
+    github:
+      production:
+        clientId: ${AUTH_GITHUB_CLIENT_ID}
+        clientSecret: ${AUTH_GITHUB_CLIENT_SECRET}
+
+catalog:
+  locations:
+    - type: file
+      target: ./catalog/all.yaml

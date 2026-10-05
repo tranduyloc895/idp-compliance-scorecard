@@ -1,0 +1,35 @@
+# Fix Template: require-labels
+# Platform Config Standard | Kubernetes Recommended Labels
+# Apply: Add required labels to metadata.labels
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  namespace: YOUR_NAMESPACE
+  labels:
+    # ---- Required labels (enforced by policy) ----
+    app.kubernetes.io/name: YOUR_APP_NAME        # e.g., "web-api"
+    app.kubernetes.io/version: "1.0.0"           # e.g., "1.0.0" or "v1.0.0"
+
+    # ---- Recommended additional labels ----
+    app.kubernetes.io/component: backend          # e.g., "frontend", "backend", "database"
+    app.kubernetes.io/part-of: MY_PLATFORM        # Platform/product name
+    app.kubernetes.io/managed-by: argocd          # e.g., "argocd", "helm", "kubectl"
+
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: YOUR_APP_NAME
+
+  template:
+    metadata:
+      labels:
+        # Pod labels MUST match selector.matchLabels
+        app.kubernetes.io/name: YOUR_APP_NAME
+        app.kubernetes.io/version: "1.0.0"
+        app.kubernetes.io/component: backend
+    spec:
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          image: YOUR_IMAGE:1.0.0

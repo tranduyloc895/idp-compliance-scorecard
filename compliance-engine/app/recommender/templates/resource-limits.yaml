@@ -1,0 +1,28 @@
+# Fix Template: resource-limits
+# CIS Kubernetes Benchmark 5.2.11
+# Apply: Add resources section to every container
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: YOUR_DEPLOYMENT_NAME
+  namespace: YOUR_NAMESPACE
+spec:
+  template:
+    spec:
+      containers:
+        - name: YOUR_CONTAINER_NAME
+          resources:
+            # Requests: Kubernetes uses this for scheduling
+            requests:
+              cpu: "100m"        # 0.1 CPU cores
+              memory: "128Mi"    # 128 MiB RAM
+            # Limits: Hard cap — pod is killed if exceeded
+            limits:
+              cpu: "500m"        # 0.5 CPU cores
+              memory: "512Mi"    # 512 MiB RAM
+
+# Size guidance:
+# - Small service (sidecars, exporters): requests: 50m/64Mi, limits: 200m/256Mi
+# - Web API: requests: 100m/128Mi, limits: 500m/512Mi
+# - Heavy service (ML, DB): requests: 500m/512Mi, limits: 2000m/2Gi

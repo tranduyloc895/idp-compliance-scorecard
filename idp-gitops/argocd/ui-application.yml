@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: retail-store-ui
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/tranduyloc895/idp-gitops.git
+      targetRevision: main
+      path: charts/microservice
+      helm:
+        releaseName: ui
+        valueFiles:
+          - $values/apps/ui/values.yaml
+    - repoURL: https://github.com/tranduyloc895/idp-gitops.git
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: retail-store
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+  # HPA quản lý spec.replicas của Deployment ui; bỏ qua field này để selfHeal
+  # không kéo về giá trị cố định (an toàn kép cùng với việc chart bỏ replicas khi hpa.enabled).
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas

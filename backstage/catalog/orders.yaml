@@ -1,0 +1,30 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: orders
+  title: Orders Service
+  description: "Order management — Java/Spring Boot. Handles order creation, tracking, and history."
+  annotations:
+    github.com/project-slug: tranduyloc895/idp-microservices
+    github.com/workflows: ci-orders.yml
+    argocd/app-name: orders
+  tags:
+    - java
+    - spring-boot
+    - orders
+  links:
+    - url: https://github.com/tranduyloc895/idp-microservices/tree/main/src/orders
+      title: Source Code
+      icon: github
+    - url: https://github.com/tranduyloc895/idp-microservices/actions/workflows/ci-orders.yml
+      title: CI Pipeline
+      icon: github
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: retail-store
+  dependsOn:
+    - component:checkout
+    - component:cart

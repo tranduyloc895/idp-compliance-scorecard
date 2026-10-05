@@ -1,0 +1,11 @@
+# GitOps
+.git/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.pem
+*.key
+*.secret

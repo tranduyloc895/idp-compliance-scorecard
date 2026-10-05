@@ -1,0 +1,59 @@
+# Workload C — FAIR compliance target: ~60-70 score (🟡 Fair)
+# Mixed compliance:
+#   ✅ runAsNonRoot: true
+#   ❌ No readOnlyRootFilesystem
+#   ✅ Resource limits set
+#   ❌ Image: nginx:1.24.0 (has known CVEs — Trivy will detect)
+#   ✅ Liveness + readiness probes set
+#   ❌ Missing some labels (version missing)
+#   ✅ allowPrivilegeEscalation: false
+#   ❌ Capabilities not explicitly dropped
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workload-c-fair
+  namespace: compliance-test
+  labels:
+    app.kubernetes.io/name: workload-c-fair
+    # ❌ Missing: app.kubernetes.io/version
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: workload-c-fair
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: workload-c-fair
+    spec:
+      securityContext:
+        runAsNonRoot: true      # ✅
+        runAsUser: 1000
+      containers:
+        - name: app
+          image: nginx:1.24.0   # ❌ Known CVEs (intentional for Trivy detection)
+          securityContext:
+            allowPrivilegeEscalation: false  # ✅
+            # ❌ No readOnlyRootFilesystem
+            # ❌ No capabilities.drop
+          resources:                          # ✅ Resource limits
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:                     # ✅ Probes set
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          ports:
+            - containerPort: 80

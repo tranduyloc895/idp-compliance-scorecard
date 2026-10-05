@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: compliance-scan
+  namespace: compliance
+  labels:
+    app.kubernetes.io/name: compliance-scan
+    app.kubernetes.io/part-of: idp-platform
+spec:
+  schedule: "*/30 * * * *"    # Every 30 minutes
+  concurrencyPolicy: Forbid   # Don't run if previous scan still running
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: scan-trigger
+              image: curlimages/curl:8.5.0
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  curl -X POST http://compliance-engine:8000/api/v1/scans \
+                    -H "Content-Type: application/json" \
+                    -d '{}' \
+                    --fail-with-body \
+                    --max-time 30
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 1000
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  cpu: 50m
+                  memory: 32Mi

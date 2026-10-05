@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-trivy-operator
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: platform-trivy-operator
+    app.kubernetes.io/part-of: idp-platform
+spec:
+  project: default
+  sources:
+    - repoURL: https://aquasecurity.github.io/helm-charts/
+      chart: trivy-operator
+      targetRevision: "0.25.*"
+      helm:
+        releaseName: trivy-operator
+        valueFiles:
+          - $values/idp-gitops/platform/trivy-operator/values.yaml
+    - repoURL: https://github.com/YOUR_ORG/idp-platform
+      targetRevision: HEAD
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: trivy-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

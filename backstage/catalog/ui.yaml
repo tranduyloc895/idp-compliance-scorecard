@@ -1,0 +1,36 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ui
+  title: UI Service
+  description: "Retail Store frontend — Java/Spring Boot. Serves the customer-facing web interface."
+  annotations:
+    # GitHub integration — shows CI workflow runs + PRs
+    github.com/project-slug: tranduyloc895/idp-microservices
+    github.com/workflows: ci-ui.yml
+    # ArgoCD integration — shows sync status + resource tree
+    argocd/app-name: ui
+    # TechDocs (future)
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - java
+    - spring-boot
+    - frontend
+  links:
+    - url: https://github.com/tranduyloc895/idp-microservices/tree/main/src/ui
+      title: Source Code
+      icon: github
+    - url: https://github.com/tranduyloc895/idp-microservices/actions/workflows/ci-ui.yml
+      title: CI Pipeline
+      icon: github
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+  system: retail-store
+  dependsOn:
+    - component:catalog-svc
+    - component:cart
+    - component:checkout
+    - component:orders

@@ -1,0 +1,35 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-privilege-escalation
+  annotations:
+    policies.kyverno.io/title: Disallow Privilege Escalation
+    policies.kyverno.io/category: Workload Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/description: >-
+      Privilege escalation, such as via set-user-ID or set-group-ID file mode,
+      must not be allowed. CIS Kubernetes Benchmark 5.2.5.
+spec:
+  validationFailureAction: Audit    # Audit mode — report only, do not block
+  background: true
+  rules:
+    - name: deny-privilege-escalation
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+      validate:
+        message: "Privilege escalation is not allowed. Set securityContext.allowPrivilegeEscalation: false."
+        pattern:
+          spec:
+            containers:
+              - securityContext:
+                  allowPrivilegeEscalation: "false"
+            =(initContainers):
+              - securityContext:
+                  allowPrivilegeEscalation: "false"
+            =(ephemeralContainers):
+              - securityContext:
+                  allowPrivilegeEscalation: "false"

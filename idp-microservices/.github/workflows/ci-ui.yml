@@ -1,0 +1,160 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# CI Pipeline — ui (Java / Spring Boot / Maven)
+#
+# Trigger : push vào src/ui/** (branch main) hoặc chạy thủ công
+# Build   : Docker multi-stage (eclipse-temurin:21-jdk → 21-jre)
+# Scan    : Trivy — FAIL nếu có lỗ hổng CRITICAL
+# Push    : ECR us-east-1 → retail-store/ui:<sha7>
+# Deploy  : Update apps/ui/values.yaml trong idp-gitops → ArgoCD tự sync
+# ──────────────────────────────────────────────────────────────────────────────
+
+name: "CI — ui"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/ui/**"
+      - ".github/workflows/ci-ui.yml"
+  workflow_dispatch:
+
+# OIDC yêu cầu id-token: write + contents: read
+permissions:
+  id-token: write
+  contents: read
+  security-events: write   # upload SARIF lên GitHub Security tab
+
+env:
+  AWS_REGION:   us-east-1
+  ECR_REPO:     retail-store/ui
+  SERVICE:      ui
+  GITOPS_REPO:  tranduyloc895/idp-gitops
+  GITOPS_REF:   main
+
+jobs:
+  build-scan-push:
+    name: "Build → Scan → Push → GitOps"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      # ── 1. Checkout source ──────────────────────────────────────────────────
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 2. Authenticate với AWS qua OIDC (không cần access key) ─────────────
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region:     ${{ env.AWS_REGION }}
+
+      # ── 3. Login ECR ─────────────────────────────────────────────────────────
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # ── 4. Tính image tag = sha ngắn 7 ký tự ───────────────────────────────
+      - name: Set image tag
+        id: meta
+        run: |
+          SHORT_SHA=$(git rev-parse --short=7 HEAD)
+          echo "tag=${SHORT_SHA}" >> $GITHUB_OUTPUT
+          echo "image=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO }}:${SHORT_SHA}" >> $GITHUB_OUTPUT
+
+      # ── 5. Setup Docker Buildx (multi-platform + GHA cache) ─────────────────
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # ── 6. Build image (với GHA layer cache) ────────────────────────────────
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context:   src/${{ env.SERVICE }}
+          push:      false          # chỉ build + load, chưa push (chờ scan xong)
+          load:      true
+          tags:      ${{ steps.meta.outputs.image }}
+          cache-from: type=gha,scope=${{ env.SERVICE }}
+          cache-to:   type=gha,scope=${{ env.SERVICE }},mode=max
+
+      # ── 7a. Trivy — table output (human-readable, fail on CRITICAL) ──────────
+      - name: "Trivy scan (table — fail on CRITICAL)"
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref:      ${{ steps.meta.outputs.image }}
+          format:         table
+          severity:       CRITICAL,HIGH
+          exit-code:      "1"        # fail job nếu có CRITICAL
+          ignore-unfixed: true       # bỏ qua lỗ hổng chưa có bản vá
+          vuln-type:      "os,library"
+
+      # ── 7b. Trivy — SARIF upload lên GitHub Security tab ────────────────────
+      - name: "Trivy scan (SARIF — GitHub Security)"
+        if: always()                 # chạy kể cả khi step trên fail
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref:      ${{ steps.meta.outputs.image }}
+          format:         sarif
+          output:         trivy-results.sarif
+          severity:       CRITICAL,HIGH
+          ignore-unfixed: true
+          vuln-type:      "os,library"
+
+      - name: Upload Trivy SARIF to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+          category:   trivy-${{ env.SERVICE }}
+
+      # ── 8. Push image lên ECR (chỉ sau khi Trivy pass) ──────────────────────
+      - name: Push image to ECR
+        run: docker push ${{ steps.meta.outputs.image }}
+
+      # ── 9. Update image tag trong idp-gitops → ArgoCD tự sync ───────────────
+      - name: Update GitOps values.yaml
+        env:
+          GITOPS_PAT: ${{ secrets.GITOPS_PAT }}
+          IMAGE_TAG:  ${{ steps.meta.outputs.tag }}
+        run: |
+          set -euo pipefail
+
+          # Cài yq (YAML processor — thay thế sed fragile)
+          wget -qO /usr/local/bin/yq \
+            "https://github.com/mikefarah/yq/releases/download/v4.44.2/yq_linux_amd64"
+          chmod +x /usr/local/bin/yq
+
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name  "github-actions[bot]"
+
+          git clone \
+            "https://x-access-token:${GITOPS_PAT}@github.com/${GITOPS_REPO}.git" \
+            /tmp/idp-gitops
+
+          cd /tmp/idp-gitops
+          git checkout ${GITOPS_REF}
+
+          VALUES_FILE="apps/${SERVICE}/values.yaml"
+          yq e ".image.tag = \"${IMAGE_TAG}\"" -i "${VALUES_FILE}"
+
+          git add "${VALUES_FILE}"
+
+          # Chỉ commit nếu có thay đổi thực sự
+          if git diff --staged --quiet; then
+            echo "No changes in ${VALUES_FILE} — skipping commit."
+          else
+            git commit -m "ci(${SERVICE}): update image tag to ${IMAGE_TAG} [skip ci]"
+            git push
+          fi
+
+      # ── 10. Summary ──────────────────────────────────────────────────────────
+      - name: Job Summary
+        if: success()
+        run: |
+          echo "## ✅ CI Pipeline — ${SERVICE}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| | |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|---|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Image** | \`${{ steps.meta.outputs.image }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Tag** | \`${{ steps.meta.outputs.tag }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **GitOps** | \`apps/${SERVICE}/values.yaml\` updated |" >> $GITHUB_STEP_SUMMARY

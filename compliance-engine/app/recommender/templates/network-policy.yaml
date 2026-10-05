@@ -1,0 +1,60 @@
+# Fix Template: network-policy
+# CIS Kubernetes Benchmark 5.3.2
+# Apply: Create a default-deny NetworkPolicy, then add specific allow rules
+
+# ---- Step 1: Default deny all ingress and egress ----
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: YOUR_NAMESPACE
+spec:
+  podSelector: {}    # Applies to all pods in namespace
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# ---- Step 2: Allow DNS egress (required for most apps) ----
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: YOUR_NAMESPACE
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+
+---
+# ---- Step 3: Allow specific ingress to your app ----
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-web-api-ingress
+  namespace: YOUR_NAMESPACE
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: YOUR_APP_NAME
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        # Allow from same namespace
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: YOUR_NAMESPACE
+        # Or: Allow from specific pod label
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
+      ports:
+        - port: 8080
+          protocol: TCP

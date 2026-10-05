@@ -1,0 +1,22 @@
+# Infrastructure (IaC)
+
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
+errored.tfstate
+*.pem
+*.key
+*.secret
+*.pub
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
