@@ -1,0 +1,3 @@
+# Paths graphify should skip (gitignore syntax)
+# Vendored Yarn release bundle: one minified file that adds ~3k meaningless nodes
+.yarn/

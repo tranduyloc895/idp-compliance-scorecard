@@ -50,3 +50,12 @@ oss-output/
 
 # Claude
 .claude/
+
+# Skills
+.agents
+GEMINI.md
+
+# Others
+*.pdf
+graphify-out/
+
