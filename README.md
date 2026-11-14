@@ -20,12 +20,15 @@ idp-platform/
 │   └── src/                 # Java, Go, NestJS source
 ├── backstage/               # Backstage IDP portal (EC2-hosted)
 ├── compliance-engine/       # Python/FastAPI Compliance Scorecard engine
-└── docs/                    # Architecture diagrams, research notes
+├── context/                 # Nhật ký thay đổi (change log) do AI ghi
+└── docs/                    # Tài liệu: setup, audit, hướng dẫn graphify
 ```
 
-## Setup
+## Tài liệu
 
-👉 Xem [**SETUP.md**](SETUP.md) — Hướng dẫn chi tiết từng bước setup toàn bộ dự án.
+- 👉 [**docs/SETUP.md**](docs/SETUP.md): hướng dẫn chi tiết từng bước setup toàn bộ dự án.
+- [docs/PROJECT_CONTEXT_AND_SETUP_AUDIT.md](docs/PROJECT_CONTEXT_AND_SETUP_AUDIT.md): context dự án và các điểm SETUP.md chưa khớp với code. Nên đọc trước khi làm theo SETUP.md.
+- [docs/GRAPHIFY.md](docs/GRAPHIFY.md): dùng knowledge graph (graphify) để nắm context dự án và lên plan với AI.
 
 ## Tech Stack
 
