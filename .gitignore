@@ -54,6 +54,7 @@ oss-output/
 # Skills
 .agents
 GEMINI.md
+CLAUDE.md
 
 # Others
 *.pdf
