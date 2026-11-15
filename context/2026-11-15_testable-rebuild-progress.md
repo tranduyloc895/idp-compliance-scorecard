@@ -5,7 +5,7 @@
 **Plan gốc:** `docs/plans/testable-rebuild.md`
 
 ## Đang làm
-- CI xanh; chờ quyết định merge main + dùng credential AWS.
+- Dừng ngày 2026-11-15 sau khi mở PR `feat/testable-rebuild` → `main` (chưa merge).
 
 ## Checklist
 
@@ -92,6 +92,7 @@
 
 
 ## Bước tiếp theo
-1. ~~Push + CI~~ xong (14/14). Image `cluster-autoscaler v1.35.0` trong chart upstream chưa được bước kiểm image bao phủ (chỉ kiểm manifest của repo).
-2. Khi được đồng ý dùng credential AWS: `scripts/aws-foundation-up.sh --dry-run` rồi chạy thật; đặt secret `AWS_ROLE_ARN`; merge vào main (hỏi trước) và chạy workflow build-all.
-3. `scripts/aws-up.sh --dry-run` → aws-up → smoke → sửa lỗi → **luôn** aws-down; ghi tiến độ trước mỗi lệnh tốn tiền.
+1. Người dùng review và merge PR vào `main` (hỏi trước khi merge; không tự merge). Sau merge, kiểm CI trên `main` xanh.
+2. Khi được đồng ý dùng credential AWS: trong CloudShell `bash scripts/cloudshell-tools.sh`, rồi `bash scripts/aws-foundation-up.sh --dry-run` → chạy thật → đặt GitHub secret `AWS_ROLE_ARN` (+ Workflow permissions Read and write) → chạy workflow `build-all` trên `main`.
+3. `bash scripts/aws-up.sh --dry-run` → aws-up → smoke → sửa lỗi → **luôn** `aws-down`; ghi tiến độ vào file này trước mỗi lệnh tốn tiền.
+4. Chưa kiểm chứng (sẽ thấy ở bước 3): chart 2024 trên K8s 1.35, internal CLB, `kube-bench v0.8.0 --benchmark eks-1.2.0`, image `cluster-autoscaler v1.35.0`, đủ tài nguyên 2× t3.large.
