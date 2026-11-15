@@ -90,7 +90,10 @@ render argocd argo/argo-cd "$(tfvar argocd_chart_version)"
 render argocd-apps argo/argocd-apps "$(tfvar argocd_apps_chart_version)"
 
 echo "==> kubeconform (upstream renders, CRD có thể thiếu schema -> bỏ qua)"
-"${KC[@]}" -ignore-missing-schemas "$OUT"/upstream/*.yaml
+# Không -strict: chart upstream có field thừa mà API server vẫn nhận (vd kyverno
+# 3.2.6 RoleBinding kyverno:remove-configmap có roleRef.namespace). Manifest của
+# repo ở trên vẫn kiểm strict.
+"${KC[@]/-strict/}" -ignore-missing-schemas "$OUT"/upstream/*.yaml
 
 echo "==> third-party images exist (docker manifest inspect)"
 imgs="$(cat "$OUT"/ours/*.yaml | awk '/^[[:space:]]+image:/ {print $2}' | tr -d '"' | sort -u   | grep -v -e 'ECR_REGISTRY_NOT_SET' -e '^compliance-engine$' -e 'dkr.ecr' || true)"
