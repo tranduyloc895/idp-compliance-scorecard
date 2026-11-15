@@ -3,7 +3,7 @@
 #
 # Môi trường chạy: AWS CloudShell hoặc Linux có aws-cli v2 + terraform >= 1.10.
 # kubectl: dùng bản trong PATH; nếu không có mà có Docker thì chạy image
-# bitnami/kubectl với kubeconfig chứa token tạm (aws eks get-token).
+# alpine/k8s (kubectl) với kubeconfig chứa token tạm (aws eks get-token).
 # Trên Windows Git Bash: terraform provider bị Application Control chặn và không
 # có kubectl -> chạy các script này trong CloudShell (scripts/cloudshell-tools.sh).
 
@@ -16,7 +16,7 @@ export AWS_REGION="${AWS_REGION:-us-east-1}"
 export AWS_DEFAULT_REGION="$AWS_REGION"
 CLUSTER_NAME="${CLUSTER_NAME:-ecommerce-cluster}"
 SSM_PREFIX="${SSM_PREFIX:-/idp}"
-KUBECTL_IMAGE="${KUBECTL_IMAGE:-bitnami/kubectl:1.31.4}"
+KUBECTL_IMAGE="${KUBECTL_IMAGE:-alpine/k8s:1.35.0}"
 DRY_RUN="${DRY_RUN:-0}"
 ASSUME_YES="${ASSUME_YES:-0}"
 

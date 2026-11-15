@@ -12,7 +12,10 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 G="$ROOT/idp-gitops"
 OUT="${OUT_DIR:-$ROOT/.render}"
+# Schema kubeconform (thư viện schema có thể chưa có bản mới nhất) và version
+# truyền cho helm template (= cluster_version trong Terraform) tách riêng.
 K8S_VERSION="${K8S_VERSION:-1.31.0}"
+HELM_KUBE_VERSION="${HELM_KUBE_VERSION:-1.35.0}"
 rm -rf "$OUT" && mkdir -p "$OUT/ours" "$OUT/upstream"
 
 # CRD schema từ datree CRDs-catalog (pin theo commit qua CRDS_CATALOG_REF nếu cần).
@@ -66,7 +69,7 @@ render() { # name chart version [values...]
   local args=()
   for v in "$@"; do args+=(-f "$v"); done
   echo "  - $chart@$version"
-  helm template "$name" "$chart" --version "$version" --kube-version "$K8S_VERSION" "${args[@]}" > "$OUT/upstream/$name.yaml"
+  helm template "$name" "$chart" --version "$version" --kube-version "$HELM_KUBE_VERSION" "${args[@]}" > "$OUT/upstream/$name.yaml"
 }
 render kyverno kyverno/kyverno "$(ver kyverno platform-kyverno-application.yml)" "$G/platform/kyverno/values.yaml"
 render trivy-operator aqua/trivy-operator "$(ver trivy-operator platform-trivy-operator-application.yml)" "$G/platform/trivy-operator/values.yaml"
@@ -80,5 +83,13 @@ render argocd-apps argo/argocd-apps "$(tfvar argocd_apps_chart_version)"
 
 echo "==> kubeconform (upstream renders, CRD có thể thiếu schema -> bỏ qua)"
 "${KC[@]}" -ignore-missing-schemas "$OUT"/upstream/*.yaml
+
+echo "==> third-party images exist (docker manifest inspect)"
+imgs="$(cat "$OUT"/ours/*.yaml | awk '/^[[:space:]]+image:/ {print $2}' | tr -d '"' | sort -u   | grep -v -e 'ECR_REGISTRY_NOT_SET' -e '^compliance-engine$' -e 'dkr.ecr' || true)"
+missing=0
+for img in $imgs; do
+  if docker manifest inspect "$img" >/dev/null 2>&1; then echo "  ok   $img"; else echo "  MISSING $img"; missing=1; fi
+done
+[ "$missing" -eq 0 ] || { echo "FAIL: image tag không tồn tại"; exit 1; }
 
 echo "k8s-render-check: OK"

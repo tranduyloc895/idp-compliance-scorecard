@@ -5,7 +5,7 @@
 #   bash scripts/cloudshell-tools.sh && export PATH=$HOME/bin:$PATH
 set -euo pipefail
 TERRAFORM_VERSION="${TERRAFORM_VERSION:-1.11.4}"
-KUBECTL_VERSION="${KUBECTL_VERSION:-v1.31.4}"
+KUBECTL_VERSION="${KUBECTL_VERSION:-v1.35.0}"
 
 case "$(uname -s)-$(uname -m)" in
   Linux-x86_64) ;;

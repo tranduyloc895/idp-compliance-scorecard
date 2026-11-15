@@ -9,9 +9,9 @@ autoDiscovery:
 
 awsRegion: us-east-1
 
-# Image CA phải khớp minor version của cluster (EKS 1.31 -> CA v1.31.x).
+# Image CA phải khớp minor version của cluster (EKS 1.35 -> CA v1.35.x).
 image:
-  tag: v1.31.0
+  tag: v1.35.0
 
 # ServiceAccount do Terraform tạo (infrastructure/02-cluster-eks/irsa-cluster-autoscaler.tf)
 # kèm annotation role ARN lấy từ output IRSA — không ghi cứng account ID (audit #8).

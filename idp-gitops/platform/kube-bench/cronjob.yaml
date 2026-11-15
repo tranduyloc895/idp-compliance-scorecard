@@ -50,7 +50,7 @@ spec:
                 - { name: etc-kubernetes, mountPath: /etc/kubernetes, readOnly: true }
           containers:
             - name: publish
-              image: bitnami/kubectl:1.31.4
+              image: alpine/k8s:1.35.0   # có shell + kubectl (tag bitnami/* cũ đã ngừng phát hành)
               command:
                 - /bin/sh
                 - -c
@@ -63,7 +63,7 @@ spec:
               securityContext:
                 allowPrivilegeEscalation: false
                 runAsNonRoot: true
-                runAsUser: 1001
+                runAsUser: 1000
                 capabilities: { drop: ["ALL"] }
               resources:
                 requests: { cpu: 10m, memory: 32Mi }

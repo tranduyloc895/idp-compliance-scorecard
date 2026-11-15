@@ -11,9 +11,9 @@ variable "cluster_name" {
 }
 
 variable "cluster_version" {
-  description = "Kubernetes version for the EKS cluster"
+  description = "Kubernetes version for the EKS cluster. 1.31 đã hết standard support (extended support $0.60/h). 1.35: standard support tới 2027-03-27. Kiểm tra: aws eks describe-cluster-versions"
   type        = string
-  default     = "1.31"
+  default     = "1.35"
 }
 
 variable "cluster_endpoint_public_access" {
