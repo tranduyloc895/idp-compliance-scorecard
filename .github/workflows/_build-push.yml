@@ -1,0 +1,163 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Reusable: build → Trivy (chặn CRITICAL) → push ECR → ghi tag vào GitOps.
+#
+# Gọi từ ci-<service>.yml (push main, path filter) và build-all.yml (thủ công).
+# Secret thống nhất (audit #10):
+#   AWS_ROLE_ARN  — output role_arn của infrastructure/04-oidc (không ghi cứng)
+#   GITOPS_TOKEN  — tuỳ chọn; PAT có quyền push. Không đặt thì dùng GITHUB_TOKEN
+#                   (monorepo: commit tag vào chính repo này).
+# ──────────────────────────────────────────────────────────────────────────────
+name: _build-push
+
+on:
+  workflow_call:
+    inputs:
+      service:
+        description: "Tên service (ui|cart|catalog|orders|checkout|compliance-engine)"
+        type: string
+        required: true
+      context:
+        description: "Docker build context"
+        type: string
+        required: true
+      update_gitops:
+        description: "Ghi tag vào idp-gitops sau khi push"
+        type: boolean
+        default: true
+    secrets:
+      AWS_ROLE_ARN:
+        required: true
+      GITOPS_TOKEN:
+        required: false
+    outputs:
+      image:
+        description: "Image đã push"
+        value: ${{ jobs.build.outputs.image }}
+
+permissions:
+  id-token: write
+  contents: write
+  security-events: write
+
+env:
+  AWS_REGION: us-east-1
+  ECR_PREFIX: retail-store
+  YQ_VERSION: v4.44.3
+
+jobs:
+  build:
+    name: "${{ inputs.service }}: build → scan → push"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    outputs:
+      image: ${{ steps.meta.outputs.image }}
+      tag: ${{ steps.meta.outputs.tag }}
+      registry: ${{ steps.login-ecr.outputs.registry }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2.0.1
+
+      - name: Image metadata
+        id: meta
+        run: |
+          TAG="$(git rev-parse --short=7 HEAD)"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "image=${{ steps.login-ecr.outputs.registry }}/${ECR_PREFIX}/${{ inputs.service }}:${TAG}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3.7.1
+
+      - name: Build image
+        uses: docker/build-push-action@v6.9.0
+        with:
+          context: ${{ inputs.context }}
+          push: false
+          load: true
+          tags: ${{ steps.meta.outputs.image }}
+          cache-from: type=gha,scope=${{ inputs.service }}
+          cache-to: type=gha,scope=${{ inputs.service }},mode=max
+
+      - name: "Trivy (fail on CRITICAL with fix)"
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ steps.meta.outputs.image }}
+          format: table
+          severity: CRITICAL
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+
+      - name: "Trivy (SARIF report)"
+        if: always()
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: ${{ steps.meta.outputs.image }}
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          skip-setup-trivy: true
+
+      - name: Upload SARIF
+        if: always() && hashFiles('trivy-results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3.27.0
+        with:
+          sarif_file: trivy-results.sarif
+          category: trivy-${{ inputs.service }}
+
+      - name: Push image
+        run: docker push "${{ steps.meta.outputs.image }}"
+
+  gitops:
+    name: "${{ inputs.service }}: update GitOps"
+    if: inputs.update_gitops
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    # Không dùng concurrency group: GitHub huỷ job đang chờ khi có job mới cùng group,
+    # làm mất cập nhật tag. Thay bằng vòng retry pull --rebase bên dưới.
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          token: ${{ secrets.GITOPS_TOKEN || github.token }}
+          fetch-depth: 0
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_amd64"
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Write tag and registry
+        env:
+          SERVICE: ${{ inputs.service }}
+          TAG: ${{ needs.build.outputs.tag }}
+          REGISTRY: ${{ needs.build.outputs.registry }}
+        run: bash scripts/ci-set-image.sh "$SERVICE" "$REGISTRY" "$TAG"
+
+      - name: Commit and push (retry on race)
+        env:
+          SERVICE: ${{ inputs.service }}
+          TAG: ${{ needs.build.outputs.tag }}
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name  "github-actions[bot]"
+          git add idp-gitops
+          if git diff --staged --quiet; then
+            echo "No GitOps change"; exit 0
+          fi
+          git commit -m "ci(${SERVICE}): image tag ${TAG} [skip ci]"
+          for i in 1 2 3 4 5; do
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then exit 0; fi
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            sleep $((i * 3))
+          done
+          echo "push failed after retries"; exit 1

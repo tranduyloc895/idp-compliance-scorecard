@@ -38,7 +38,7 @@ The CI pipeline (`.github/workflows/ci.yml`) runs on every push to `main`:
 1. **OIDC Auth** → Authenticates to AWS without static credentials
 2. **Docker Build** → Builds the container image
 3. **Trivy Scan** → Scans for CRITICAL/HIGH CVEs
-4. **ECR Push** → Pushes image to `${{ values.ecrRegistry }}/${{ values.ecrRepo }}`
+4. **ECR Push** → Pushes image to `<ECR registry của account>/${{ values.ecrRepo }}`
 5. **GitOps Update** → Updates `apps/${{ values.serviceName }}/values.yaml` in `idp-gitops`
 
 ### First Deployment
