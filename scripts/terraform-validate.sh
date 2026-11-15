@@ -8,6 +8,8 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 INFRA="$ROOT/infrastructure"
+# terraform/tflint cài trong ~/tools/bin (WSL) được ưu tiên nếu có.
+if [ -d "$HOME/tools/bin" ]; then export PATH="$HOME/tools/bin:$PATH"; fi
 export TF_IN_AUTOMATION=1
 export TF_PLUGIN_CACHE_DIR="${TF_PLUGIN_CACHE_DIR:-$HOME/.terraform.d/plugin-cache}"
 mkdir -p "$TF_PLUGIN_CACHE_DIR"

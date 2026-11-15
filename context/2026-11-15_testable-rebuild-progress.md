@@ -5,7 +5,7 @@
 **Plan gốc:** `docs/plans/testable-rebuild.md`
 
 ## Đang làm
-- Kết thúc Giai đoạn 0; bắt đầu Giai đoạn 1.
+- Giai đoạn 3: script AWS (chỉ viết + `--dry-run` không credential).
 
 ## Checklist
 
@@ -48,12 +48,12 @@
 - [x] API contract 5.1 (adapters.ts) + empty state — tsc pass; contract-check với response dựng từ model backend pass (máy); với API thật ở engine-smoke CI
 
 ### Giai đoạn 1
-- [ ] `.github/workflows/validate.yml`
-- [ ] `scripts/validate-local.sh` chạy pass trên máy (đã pass từng bước; chạy đầy đủ sau validate.yml)
+- [x] `.github/workflows/validate.yml` (placeholders, terraform, k8s-manifests, kyverno-policies, pytest, tsc, docker-build, engine-smoke) — **chưa chạy** (chờ đồng ý push)
+- [x] `scripts/validate-local.sh` pass trên máy: placeholders, yaml, sh, terraform (WSL), pytest 68 passed, tsc — tổng 32s
 
 ### Giai đoạn 2
 - [x] Collector fixture mode (`COLLECTOR_MODE=fixtures`, fixtures/scenario-abc) (máy: test)
-- [ ] Job `engine-smoke`
+- [x] Job `engine-smoke` + `contract-check.mjs` — **chưa chạy** trong CI
 
 ### Giai đoạn 3
 - [ ] `aws-foundation-up.sh`, `aws-up.sh`, `aws-down.sh`, `smoke.sh` (có `--dry-run`)
@@ -82,4 +82,4 @@
 (chưa có)
 
 ## Bước tiếp theo
-Ghi context log Giai đoạn 0, `graphify update .`; rồi viết `.github/workflows/validate.yml` (Giai đoạn 1).
+Viết scripts/lib.sh, aws-foundation-up.sh, aws-up.sh, aws-down.sh, smoke.sh, k8s-secrets.sh, ssm-put-secrets.sh.

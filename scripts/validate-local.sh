@@ -79,8 +79,8 @@ step_tf() {
     local wsl_root
     wsl_root="/mnt/$(echo "${ROOT:1:1}" | tr 'A-Z' 'a-z')${ROOT:2}"
     echo "Windows: chạy terraform/tflint trong WSL ($distro) tại $wsl_root"
-    MSYS_NO_PATHCONV=1 wsl.exe -d "$distro" -- bash -c \
-      "export PATH=\$HOME/tools/bin:\$PATH; cd '$wsl_root' && bash scripts/terraform-validate.sh"
+    # wsl.exe tự expand $VAR trong tham số -> gọi thẳng file script (script tự thêm ~/tools/bin vào PATH).
+    MSYS_NO_PATHCONV=1 wsl.exe -d "$distro" -- bash "$wsl_root/scripts/terraform-validate.sh"
   else
     bash scripts/terraform-validate.sh
   fi
