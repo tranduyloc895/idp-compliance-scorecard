@@ -5,7 +5,7 @@
 **Plan gốc:** `docs/plans/testable-rebuild.md`
 
 ## Đang làm
-- Chờ người dùng quyết định (push/CI, merge, AWS).
+- CI xanh; chờ quyết định merge main + dùng credential AWS.
 
 ## Checklist
 
@@ -48,12 +48,12 @@
 - [x] API contract 5.1 (adapters.ts) + empty state — tsc pass; contract-check với response dựng từ model backend pass (máy); với API thật ở engine-smoke CI
 
 ### Giai đoạn 1
-- [x] `.github/workflows/validate.yml` (placeholders, terraform, k8s-manifests, kyverno-policies, pytest, tsc, docker-build, engine-smoke) — **chưa chạy** (chờ đồng ý push)
+- [x] `.github/workflows/validate.yml` — **CI PASS 14/14** ở run 43715994569 (vòng 5)
 - [x] `scripts/validate-local.sh` pass trên máy: placeholders, yaml, sh, terraform (WSL), pytest 68 passed, tsc — tổng 32s
 
 ### Giai đoạn 2
 - [x] Collector fixture mode (`COLLECTOR_MODE=fixtures`, fixtures/scenario-abc) (máy: test)
-- [x] Job `engine-smoke` + `contract-check.mjs` — **chưa chạy** trong CI
+- [x] Job `engine-smoke` + `contract-check.mjs` — PASS trong CI (scan=1, 34 findings, score 35.31 poor cho toàn bộ fixture A+B+C; rule WS-004; contract-check OK)
 
 ### Giai đoạn 3
 - [x] `aws-foundation-up.sh`, `aws-up.sh`, `aws-down.sh`, `smoke.sh` (có `--dry-run`) — bash -n + dry-run không credential (máy); chưa chạy với AWS
@@ -79,9 +79,19 @@
 - **Line endings**: `.gitattributes` ép LF (trừ `.ps1`) để script chạy được trên Linux/CI.
 
 ## Lỗi đang dở
-(chưa có)
+(không có)
+
+## Kết quả CI (2026-11-15, branch feat/testable-rebuild)
+| Vòng | Run | Kết quả | Lỗi tìm được → sửa |
+|---|---|---|---|
+| 1 | 43714705374 | 10/14 | `import app.models` ghi đè `app` trong lifespan (API không start); `disallow-latest-tag` dùng foreach nên không autogen; overlay `environments/dev` rỗng; `actions/cache@v4.1.2` bị chặn |
+| 2 | 43715177717 | 13/14 | nối manifest không có newline (lỗi script) |
+| 3 | 43715401370 | 13/14 | values Kyverno `crds.groups.*: true` sai kiểu → chart không render (lỗi thật, sẽ chặn Argo CD) |
+| 4 | 43715681311 | 13/14 | kubeconform -strict từ chối RoleBinding của chính chart kyverno → chỉ strict cho manifest repo |
+| 5 | 43715994569 | **14/14** | — repo 88/88 hợp lệ; upstream 277 hợp lệ, 18 bỏ qua (thiếu schema CRD); 12 image bên thứ ba tồn tại; 9 chart version tồn tại |
+
 
 ## Bước tiếp theo
-1. Khi được đồng ý push: `git push -u origin feat/testable-rebuild` → đọc `gh run list/view` cho validate.yml → sửa lỗi CI (dự kiến: version chart, kyverno autogen, image tag).
+1. ~~Push + CI~~ xong (14/14). Image `cluster-autoscaler v1.35.0` trong chart upstream chưa được bước kiểm image bao phủ (chỉ kiểm manifest của repo).
 2. Khi được đồng ý dùng credential AWS: `scripts/aws-foundation-up.sh --dry-run` rồi chạy thật; đặt secret `AWS_ROLE_ARN`; merge vào main (hỏi trước) và chạy workflow build-all.
 3. `scripts/aws-up.sh --dry-run` → aws-up → smoke → sửa lỗi → **luôn** aws-down; ghi tiến độ trước mỗi lệnh tốn tiền.
