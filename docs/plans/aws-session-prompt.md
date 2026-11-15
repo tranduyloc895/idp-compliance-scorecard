@@ -29,7 +29,7 @@ Sau khi đọc xong, tóm tắt lại cho tôi trong 5–8 dòng: trạng thái 
 - Windows Application Control chặn `terraform-provider-*.exe`, nên **mọi lệnh terraform và script `aws-*.sh`/`smoke.sh` phải chạy trong WSL `Ubuntu-22.04`**. Repo trong WSL nằm ở `/mnt/c/workspace/it/project/idp-compliance-scorecard`; terraform và tflint ở `~/tools/bin`.
 - Gọi WSL từ Git Bash: `MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-22.04 -- bash /mnt/c/.../<file>.sh`. `wsl.exe` tự expand `$VAR` trong tham số, nên không truyền chuỗi lệnh có `$`. Hãy viết lệnh vào một file script (trong scratchpad hoặc repo) rồi gọi file đó.
 - Credential: tôi đã chạy `aws configure --profile idp-lab` **trong WSL** (region `us-east-1`). Script dùng `export AWS_PROFILE=idp-lab`. Không yêu cầu tôi dán key vào chat; không in key ra log.
-- kubectl: <ĐIỀN: "cho phép cài kubectl v1.35.0 vào ~/tools/bin trong WSL" HOẶC "chạy bước kubectl trong CloudShell, tôi dán log">. Không cài kubectl/helm trên Windows.
+- kubectl: "cho phép cài kubectl v1.35.0 vào ~/tools/bin trong WSL"
 
 ## Quy tắc buổi này
 - Đầu buổi chạy `aws sts get-caller-identity` (profile `idp-lab`, trong WSL) và báo account ID/ARN cho tôi xác nhận.
