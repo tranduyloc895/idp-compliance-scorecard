@@ -145,6 +145,7 @@ class TestComplianceScorer:
             for i in range(4)
         ] + [
             make_finding(ComplianceCategory.SUPPLY_CHAIN, Severity.HIGH, FindingStatus.PASS, "SC-1"),
+        ] + [
             make_finding(ComplianceCategory.PLATFORM_CONFIG, Severity.MEDIUM, FindingStatus.PASS, f"PC-{i}")
             for i in range(3)
         ]
