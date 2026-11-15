@@ -67,7 +67,7 @@
         },
         {
           "policy": "drop-all-capabilities",
-          "rule": "autogen-drop-all",
+          "rule": "autogen-drop-capabilities",
           "result": "fail",
           "severity": "high",
           "message": "fixture: drop-all-capabilities fail on workload-a-poor",
@@ -97,7 +97,7 @@
         },
         {
           "policy": "require-resource-limits",
-          "rule": "autogen-resource-limits",
+          "rule": "autogen-resource-limits-required",
           "result": "fail",
           "severity": "medium",
           "message": "fixture: require-resource-limits fail on workload-a-poor",
@@ -207,7 +207,7 @@
         },
         {
           "policy": "drop-all-capabilities",
-          "rule": "autogen-drop-all",
+          "rule": "autogen-drop-capabilities",
           "result": "pass",
           "severity": "high",
           "message": "fixture: drop-all-capabilities pass on workload-b-excellent",
@@ -237,7 +237,7 @@
         },
         {
           "policy": "require-resource-limits",
-          "rule": "autogen-resource-limits",
+          "rule": "autogen-resource-limits-required",
           "result": "pass",
           "severity": "medium",
           "message": "fixture: require-resource-limits pass on workload-b-excellent",
@@ -347,7 +347,7 @@
         },
         {
           "policy": "drop-all-capabilities",
-          "rule": "autogen-drop-all",
+          "rule": "autogen-drop-capabilities",
           "result": "fail",
           "severity": "high",
           "message": "fixture: drop-all-capabilities fail on workload-c-fair",
@@ -377,7 +377,7 @@
         },
         {
           "policy": "require-resource-limits",
-          "rule": "autogen-resource-limits",
+          "rule": "autogen-resource-limits-required",
           "result": "pass",
           "severity": "medium",
           "message": "fixture: require-resource-limits pass on workload-c-fair",

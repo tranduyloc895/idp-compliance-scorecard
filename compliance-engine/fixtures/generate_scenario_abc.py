@@ -19,9 +19,9 @@ POLICIES = {
     "disallow-privilege-escalation": ("autogen-deny-privilege-escalation", "high"),
     "require-run-as-non-root": ("autogen-run-as-non-root", "high"),
     "require-read-only-rootfs": ("autogen-read-only-rootfs", "medium"),
-    "drop-all-capabilities": ("autogen-drop-all", "high"),
+    "drop-all-capabilities": ("autogen-drop-capabilities", "high"),
     "disallow-latest-tag": ("autogen-no-latest-tag", "high"),
-    "require-resource-limits": ("autogen-resource-limits", "medium"),
+    "require-resource-limits": ("autogen-resource-limits-required", "medium"),
     "require-labels": ("app-labels-required", "low"),
     "require-probes": ("probes-required", "medium"),
 }
