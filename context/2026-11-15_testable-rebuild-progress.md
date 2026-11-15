@@ -92,6 +92,7 @@
 
 
 ## Bước tiếp theo
+0. Buổi sau bắt đầu bằng prompt `docs/plans/aws-session-prompt.md`.
 1. Người dùng review và merge PR vào `main` (hỏi trước khi merge; không tự merge). Sau merge, kiểm CI trên `main` xanh.
 2. Khi được đồng ý dùng credential AWS: trong CloudShell `bash scripts/cloudshell-tools.sh`, rồi `bash scripts/aws-foundation-up.sh --dry-run` → chạy thật → đặt GitHub secret `AWS_ROLE_ARN` (+ Workflow permissions Read and write) → chạy workflow `build-all` trên `main`.
 3. `bash scripts/aws-up.sh --dry-run` → aws-up → smoke → sửa lỗi → **luôn** `aws-down`; ghi tiến độ vào file này trước mỗi lệnh tốn tiền.
