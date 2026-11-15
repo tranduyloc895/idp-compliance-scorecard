@@ -42,13 +42,6 @@ class Settings(BaseSettings):
             f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
         )
 
-    @property
-    def DATABASE_URL_SYNC(self) -> str:
-        """Sync URL cho Alembic migrations."""
-        return (
-            f"postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
-            f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-        )
 
     # -----------------------------------------------------------------------
     # Redis

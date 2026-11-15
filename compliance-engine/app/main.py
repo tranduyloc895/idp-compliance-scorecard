@@ -42,12 +42,13 @@ async def lifespan(app: FastAPI):
 
     # 1. Init Database
     from app.database import init_db, get_engine, Base
+    import app.models  # noqa: F401  — đăng ký mọi bảng vào Base.metadata trước create_all
     init_db(settings.DATABASE_URL)
 
     engine = get_engine()
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        logger.info("Database tables created/verified")
+        logger.info("Database schema ensured via create_all (no Alembic)")
 
     # 2. Init Redis
     from app.cache import ComplianceCache
