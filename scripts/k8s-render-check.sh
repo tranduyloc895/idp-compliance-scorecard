@@ -93,7 +93,9 @@ echo "==> kubeconform (upstream renders, CRD có thể thiếu schema -> bỏ qu
 # Không -strict: chart upstream có field thừa mà API server vẫn nhận (vd kyverno
 # 3.2.6 RoleBinding kyverno:remove-configmap có roleRef.namespace). Manifest của
 # repo ở trên vẫn kiểm strict.
-"${KC[@]/-strict/}" -ignore-missing-schemas "$OUT"/upstream/*.yaml
+KC_LAX=()
+for arg in "${KC[@]}"; do [ "$arg" = "-strict" ] || KC_LAX+=("$arg"); done
+"${KC_LAX[@]}" -ignore-missing-schemas "$OUT"/upstream/*.yaml
 
 echo "==> third-party images exist (docker manifest inspect)"
 imgs="$(cat "$OUT"/ours/*.yaml | awk '/^[[:space:]]+image:/ {print $2}' | tr -d '"' | sort -u   | grep -v -e 'ECR_REGISTRY_NOT_SET' -e '^compliance-engine$' -e 'dkr.ecr' || true)"
