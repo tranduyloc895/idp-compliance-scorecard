@@ -104,7 +104,17 @@ class ComplianceAggregator:
         if finding.source == "kyverno":
             key_str = f"kyverno:{data.get('policy', '')}:{data.get('resource_kind', '')}:{data.get('resource_name', '')}:{data.get('resource_namespace', '')}"
         elif finding.source == "trivy":
-            key_str = f"trivy:{data.get('vulnerability_id', '')}:{data.get('resource_name', '')}:{data.get('container_name', '')}"
+            # Cùng CVE có thể xuất hiện ở nhiều namespace/container/package khác nhau;
+            # thiếu thành phần nào thì các finding khác nhau bị gộp nhầm.
+            key_str = (
+                f"trivy:{data.get('vulnerability_id', '')}"
+                f":{data.get('resource_namespace', '')}"
+                f":{data.get('resource_kind', '')}"
+                f":{data.get('resource_name', '')}"
+                f":{data.get('container_name', '')}"
+                f":{data.get('package', '')}"
+                f":{data.get('installed_version', '')}"
+            )
         else:  # kube-bench
             key_str = f"kube-bench:{data.get('test_number', '')}"
 
