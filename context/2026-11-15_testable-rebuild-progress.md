@@ -5,7 +5,7 @@
 **Plan gốc:** `docs/plans/testable-rebuild.md`
 
 ## Đang làm
-- Giai đoạn 3: script AWS (chỉ viết + `--dry-run` không credential).
+- Chờ người dùng quyết định (push/CI, merge, AWS).
 
 ## Checklist
 
@@ -56,11 +56,11 @@
 - [x] Job `engine-smoke` + `contract-check.mjs` — **chưa chạy** trong CI
 
 ### Giai đoạn 3
-- [ ] `aws-foundation-up.sh`, `aws-up.sh`, `aws-down.sh`, `smoke.sh` (có `--dry-run`)
-- [ ] Chạy thật trên EKS (chờ xác nhận)
+- [x] `aws-foundation-up.sh`, `aws-up.sh`, `aws-down.sh`, `smoke.sh` (có `--dry-run`) — bash -n + dry-run không credential (máy); chưa chạy với AWS
+- [ ] Chạy thật trên EKS (chờ xác nhận: push branch → CI; merge main; dùng credential AWS)
 
 ### Giai đoạn 4
-- [ ] Viết lại `docs/SETUP.md`
+- [x] Viết lại `docs/SETUP.md` (troubleshooting mới có lỗi local; bổ sung lỗi AWS sau lần chạy đầu)
 
 ## Quyết định đã chốt
 (Xem `docs/plans/testable-rebuild.md` mục "Quyết định đã chốt"; quyết định bổ sung ghi dưới đây.)
@@ -82,4 +82,6 @@
 (chưa có)
 
 ## Bước tiếp theo
-Viết scripts/lib.sh, aws-foundation-up.sh, aws-up.sh, aws-down.sh, smoke.sh, k8s-secrets.sh, ssm-put-secrets.sh.
+1. Khi được đồng ý push: `git push -u origin feat/testable-rebuild` → đọc `gh run list/view` cho validate.yml → sửa lỗi CI (dự kiến: version chart, kyverno autogen, image tag).
+2. Khi được đồng ý dùng credential AWS: `scripts/aws-foundation-up.sh --dry-run` rồi chạy thật; đặt secret `AWS_ROLE_ARN`; merge vào main (hỏi trước) và chạy workflow build-all.
+3. `scripts/aws-up.sh --dry-run` → aws-up → smoke → sửa lỗi → **luôn** aws-down; ghi tiến độ trước mỗi lệnh tốn tiền.
