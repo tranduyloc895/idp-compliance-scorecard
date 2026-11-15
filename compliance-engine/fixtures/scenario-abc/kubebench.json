@@ -1,0 +1,53 @@
+{
+  "Controls": [
+    {
+      "id": "3",
+      "version": "eks-1.2.0",
+      "text": "Worker Node Security Configuration",
+      "node_type": "node",
+      "tests": [
+        {
+          "section": "3.x",
+          "desc": "fixture",
+          "results": [
+            {
+              "test_number": "3.1.1",
+              "test_desc": "Ensure kubeconfig file permissions are 644 or more restrictive",
+              "status": "PASS",
+              "remediation": "fixture remediation",
+              "scored": true
+            },
+            {
+              "test_number": "3.2.1",
+              "test_desc": "Ensure that the Anonymous Auth is Not Enabled",
+              "status": "PASS",
+              "remediation": "fixture remediation",
+              "scored": true
+            },
+            {
+              "test_number": "3.2.2",
+              "test_desc": "Ensure that the --authorization-mode argument is not set to AlwaysAllow",
+              "status": "PASS",
+              "remediation": "fixture remediation",
+              "scored": true
+            },
+            {
+              "test_number": "3.2.4",
+              "test_desc": "Ensure that the --read-only-port is disabled",
+              "status": "FAIL",
+              "remediation": "fixture remediation",
+              "scored": true
+            },
+            {
+              "test_number": "3.2.9",
+              "test_desc": "Ensure that the --event-qps argument is set to 0 or a level which ensures appropriate event capture",
+              "status": "WARN",
+              "remediation": "fixture remediation",
+              "scored": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

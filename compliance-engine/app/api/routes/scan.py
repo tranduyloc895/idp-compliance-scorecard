@@ -179,15 +179,20 @@ async def _run_scan_background(
             scan.status = ScanStatus.RUNNING
             await db.commit()
 
-            # Get K8s client from module-level state
-            from app.main import app as _app
-            k8s_client = getattr(_app.state, "k8s_client", None)
+            from app.config import settings
 
-            if k8s_client is None:
-                raise RuntimeError("K8s client not available — are you running in-cluster?")
+            if settings.COLLECTOR_MODE == "fixtures":
+                aggregator = ComplianceAggregator(None, fixtures_dir=settings.FIXTURES_DIR)
+            else:
+                # Get K8s client from module-level state
+                from app.main import app as _app
+                k8s_client = getattr(_app.state, "k8s_client", None)
+
+                if k8s_client is None:
+                    raise RuntimeError("K8s client not available — are you running in-cluster?")
+                aggregator = ComplianceAggregator(k8s_client)
 
             # 1. Collect
-            aggregator = ComplianceAggregator(k8s_client)
             raw_findings = await aggregator.collect_all(namespace)
 
             # 2. Normalize

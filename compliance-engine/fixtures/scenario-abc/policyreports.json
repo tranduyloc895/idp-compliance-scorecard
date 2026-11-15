@@ -1,0 +1,426 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "wgpolicyk8s.io/v1alpha2",
+      "kind": "PolicyReport",
+      "metadata": {
+        "name": "fixture-workload-a-poor",
+        "namespace": "compliance-test"
+      },
+      "scope": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "workload-a-poor",
+        "namespace": "compliance-test"
+      },
+      "summary": {
+        "pass": 0,
+        "fail": 8
+      },
+      "results": [
+        {
+          "policy": "disallow-privilege-escalation",
+          "rule": "autogen-deny-privilege-escalation",
+          "result": "fail",
+          "severity": "high",
+          "message": "fixture: disallow-privilege-escalation fail on workload-a-poor",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-a-poor",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-run-as-non-root",
+          "rule": "autogen-run-as-non-root",
+          "result": "fail",
+          "severity": "high",
+          "message": "fixture: require-run-as-non-root fail on workload-a-poor",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-a-poor",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-read-only-rootfs",
+          "rule": "autogen-read-only-rootfs",
+          "result": "fail",
+          "severity": "medium",
+          "message": "fixture: require-read-only-rootfs fail on workload-a-poor",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-a-poor",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "drop-all-capabilities",
+          "rule": "autogen-drop-all",
+          "result": "fail",
+          "severity": "high",
+          "message": "fixture: drop-all-capabilities fail on workload-a-poor",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-a-poor",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "disallow-latest-tag",
+          "rule": "autogen-no-latest-tag",
+          "result": "fail",
+          "severity": "high",
+          "message": "fixture: disallow-latest-tag fail on workload-a-poor",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-a-poor",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-resource-limits",
+          "rule": "autogen-resource-limits",
+          "result": "fail",
+          "severity": "medium",
+          "message": "fixture: require-resource-limits fail on workload-a-poor",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-a-poor",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-labels",
+          "rule": "app-labels-required",
+          "result": "fail",
+          "severity": "low",
+          "message": "fixture: require-labels fail on workload-a-poor",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-a-poor",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-probes",
+          "rule": "probes-required",
+          "result": "fail",
+          "severity": "medium",
+          "message": "fixture: require-probes fail on workload-a-poor",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-a-poor",
+              "namespace": "compliance-test"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "wgpolicyk8s.io/v1alpha2",
+      "kind": "PolicyReport",
+      "metadata": {
+        "name": "fixture-workload-b-excellent",
+        "namespace": "compliance-test"
+      },
+      "scope": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "workload-b-excellent",
+        "namespace": "compliance-test"
+      },
+      "summary": {
+        "pass": 8,
+        "fail": 0
+      },
+      "results": [
+        {
+          "policy": "disallow-privilege-escalation",
+          "rule": "autogen-deny-privilege-escalation",
+          "result": "pass",
+          "severity": "high",
+          "message": "fixture: disallow-privilege-escalation pass on workload-b-excellent",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-b-excellent",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-run-as-non-root",
+          "rule": "autogen-run-as-non-root",
+          "result": "pass",
+          "severity": "high",
+          "message": "fixture: require-run-as-non-root pass on workload-b-excellent",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-b-excellent",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-read-only-rootfs",
+          "rule": "autogen-read-only-rootfs",
+          "result": "pass",
+          "severity": "medium",
+          "message": "fixture: require-read-only-rootfs pass on workload-b-excellent",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-b-excellent",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "drop-all-capabilities",
+          "rule": "autogen-drop-all",
+          "result": "pass",
+          "severity": "high",
+          "message": "fixture: drop-all-capabilities pass on workload-b-excellent",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-b-excellent",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "disallow-latest-tag",
+          "rule": "autogen-no-latest-tag",
+          "result": "pass",
+          "severity": "high",
+          "message": "fixture: disallow-latest-tag pass on workload-b-excellent",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-b-excellent",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-resource-limits",
+          "rule": "autogen-resource-limits",
+          "result": "pass",
+          "severity": "medium",
+          "message": "fixture: require-resource-limits pass on workload-b-excellent",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-b-excellent",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-labels",
+          "rule": "app-labels-required",
+          "result": "pass",
+          "severity": "low",
+          "message": "fixture: require-labels pass on workload-b-excellent",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-b-excellent",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-probes",
+          "rule": "probes-required",
+          "result": "pass",
+          "severity": "medium",
+          "message": "fixture: require-probes pass on workload-b-excellent",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-b-excellent",
+              "namespace": "compliance-test"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "apiVersion": "wgpolicyk8s.io/v1alpha2",
+      "kind": "PolicyReport",
+      "metadata": {
+        "name": "fixture-workload-c-fair",
+        "namespace": "compliance-test"
+      },
+      "scope": {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "name": "workload-c-fair",
+        "namespace": "compliance-test"
+      },
+      "summary": {
+        "pass": 5,
+        "fail": 3
+      },
+      "results": [
+        {
+          "policy": "disallow-privilege-escalation",
+          "rule": "autogen-deny-privilege-escalation",
+          "result": "pass",
+          "severity": "high",
+          "message": "fixture: disallow-privilege-escalation pass on workload-c-fair",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-c-fair",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-run-as-non-root",
+          "rule": "autogen-run-as-non-root",
+          "result": "pass",
+          "severity": "high",
+          "message": "fixture: require-run-as-non-root pass on workload-c-fair",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-c-fair",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-read-only-rootfs",
+          "rule": "autogen-read-only-rootfs",
+          "result": "fail",
+          "severity": "medium",
+          "message": "fixture: require-read-only-rootfs fail on workload-c-fair",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-c-fair",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "drop-all-capabilities",
+          "rule": "autogen-drop-all",
+          "result": "fail",
+          "severity": "high",
+          "message": "fixture: drop-all-capabilities fail on workload-c-fair",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-c-fair",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "disallow-latest-tag",
+          "rule": "autogen-no-latest-tag",
+          "result": "pass",
+          "severity": "high",
+          "message": "fixture: disallow-latest-tag pass on workload-c-fair",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-c-fair",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-resource-limits",
+          "rule": "autogen-resource-limits",
+          "result": "pass",
+          "severity": "medium",
+          "message": "fixture: require-resource-limits pass on workload-c-fair",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-c-fair",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-labels",
+          "rule": "app-labels-required",
+          "result": "fail",
+          "severity": "low",
+          "message": "fixture: require-labels fail on workload-c-fair",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-c-fair",
+              "namespace": "compliance-test"
+            }
+          ]
+        },
+        {
+          "policy": "require-probes",
+          "rule": "probes-required",
+          "result": "pass",
+          "severity": "medium",
+          "message": "fixture: require-probes pass on workload-c-fair",
+          "resources": [
+            {
+              "apiVersion": "apps/v1",
+              "kind": "Deployment",
+              "name": "workload-c-fair",
+              "namespace": "compliance-test"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

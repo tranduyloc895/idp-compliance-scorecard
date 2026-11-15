@@ -31,7 +31,23 @@ class ComplianceAggregator:
     Nếu cùng hash → chỉ giữ entry đầu tiên (latest PolicyReport wins).
     """
 
-    def __init__(self, k8s_client: ApiClient) -> None:
+    def __init__(self, k8s_client: Optional[ApiClient], fixtures_dir: Optional[str] = None) -> None:
+        if fixtures_dir:
+            # COLLECTOR_MODE=fixtures: đọc file JSON, không cần cluster.
+            from pathlib import Path
+
+            from app.collector.fixtures import (
+                FixtureKubeBenchCollector,
+                FixtureKyvernoCollector,
+                FixtureTrivyCollector,
+            )
+
+            base = Path(fixtures_dir)
+            self.kyverno = FixtureKyvernoCollector(base)
+            self.trivy = FixtureTrivyCollector(base)
+            self.kubebench = FixtureKubeBenchCollector(base)
+            return
+
         self.kyverno = KyvernoCollector(k8s_client)
         self.trivy = TrivyCollector(k8s_client)
         self.kubebench = KubeBenchCollector(k8s_client)
