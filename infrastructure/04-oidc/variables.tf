@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "project" {
   description = "Project name for tagging"
   type        = string
-  default     = "IDP-Platform"
+  default     = "idp-compliance-scorecard"
 }
 
 variable "environment" {
@@ -23,19 +23,25 @@ variable "github_org" {
 }
 
 variable "github_repo" {
-  description = "GitHub repository name for idp-microservices"
+  description = "GitHub repository (monorepo) được phép assume role"
   type        = string
-  default     = "idp-microservices"
+  default     = "idp-compliance-scorecard"
 }
 
-variable "ecr_account_id" {
-  description = "AWS Account ID owning the ECR repositories"
-  type        = string
-  # Không có default — bắt buộc phải truyền vào (hoặc set TF_VAR_ecr_account_id)
-}
 
 variable "iam_role_name" {
   description = "Name of the IAM Role created for GitHub Actions"
   type        = string
-  default     = "github-actions-idp-microservices"
+  default     = "github-actions-idp-compliance-scorecard"
+}
+
+variable "state_bucket" {
+  description = "S3 bucket chứa Terraform state (output của 00-bootstrap)"
+  type        = string
+}
+
+variable "create_oidc_provider" {
+  description = "Tạo GitHub OIDC provider mới (false nếu account đã có sẵn)"
+  type        = bool
+  default     = true
 }

@@ -4,9 +4,30 @@
 #
 # Kiến trúc:
 #   GitHub Actions → OIDC token → STS AssumeRoleWithWebIdentity
-#   → IAM Role → ECR Push (5 repos retail-store/*)
+#   → IAM Role → ECR Push (6 repo của 03-ecr)
 #
 # Không cần static access key nào trong GitHub Secrets!
+
+# Repo ECR lấy từ remote state của 03-ecr (không ghi cứng account ID — audit #4).
+data "terraform_remote_state" "ecr" {
+  backend = "s3"
+  config = {
+    bucket = var.state_bucket
+    key    = "03-ecr/terraform.tfstate"
+    region = var.aws_region
+  }
+}
+
+# Mỗi account chỉ có 1 OIDC provider cho token.actions.githubusercontent.com.
+# Nếu account đã có (tạo tay hoặc project khác), đặt create_oidc_provider=false.
+data "aws_iam_openid_connect_provider" "github" {
+  count = var.create_oidc_provider ? 0 : 1
+  url   = "https://token.actions.githubusercontent.com"
+}
+
+locals {
+  oidc_provider_arn = var.create_oidc_provider ? aws_iam_openid_connect_provider.github[0].arn : data.aws_iam_openid_connect_provider.github[0].arn
+}
 
 # Lấy thumbprint tự động từ OIDC endpoint (tránh hardcode)
 data "tls_certificate" "github" {
@@ -15,13 +36,15 @@ data "tls_certificate" "github" {
 
 # ─── OIDC Identity Provider ──────────────────────────────────────────────────
 resource "aws_iam_openid_connect_provider" "github" {
-  url = "https://token.actions.githubusercontent.com"
+  count = var.create_oidc_provider ? 1 : 0
+  url   = "https://token.actions.githubusercontent.com"
 
   # STS là audience chuẩn cho OIDC với AWS
   client_id_list = ["sts.amazonaws.com"]
 
   # Thumbprint lấy từ certificate của OIDC endpoint
   thumbprint_list = [data.tls_certificate.github.certificates[0].sha1_fingerprint]
+
 
   tags = {
     Name = "github-actions-oidc-provider"
@@ -31,7 +54,7 @@ resource "aws_iam_openid_connect_provider" "github" {
 # ─── IAM Role ────────────────────────────────────────────────────────────────
 resource "aws_iam_role" "github_actions" {
   name        = var.iam_role_name
-  description = "Assumed by GitHub Actions via OIDC for idp-microservices CI"
+  description = "Assumed by GitHub Actions via OIDC (monorepo CI: build/push ECR)"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -40,7 +63,7 @@ resource "aws_iam_role" "github_actions" {
         Sid    = "GitHubActionsOIDC"
         Effect = "Allow"
         Principal = {
-          Federated = aws_iam_openid_connect_provider.github.arn
+          Federated = local.oidc_provider_arn
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
@@ -49,7 +72,7 @@ resource "aws_iam_role" "github_actions" {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
           }
           StringLike = {
-            # Giới hạn chỉ repo tranduyloc895/idp-microservices, mọi branch/tag
+            # Giới hạn đúng repo monorepo, mọi branch/tag/PR
             "token.actions.githubusercontent.com:sub" = "repo:${var.github_org}/${var.github_repo}:*"
           }
         }
@@ -74,7 +97,7 @@ resource "aws_iam_role_policy" "ecr_push" {
         Resource = "*"
       },
       {
-        # Chỉ cấp quyền push/pull trên 5 repos retail-store/* (principle of least privilege)
+        # Chỉ cấp quyền push/pull trên các repo do 03-ecr tạo (least privilege)
         Sid    = "ECRPushPullRetailStore"
         Effect = "Allow"
         Action = [
@@ -90,13 +113,7 @@ resource "aws_iam_role_policy" "ecr_push" {
           "ecr:DescribeRepositories",
           "ecr:DescribeImages"
         ]
-        Resource = [
-          "arn:aws:ecr:${var.aws_region}:${var.ecr_account_id}:repository/retail-store/ui",
-          "arn:aws:ecr:${var.aws_region}:${var.ecr_account_id}:repository/retail-store/catalog",
-          "arn:aws:ecr:${var.aws_region}:${var.ecr_account_id}:repository/retail-store/cart",
-          "arn:aws:ecr:${var.aws_region}:${var.ecr_account_id}:repository/retail-store/orders",
-          "arn:aws:ecr:${var.aws_region}:${var.ecr_account_id}:repository/retail-store/checkout",
-        ]
+        Resource = values(data.terraform_remote_state.ecr.outputs.repository_arns)
       }
     ]
   })

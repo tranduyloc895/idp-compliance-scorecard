@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.5.0"
+  required_version = ">= 1.10.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -7,9 +7,11 @@ terraform {
     }
   }
 
+  # Backend S3 cấu hình một phần: bucket truyền lúc init
+  #   terraform init -backend-config="bucket=$TF_STATE_BUCKET"
+  # (scripts/lib.sh tự làm việc này). Một bucket duy nhất cho mọi module.
   backend "s3" {
-    bucket       = "devsecops-tfstate-23520868-23521463"
-    key          = "05-ecr/terraform.tfstate"
+    key          = "03-ecr/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
     encrypt      = true
@@ -23,6 +25,7 @@ provider "aws" {
       Project     = var.project
       Environment = var.environment
       ManagedBy   = "Terraform"
+      Layer       = "foundation"
     }
   }
 }

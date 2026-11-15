@@ -17,7 +17,7 @@
 # Lưu ý discovery:
 #   - EKS managed node group tự gắn tag k8s.io/cluster-autoscaler/<cluster> lên
 #     ASG, nên CA dùng autoDiscovery.clusterName là tìm thấy node group
-#     (cấu hình ở retail-store-gitops/platform/cluster-autoscaler/values.yaml).
+#     (cấu hình ở idp-gitops/platform/cluster-autoscaler/values.yaml).
 # ============================================================
 
 module "cluster_autoscaler_irsa" {
@@ -34,4 +34,22 @@ module "cluster_autoscaler_irsa" {
       namespace_service_accounts = ["kube-system:cluster-autoscaler"]
     }
   }
+}
+
+# ServiceAccount do Terraform tạo để gắn role ARN lấy trực tiếp từ output IRSA
+# (audit #8): GitOps không phải ghi cứng account ID. Chart cluster-autoscaler
+# trong idp-gitops dùng rbac.serviceAccount.create=false + name này.
+resource "kubernetes_service_account_v1" "cluster_autoscaler" {
+  metadata {
+    name      = "cluster-autoscaler"
+    namespace = "kube-system"
+    annotations = {
+      "eks.amazonaws.com/role-arn" = module.cluster_autoscaler_irsa.iam_role_arn
+    }
+    labels = {
+      "app.kubernetes.io/managed-by" = "terraform"
+    }
+  }
+
+  depends_on = [module.eks]
 }

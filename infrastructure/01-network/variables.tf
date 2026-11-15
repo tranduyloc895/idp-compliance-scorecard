@@ -53,7 +53,7 @@ variable "single_nat_gateway" {
 variable "project" {
   description = "Project name for tagging"
   type        = string
-  default     = "DevSecOps-Ecommerce"
+  default     = "idp-compliance-scorecard"
 }
 
 variable "environment" {
@@ -65,4 +65,10 @@ variable "environment" {
     condition     = contains(["Dev", "Staging", "Prod"], var.environment)
     error_message = "Environment must be Dev, Staging, or Prod."
   }
+}
+
+variable "cluster_name" {
+  description = "Tên EKS cluster (02-cluster-eks) — dùng để gắn tag subnet cho load balancer discovery"
+  type        = string
+  default     = "ecommerce-cluster"
 }

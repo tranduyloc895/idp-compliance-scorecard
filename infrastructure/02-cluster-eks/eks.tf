@@ -12,13 +12,13 @@ resource "aws_kms_alias" "eks" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 20.0"
+  version = "~> 20.31"
 
   cluster_name    = var.cluster_name
   cluster_version = var.cluster_version
 
-  vpc_id     = data.aws_vpc.ecommerce.id
-  subnet_ids = data.aws_subnets.private.ids
+  vpc_id     = local.vpc_id
+  subnet_ids = local.private_subnet_ids
 
   # Endpoint access control
   cluster_endpoint_public_access       = var.cluster_endpoint_public_access
@@ -31,7 +31,8 @@ module "eks" {
     resources        = ["secrets"]
   }
 
-  cluster_enabled_log_types = ["api", "audit", "authenticator"]
+  cluster_enabled_log_types              = ["api", "audit", "authenticator"]
+  cloudwatch_log_group_retention_in_days = var.cluster_log_retention_days
 
   enable_cluster_creator_admin_permissions = true
 
@@ -46,10 +47,6 @@ module "eks" {
     }
   }
 
-  # Note: `access_entries` for Jenkins Agent was removed after migrating to GitOps.
-  # ArgoCD (running in-cluster) now handles all kubectl apply operations.
-  # Jenkins Agent only needs to push images to ECR and commits to the gitops repo.
-
   eks_managed_node_groups = {
     main_nodes = {
       min_size     = var.node_min_size
@@ -59,11 +56,9 @@ module "eks" {
       instance_types = var.node_instance_types
       capacity_type  = var.node_capacity_type
 
-      disk_size = var.node_disk_size
+      # disk_size chỉ có hiệu lực khi không dùng launch template tùy biến của module.
+      use_custom_launch_template = false
+      disk_size                  = var.node_disk_size
     }
   }
 }
-
-# SG rule `jenkins_agent_to_eks` was removed after migrating to GitOps.
-# Jenkins Agent no longer needs to reach the EKS API endpoint (port 443).
-# Only ArgoCD (inside the cluster) talks to the API server now.

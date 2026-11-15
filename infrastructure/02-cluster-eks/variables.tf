@@ -60,19 +60,25 @@ variable "node_min_size" {
 variable "node_max_size" {
   description = "Maximum number of nodes in node group (trần cho Cluster Autoscaler)"
   type        = number
-  default     = 4
+  default     = 3
 }
 
 variable "node_desired_size" {
   description = "Desired number of nodes in node group (chỉ áp dụng lúc tạo mới; sau đó Cluster Autoscaler quản lý — module có ignore_changes cho desired_size)"
   type        = number
-  default     = 3
+  default     = 2
 }
 
 variable "node_disk_size" {
   description = "Disk size in GB for each node"
   type        = number
-  default     = 50
+  default     = 30
+}
+
+variable "cluster_log_retention_days" {
+  description = "Số ngày giữ CloudWatch log của control plane (nhỏ để giảm chi phí lab)"
+  type        = number
+  default     = 7
 }
 
 variable "argocd_chart_version" {
@@ -81,16 +87,39 @@ variable "argocd_chart_version" {
   default     = "5.51.4"
 }
 
-variable "vpc_name" {
-  description = "Name tag of the VPC to lookup"
+variable "state_bucket" {
+  description = "S3 bucket chứa Terraform state (output state_bucket của 00-bootstrap); dùng cho terraform_remote_state"
   type        = string
-  default     = "ecommerce-vpc"
+}
+
+variable "gitops_repo_url" {
+  description = "Repo Git mà Argo CD đồng bộ (monorepo)"
+  type        = string
+  default     = "https://github.com/tranduyloc895/idp-compliance-scorecard.git"
+}
+
+variable "gitops_revision" {
+  description = "Branch/tag/commit Argo CD theo dõi"
+  type        = string
+  default     = "main"
+}
+
+variable "gitops_root_path" {
+  description = "Thư mục chứa các Argo CD Application (app-of-apps)"
+  type        = string
+  default     = "idp-gitops/argocd"
+}
+
+variable "argocd_apps_chart_version" {
+  description = "Helm chart version cho argocd-apps (tạo root Application)"
+  type        = string
+  default     = "2.0.2"
 }
 
 variable "project" {
   description = "Project name for tagging"
   type        = string
-  default     = "DevSecOps-Ecommerce"
+  default     = "idp-compliance-scorecard"
 }
 
 variable "environment" {

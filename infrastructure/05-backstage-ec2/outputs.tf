@@ -15,7 +15,7 @@ output "public_ip" {
 
 output "backstage_url" {
   description = "URL to access the Backstage UI"
-  value       = "http://${aws_eip.backstage.public_ip}:3000"
+  value       = "http://${aws_eip.backstage.public_ip}:7007"
 }
 
 output "github_oauth_callback_url" {
