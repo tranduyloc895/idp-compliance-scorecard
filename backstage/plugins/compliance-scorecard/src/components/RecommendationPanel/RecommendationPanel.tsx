@@ -1,4 +1,4 @@
-﻿/**
+/**
  * RecommendationPanel — Rule-based, AI Basic, AI Enriched tabs + Compare view.
  *
  * For thesis experiment: shows all 3 approaches side-by-side with
@@ -147,7 +147,7 @@ export function RecommendationPanel({ finding }: Props) {
   const loadRule = async () => {
     if (!finding) return;
     setLoading(true); setError(null);
-    try { setRuleRec(await client.getRuleRecommendation(finding.finding_id)); }
+    try { setRuleRec(await client.getRuleRecommendation(finding.id)); }
     catch (e: any) { setError(e?.message); }
     finally { setLoading(false); }
   };
@@ -156,7 +156,7 @@ export function RecommendationPanel({ finding }: Props) {
     if (!finding) return;
     setLoading(true); setError(null);
     try {
-      const rec = await client.getAIRecommendation(finding.finding_id, strategy);
+      const rec = await client.getAIRecommendation(finding.id, strategy);
       if (strategy === 'basic') setBasicRec(rec);
       else setEnrichedRec(rec);
     } catch (e: any) { setError(e?.message); }
@@ -167,7 +167,7 @@ export function RecommendationPanel({ finding }: Props) {
     if (!finding) return;
     setLoading(true); setError(null);
     try {
-      const { basic, context_enriched } = await client.compareRecommendations(finding.finding_id);
+      const { basic, context_enriched } = await client.compareRecommendations(finding.id);
       setBasicRec(basic);
       setEnrichedRec(context_enriched);
     } catch (e: any) { setError(e?.message); }
@@ -200,7 +200,7 @@ export function RecommendationPanel({ finding }: Props) {
         <Tab label="📋 Rule-based" />
         <Tab label="🤖 AI Basic" />
         <Tab label="🧠 AI Enriched" />
-        <Tab label={<Box display="flex" alignItems="center" gap={0.5}><CompareArrowsIcon style={{ fontSize: 16 }} /> Compare</Box>} />
+        <Tab label={<Box display="flex" alignItems="center" style={{ gap: 4 }}><CompareArrowsIcon style={{ fontSize: 16 }} /> Compare</Box>} />
       </Tabs>
 
       {loading && (
@@ -231,9 +231,9 @@ export function RecommendationPanel({ finding }: Props) {
               <Typography className={classes.label}>Policy Reference</Typography>
               <Typography className={classes.value}>{ruleRec.reference}</Typography>
             </Box>
-            <Box display="flex" gap={1} alignItems="center" flexWrap="wrap">
+            <Box display="flex" style={{ gap: 8 }} alignItems="center" flexWrap="wrap">
               <span className={classes.latencyBadge}>⚡ {ruleRec.latency_ms.toFixed(2)}ms</span>
-              <Chip label={`Severity: ${ruleRec.severity}`} size="small" className={classes.badge} style={{ background: '#1e293b', color: '#94a3b8' }} />
+              <Chip label={`Severity: ${finding.severity}`} size="small" className={classes.badge} style={{ background: '#1e293b', color: '#94a3b8' }} />
             </Box>
           </>
         )}
@@ -354,7 +354,7 @@ function AIRecView({ rec, classes }: AIRecViewProps) {
           ))}
         </Box>
       </Box>
-      <Box display="flex" gap={1} alignItems="center" flexWrap="wrap">
+      <Box display="flex" style={{ gap: 8 }} alignItems="center" flexWrap="wrap">
         <span className={classes.latencyBadge}>⏱ {rec.latency_ms.toFixed(0)}ms</span>
         <Chip
           label={`Urgency: ${rec.urgency}`}

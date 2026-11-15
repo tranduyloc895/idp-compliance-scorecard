@@ -1,22 +1,47 @@
-﻿/**
+/**
  * ComplianceClient — Backstage fetch-based client for Compliance Engine API.
  *
  * All requests go through Backstage backend proxy:
- *   /api/proxy/compliance-engine/* → http://compliance-engine:8000/api/v1/*
+ *   /api/proxy/compliance-engine/* → ${COMPLIANCE_ENGINE_URL}/api/v1/*
  *
- * Note: Backstage proxy config strips the proxy prefix and rewrites to /api/v1/*
+ * Backstage proxy bỏ prefix /api/proxy/compliance-engine và nối phần còn lại
+ * vào target (target đã gồm /api/v1). Response được chuyển qua ./adapters.ts.
  */
 
 import type {
   ComplianceApi,
   ScoresResponse,
+  ScoreHistoryPoint,
   FindingsResponse,
   RuleRecommendation,
   AIRecommendation,
+  CompareRecommendationsResponse,
   AISummaryResponse,
   RemediationPlanResponse,
   BatchAnalyzeResponse,
 } from './ComplianceApi';
+import {
+  RawAIRecommendation,
+  RawCompareEnvelope,
+  RawFindingsEnvelope,
+  RawHistoryEnvelope,
+  RawRuleRecommendation,
+  toAIRecommendation,
+  toCompareResponse,
+  toFindingsResponse,
+  toHistory,
+  toRuleRecommendation,
+  toScoresResponse,
+} from './adapters';
+
+export class ComplianceApiError extends Error {
+  readonly status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+  }
+}
 
 const PROXY_BASE = '/api/proxy/compliance-engine';
 
@@ -31,7 +56,7 @@ export class ComplianceClient implements ComplianceApi {
     const res = await this.fetchApi(`${PROXY_BASE}${path}`);
     if (!res.ok) {
       const text = await res.text();
-      throw new Error(`Compliance API error ${res.status}: ${text}`);
+      throw new ComplianceApiError(res.status, `Compliance API error ${res.status}: ${text}`);
     }
     return res.json() as Promise<T>;
   }
@@ -49,16 +74,24 @@ export class ComplianceClient implements ComplianceApi {
     return res.json() as Promise<T>;
   }
 
-  async getLatestScores(): Promise<ScoresResponse> {
-    return this.get<ScoresResponse>('/scores');
+  async getLatestScores(): Promise<ScoresResponse | null> {
+    try {
+      return toScoresResponse(await this.get<ScoresResponse & { cached?: boolean }>('/scores'));
+    } catch (e) {
+      // 404 = DB chưa có scan nào: dashboard hiển thị empty state thay vì lỗi.
+      if (e instanceof ComplianceApiError && e.status === 404) return null;
+      throw e;
+    }
   }
 
   async getScoresByNamespace(namespace: string): Promise<ScoresResponse> {
-    return this.get<ScoresResponse>(`/scores/${encodeURIComponent(namespace)}`);
+    return toScoresResponse(
+      await this.get<ScoresResponse & { cached?: boolean }>(`/scores/${encodeURIComponent(namespace)}`),
+    );
   }
 
-  async getScoreHistory(limit = 10): Promise<ScoresResponse[]> {
-    return this.get<ScoresResponse[]>(`/scores/history?limit=${limit}`);
+  async getScoreHistory(limit = 10): Promise<ScoreHistoryPoint[]> {
+    return toHistory(await this.get<RawHistoryEnvelope>(`/scores/history?limit=${limit}`));
   }
 
   async getFindings(filters?: {
@@ -73,7 +106,7 @@ export class ComplianceClient implements ComplianceApi {
     if (filters?.status) params.set('status', filters.status);
     if (filters?.scan_id) params.set('scan_id', String(filters.scan_id));
     const qs = params.toString();
-    return this.get<FindingsResponse>(`/findings${qs ? `?${qs}` : ''}`);
+    return toFindingsResponse(await this.get<RawFindingsEnvelope>(`/findings${qs ? `?${qs}` : ''}`));
   }
 
   async triggerScan(namespace?: string): Promise<{ scan_id: number; status: string }> {
@@ -82,23 +115,25 @@ export class ComplianceClient implements ComplianceApi {
     });
   }
 
-  async getRuleRecommendation(findingId: string): Promise<RuleRecommendation> {
-    return this.get<RuleRecommendation>(`/findings/${encodeURIComponent(findingId)}/recommendation`);
-  }
-
-  async getAIRecommendation(
-    findingId: string,
-    strategy: 'basic' | 'context_enriched' = 'context_enriched',
-  ): Promise<AIRecommendation> {
-    return this.get<AIRecommendation>(
-      `/findings/${encodeURIComponent(findingId)}/ai-recommendation?strategy=${strategy}`,
+  async getRuleRecommendation(findingDbId: number): Promise<RuleRecommendation> {
+    return toRuleRecommendation(
+      await this.get<RawRuleRecommendation>(`/findings/${findingDbId}/recommendation`),
     );
   }
 
-  async compareRecommendations(
-    findingId: string,
-  ): Promise<{ basic: AIRecommendation; context_enriched: AIRecommendation }> {
-    return this.get(`/findings/${encodeURIComponent(findingId)}/compare-recommendations`);
+  async getAIRecommendation(
+    findingDbId: number,
+    strategy: 'basic' | 'context_enriched' = 'context_enriched',
+  ): Promise<AIRecommendation> {
+    return toAIRecommendation(
+      await this.get<RawAIRecommendation>(`/findings/${findingDbId}/ai-recommendation?strategy=${strategy}`),
+    );
+  }
+
+  async compareRecommendations(findingDbId: number): Promise<CompareRecommendationsResponse> {
+    return toCompareResponse(
+      await this.get<RawCompareEnvelope>(`/findings/${findingDbId}/compare-recommendations`),
+    );
   }
 
   async getAISummary(): Promise<AISummaryResponse> {

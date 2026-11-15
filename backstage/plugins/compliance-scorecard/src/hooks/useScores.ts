@@ -1,12 +1,12 @@
-﻿import { useState, useEffect, useCallback } from 'react';
-import type { ScoresResponse } from '../api/ComplianceApi';
+import { useState, useEffect, useCallback } from 'react';
+import type { ScoreHistoryPoint, ScoresResponse } from '../api/ComplianceApi';
 import { ComplianceClient } from '../api/ComplianceClient';
 
 const client = new ComplianceClient();
 
 export interface UseScoresResult {
   scores: ScoresResponse | null;
-  history: ScoresResponse[];
+  history: ScoreHistoryPoint[];
   loading: boolean;
   error: string | null;
   refresh: () => void;
@@ -14,7 +14,7 @@ export interface UseScoresResult {
 
 export function useScores(): UseScoresResult {
   const [scores, setScores] = useState<ScoresResponse | null>(null);
-  const [history, setHistory] = useState<ScoresResponse[]>([]);
+  const [history, setHistory] = useState<ScoreHistoryPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

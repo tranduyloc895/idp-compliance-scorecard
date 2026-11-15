@@ -158,8 +158,20 @@ export function CompliancePage() {
         </Button>
       </Box>
 
-      {/* AI Summary Panel */}
-      <AISummaryPanel />
+      {/* Empty state: DB chưa có scan (GET /scores trả 404) */}
+      {!scores && (
+        <Box className={classes.loadingCenter}>
+          <Typography variant="h6" style={{ color: '#e2e8f0' }}>
+            No compliance scan yet
+          </Typography>
+          <Typography style={{ color: '#94a3b8' }}>
+            Click “Scan Now” to collect Kyverno, Trivy and kube-bench results.
+          </Typography>
+        </Box>
+      )}
+
+      {/* AI Summary Panel (chỉ khi đã có dữ liệu scan) */}
+      {scores && <AISummaryPanel />}
 
       {/* Score Overview + Domain Breakdown */}
       {scores && (
@@ -190,7 +202,7 @@ export function CompliancePage() {
           findings={findingsData?.items ?? []}
           loading={findingsLoading}
           onSelect={setSelectedFinding}
-          selectedId={selectedFinding?.finding_id}
+          selectedId={selectedFinding?.id}
         />
       </Paper>
 

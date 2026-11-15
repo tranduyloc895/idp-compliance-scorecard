@@ -1,0 +1,13 @@
+{
+  "//": "Biên dịch riêng lớp adapter (không phụ thuộc React) để scripts/contract-check.mjs chạy bằng Node.",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "dist-contract",
+    "types": []
+  },
+  "files": ["src/api/adapters.ts", "src/api/ComplianceApi.ts"]
+}

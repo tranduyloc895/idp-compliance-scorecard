@@ -1,4 +1,4 @@
-﻿/**
+/**
  * FindingsTable — sortable, filterable findings table.
  *
  * Displays findings from all 3 sources (Kyverno, Trivy, kube-bench)
@@ -86,7 +86,7 @@ interface Props {
   findings: Finding[];
   loading?: boolean;
   onSelect?: (finding: Finding) => void;
-  selectedId?: string;
+  selectedId?: number;
 }
 
 export function FindingsTable({ findings, loading, onSelect, selectedId }: Props) {
@@ -174,8 +174,8 @@ export function FindingsTable({ findings, loading, onSelect, selectedId }: Props
                 const st = STATUS_CONFIG[f.status] ?? { label: f.status, color: '#94a3b8' };
                 return (
                   <TableRow
-                    key={f.finding_id}
-                    className={`${classes.row} ${f.finding_id === selectedId ? classes.selectedRow : ''}`}
+                    key={f.id}
+                    className={`${classes.row} ${f.id === selectedId ? classes.selectedRow : ''}`}
                     onClick={() => onSelect?.(f)}
                   >
                     <TableCell>

@@ -1,4 +1,4 @@
-﻿import { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { RuleRecommendation, AIRecommendation, AISummaryResponse } from '../api/ComplianceApi';
 import { ComplianceClient } from '../api/ComplianceClient';
 
@@ -11,9 +11,9 @@ export interface UseRecommendationResult {
   aiSummary: AISummaryResponse | null;
   loading: boolean;
   error: string | null;
-  loadForFinding: (findingId: string) => void;
+  loadForFinding: (findingDbId: number) => void;
   loadAISummary: () => void;
-  compareAll: (findingId: string) => void;
+  compareAll: (findingDbId: number) => void;
 }
 
 export function useRecommendation(): UseRecommendationResult {
@@ -24,11 +24,11 @@ export function useRecommendation(): UseRecommendationResult {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadForFinding = useCallback(async (findingId: string) => {
+  const loadForFinding = useCallback(async (findingDbId: number) => {
     setLoading(true);
     setError(null);
     try {
-      const rule = await client.getRuleRecommendation(findingId);
+      const rule = await client.getRuleRecommendation(findingDbId);
       setRuleRec(rule);
     } catch (err: any) {
       setError(err?.message ?? 'Failed to load recommendation');
@@ -37,11 +37,11 @@ export function useRecommendation(): UseRecommendationResult {
     }
   }, []);
 
-  const compareAll = useCallback(async (findingId: string) => {
+  const compareAll = useCallback(async (findingDbId: number) => {
     setLoading(true);
     setError(null);
     try {
-      const { basic, context_enriched } = await client.compareRecommendations(findingId);
+      const { basic, context_enriched } = await client.compareRecommendations(findingDbId);
       setBasicRec(basic);
       setEnrichedRec(context_enriched);
     } catch (err: any) {
