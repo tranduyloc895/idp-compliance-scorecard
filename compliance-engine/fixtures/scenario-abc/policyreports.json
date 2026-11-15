@@ -82,7 +82,7 @@
         },
         {
           "policy": "disallow-latest-tag",
-          "rule": "autogen-no-latest-tag",
+          "rule": "autogen-validate-image-tag",
           "result": "fail",
           "severity": "high",
           "message": "fixture: disallow-latest-tag fail on workload-a-poor",
@@ -222,7 +222,7 @@
         },
         {
           "policy": "disallow-latest-tag",
-          "rule": "autogen-no-latest-tag",
+          "rule": "autogen-validate-image-tag",
           "result": "pass",
           "severity": "high",
           "message": "fixture: disallow-latest-tag pass on workload-b-excellent",
@@ -362,7 +362,7 @@
         },
         {
           "policy": "disallow-latest-tag",
-          "rule": "autogen-no-latest-tag",
+          "rule": "autogen-validate-image-tag",
           "result": "pass",
           "severity": "high",
           "message": "fixture: disallow-latest-tag pass on workload-c-fair",

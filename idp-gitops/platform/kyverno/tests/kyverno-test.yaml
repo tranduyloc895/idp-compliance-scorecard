@@ -20,7 +20,12 @@ resources:
   - ../../../experiments/workload-c-fair/deployment.yaml
 results:
   - policy: disallow-latest-tag
-    rule: autogen-no-latest-tag
+    rule: autogen-require-image-tag
+    kind: Deployment
+    resources: [workload-a-poor]
+    result: pass
+  - policy: disallow-latest-tag
+    rule: autogen-validate-image-tag
     kind: Deployment
     resources: [workload-a-poor]
     result: fail
@@ -60,7 +65,12 @@ results:
     resources: [workload-a-poor]
     result: fail
   - policy: disallow-latest-tag
-    rule: autogen-no-latest-tag
+    rule: autogen-require-image-tag
+    kind: Deployment
+    resources: [workload-b-excellent]
+    result: pass
+  - policy: disallow-latest-tag
+    rule: autogen-validate-image-tag
     kind: Deployment
     resources: [workload-b-excellent]
     result: pass
@@ -100,7 +110,12 @@ results:
     resources: [workload-b-excellent]
     result: pass
   - policy: disallow-latest-tag
-    rule: autogen-no-latest-tag
+    rule: autogen-require-image-tag
+    kind: Deployment
+    resources: [workload-c-fair]
+    result: pass
+  - policy: disallow-latest-tag
+    rule: autogen-validate-image-tag
     kind: Deployment
     resources: [workload-c-fair]
     result: pass

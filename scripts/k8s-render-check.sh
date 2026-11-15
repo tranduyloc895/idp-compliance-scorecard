@@ -38,7 +38,12 @@ fi
 echo "==> kustomize build"
 kustomize build "$G/compliance/compliance-engine" > "$OUT/ours/compliance-engine.yaml"
 kustomize build "$G/platform/monitoring/dashboards" > "$OUT/ours/dashboards.yaml"
-kustomize build "$G/environments/dev" > "$OUT/ours/env-dev.yaml"
+# Overlay dev hiện chưa có resource (placeholder) -> kustomize báo "empty"; chỉ build khi có nội dung.
+if grep -qE '^(resources|patches|components):' "$G/environments/dev/kustomization.yaml"; then
+  kustomize build "$G/environments/dev" > "$OUT/ours/env-dev.yaml"
+else
+  echo "  skip environments/dev (kustomization chưa có resources)"
+fi
 
 echo "==> plain manifests"
 for d in apps/databases apps/namespace experiments platform/kube-bench platform/kyverno/policies argocd; do

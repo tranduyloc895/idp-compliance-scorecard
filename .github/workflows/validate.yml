@@ -44,7 +44,7 @@ jobs:
       - uses: terraform-linters/setup-tflint@v4.1.0
         with:
           tflint_version: ${{ env.TFLINT_VERSION }}
-      - uses: actions/cache@v4.1.2
+      - uses: actions/cache@v4.2.3
         with:
           path: |
             ~/.terraform.d/plugin-cache

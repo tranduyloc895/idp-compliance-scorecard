@@ -42,7 +42,8 @@ async def lifespan(app: FastAPI):
 
     # 1. Init Database
     from app.database import init_db, get_engine, Base
-    import app.models  # noqa: F401  — đăng ký mọi bảng vào Base.metadata trước create_all
+    # `import app.models` sẽ gán tên `app` (package) đè lên tham số `app` của lifespan.
+    import app.models as _all_models  # noqa: F401  — đăng ký mọi bảng trước create_all
     init_db(settings.DATABASE_URL)
 
     engine = get_engine()
