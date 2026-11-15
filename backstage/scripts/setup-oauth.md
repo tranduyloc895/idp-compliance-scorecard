@@ -16,7 +16,7 @@ Backstage dùng GitHub OAuth để authenticate users. Hướng dẫn này mô t
    | Field | Value |
    |---|---|
    | **Application name** | `IDP Portal — Retail Store` |
-   | **Homepage URL** | `http://<elastic-ip>:3000` |
+   | **Homepage URL** | `http://<elastic-ip>:7007` |
    | **Authorization callback URL** | `http://<elastic-ip>:7007/api/auth/github/handler/frame` |
    | **Enable Device Flow** | ✅ (optional, for CLI auth) |
 
@@ -72,7 +72,7 @@ GITHUB_TOKEN=github_pat_xxxxxxxx
 
 ## Bước 5: Xác minh
 
-Sau khi restart Backstage, truy cập `http://<elastic-ip>:3000` và đăng nhập bằng GitHub.
+Sau khi restart Backstage, truy cập `http://<elastic-ip>:7007` và đăng nhập bằng GitHub.
 
 ## Callback URL Reference
 

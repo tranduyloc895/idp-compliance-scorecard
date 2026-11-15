@@ -1,6 +1,6 @@
 app:
   title: IDP Portal — Retail Store
-  baseUrl: http://${BACKSTAGE_HOST}:3000
+  baseUrl: http://${BACKSTAGE_HOST}:7007
 
 organization:
   name: Retail Store Platform
@@ -13,7 +13,7 @@ backend:
   csp:
     connect-src: ["'self'", 'http:', 'https:']
   cors:
-    origin: http://${BACKSTAGE_HOST}:3000
+    origin: http://${BACKSTAGE_HOST}:7007
     methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
     credentials: true
   database:
@@ -48,11 +48,12 @@ proxy:
       headers:
         Cookie:
           $env: ARGOCD_AUTH_TOKEN
+    # /api/proxy/compliance-engine/<path> -> ${COMPLIANCE_ENGINE_URL}/api/v1/<path>
+    # COMPLIANCE_ENGINE_URL = http://<internal LB DNS>:8000, do scripts/aws-up.sh ghi
+    # vào SSM /idp/backstage/compliance-engine-url (audit #24). Proxy tự bỏ prefix.
     '/compliance-engine':
-      target: http://compliance-engine:8000
+      target: ${COMPLIANCE_ENGINE_URL}/api/v1
       changeOrigin: true
-      pathRewrite:
-        '^/api/proxy/compliance-engine': '/api/v1'
 
 catalog:
   import:

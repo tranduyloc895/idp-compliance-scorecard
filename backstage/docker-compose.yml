@@ -5,7 +5,8 @@ services:
       dockerfile: Dockerfile
     image: backstage:local
     ports:
-      - "3000:7007"
+      # Frontend + backend cùng port 7007 (audit #23)
+      - "7007:7007"
     environment:
       BACKSTAGE_HOST: ${BACKSTAGE_HOST:-localhost}
       POSTGRES_HOST: db
@@ -15,6 +16,7 @@ services:
       GITHUB_TOKEN: ${GITHUB_TOKEN}
       AUTH_GITHUB_CLIENT_ID: ${AUTH_GITHUB_CLIENT_ID}
       AUTH_GITHUB_CLIENT_SECRET: ${AUTH_GITHUB_CLIENT_SECRET}
+      COMPLIANCE_ENGINE_URL: ${COMPLIANCE_ENGINE_URL}
       ARGOCD_URL: ${ARGOCD_URL:-http://localhost:8080}
       ARGOCD_AUTH_TOKEN: ${ARGOCD_AUTH_TOKEN:-}
       ARGOCD_ADMIN_PASSWORD: ${ARGOCD_ADMIN_PASSWORD:-}
