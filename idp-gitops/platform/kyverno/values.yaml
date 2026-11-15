@@ -26,8 +26,7 @@ features:
 grafana:
   enabled: false   # Disable — using Backstage for monitoring
 
+# Chart 3.x: crds.groups.<group> là map từng CRD (mặc định bật hết, gồm
+# wgpolicyk8s.io PolicyReport). Không ghi đè bằng boolean — chart lỗi render.
 crds:
   install: true
-  groups:
-    kyverno: true
-    reports: true   # PolicyReport CRDs
