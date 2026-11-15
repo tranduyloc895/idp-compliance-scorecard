@@ -5,7 +5,7 @@
 **Plan gốc:** `docs/plans/testable-rebuild.md`
 
 ## Đang làm
-- Kiểm tra tool local.
+- Giai đoạn 0: compliance engine xong phần lớn; tiếp theo POST /scans body (#15), Terraform.
 
 ## Checklist
 
@@ -33,13 +33,13 @@
 - [ ] Workflow về root `.github/workflows`, path filter, một tên secret GitOps (#1, #10)
 
 ### Giai đoạn 0 — Compliance engine
-- [ ] build-backend (#13)
-- [ ] Bỏ `await` load_incluster_config
-- [ ] Sửa test_engine.py, test_normalize_all_returns_only_valid
-- [ ] Migration từ DB trắng (#14)
+- [x] build-backend (#13) — `pip install -e .[dev]` chạy được trên py3.12 (máy)
+- [x] Bỏ `await` load_incluster_config — test hồi quy fail trên code cũ, pass trên code mới (máy)
+- [x] Sửa test_engine.py, test_normalize_all_returns_only_valid (máy: pytest pass)
+- [x] Migration từ DB trắng (#14) — chọn `create_all`, bỏ Alembic (chưa kiểm chứng trên PostgreSQL thật; kiểm ở engine-smoke CI)
 - [ ] POST /scans có body (#15)
-- [ ] Parser kube-bench kiểm kiểu
-- [ ] Trivy dedup key / finding ID
+- [x] Parser kube-bench kiểm kiểu (máy: test dict/list)
+- [x] Trivy dedup key / finding ID (máy: test)
 
 ### Giai đoạn 0 — Backstage
 - [ ] Port/URL (#23)
@@ -52,7 +52,7 @@
 - [ ] `scripts/validate-local.sh` chạy pass trên máy
 
 ### Giai đoạn 2
-- [ ] Collector fixture mode
+- [x] Collector fixture mode (`COLLECTOR_MODE=fixtures`, fixtures/scenario-abc) (máy: test)
 - [ ] Job `engine-smoke`
 
 ### Giai đoạn 3
@@ -64,6 +64,12 @@
 
 ## Quyết định đã chốt
 (Xem `docs/plans/testable-rebuild.md` mục "Quyết định đã chốt"; quyết định bổ sung ghi dưới đây.)
+
+- **Tool local** (2026-11-15, được đồng ý): terraform 1.11.4 (`use_lockfile` của S3 backend cần ≥1.10), tflint 0.53.0, node 20.18.0, gh 2.62.0, aws-cli 2.22.0 (giải nén MSI) trong `C:	ools\*`. Python 3.12.10 có sẵn ở `C:	ools\python`. PATH: `C:	ools	erraform;C:	ools	flint;C:	ools
+ode;C:	ools\ghin;C:	oolswscli\Amazon\AWSCLIV2`.
+- **Schema DB**: dùng `Base.metadata.create_all` lúc startup, bỏ Alembic. Lý do: migration duy nhất tham chiếu bảng `scans` chưa tồn tại, startup đã dùng create_all; một cơ chế idempotent là đủ cho khóa luận. Đổi schema sau này thì cần thêm Alembic lại có baseline.
+- **Compose local**: mặc định fixture mode, không mount kubeconfig (image không có AWS CLI cho EKS exec credential, #16).
+- **Line endings**: `.gitattributes` ép LF (trừ `.ps1`) để script chạy được trên Linux/CI.
 
 ## Lỗi đang dở
 (chưa có)
