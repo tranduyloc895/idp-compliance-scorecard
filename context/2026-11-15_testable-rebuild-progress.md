@@ -76,6 +76,7 @@
 - **Đường Backstage EC2 → engine**: Service `compliance-engine-internal` type LoadBalancer internal (Classic ELB của legacy cloud provider, không cần AWS LB Controller). Đây là LB duy nhất; aws-down xoá trước khi destroy VPC.
 - **Backstage EC2 mặc định không dựng trong aws-up** (cần `--with-backstage`): repo chưa có `packages/app`, `packages/backend` (audit #22) nên image Backstage chưa build được.
 - **kubectl/helm**: không cài trên Windows. Script AWS chạy trong AWS CloudShell hoặc Linux; nếu có Docker thì gọi kubectl qua image.
+- **kubectl cho buổi AWS** (2026-11-15, người dùng chốt): cài kubectl v1.35.0 vào `~/tools/bin` trong WSL Ubuntu-22.04 (không cài trên Windows); script AWS chạy trong WSL với `AWS_PROFILE=idp-lab`.
 - **Line endings**: `.gitattributes` ép LF (trừ `.ps1`) để script chạy được trên Linux/CI.
 
 ## Lỗi đang dở
