@@ -1,0 +1,26 @@
+# Workload đối chứng A (poor) / B (excellent) / C (fair) cho thực nghiệm chấm điểm.
+# Wave 10: sau Kyverno policies và Trivy để report được sinh cho các workload này.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: experiments
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/part-of: idp-experiments
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
+    targetRevision: main
+    path: idp-gitops/experiments
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: compliance-test
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }

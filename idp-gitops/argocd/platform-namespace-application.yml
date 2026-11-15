@@ -5,12 +5,14 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "-10"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://github.com/tranduyloc895/idp-gitops.git
+    repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
     targetRevision: main
-    path: platform/monitoring
+    path: idp-gitops/platform/monitoring
     directory:
       include: "namespace.yml"
   destination:

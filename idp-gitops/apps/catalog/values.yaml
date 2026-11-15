@@ -1,8 +1,9 @@
 name: catalog
 
 image:
-  repository: 736508008585.dkr.ecr.us-east-1.amazonaws.com/retail-store/catalog
-  tag: "192189a"
+  # registry lấy từ apps/image-registry.yaml; tag do CI ghi (MANAGED BY CI)
+  repository: retail-store/catalog
+  tag: "not-built"
 
 # Kết nối MariaDB dùng chung; service tự AutoMigrate + seed sản phẩm khi khởi động.
 env:

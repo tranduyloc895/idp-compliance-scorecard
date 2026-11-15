@@ -1,8 +1,9 @@
 name: ui
 
 image:
-  repository: 736508008585.dkr.ecr.us-east-1.amazonaws.com/retail-store/ui
-  tag: "c8fb5e3"
+  # registry lấy từ apps/image-registry.yaml; tag do CI ghi (MANAGED BY CI)
+  repository: retail-store/ui
+  tag: "not-built"
 
 resources:
   requests:
@@ -22,8 +23,10 @@ probes:
     initialDelaySeconds: 60
     periodSeconds: 15
 
+# ClusterIP + port-forward (không tạo ELB công khai; truy cập:
+#   kubectl -n retail-store port-forward svc/ui 8080:80)
 service:
-  type: LoadBalancer
+  type: ClusterIP
 
 monitoring:
   path: /actuator/prometheus

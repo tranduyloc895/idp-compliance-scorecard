@@ -5,6 +5,8 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   sources:
@@ -14,8 +16,8 @@ spec:
       helm:
         releaseName: loki
         valueFiles:
-          - $values/platform/monitoring/values-loki.yaml
-    - repoURL: https://github.com/tranduyloc895/idp-gitops.git
+          - $values/idp-gitops/platform/monitoring/values-loki.yaml
+    - repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
       targetRevision: main
       ref: values
   destination:

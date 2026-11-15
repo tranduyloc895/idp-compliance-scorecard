@@ -10,7 +10,7 @@ metadata:
     github.com/project-slug: tranduyloc895/idp-microservices
     github.com/workflows: ci-ui.yml
     # ArgoCD integration — shows sync status + resource tree
-    argocd/app-name: ui
+    argocd/app-name: retail-store-ui
     # TechDocs (future)
     backstage.io/techdocs-ref: dir:.
   tags:

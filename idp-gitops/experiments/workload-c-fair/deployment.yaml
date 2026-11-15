@@ -3,11 +3,14 @@
 #   ✅ runAsNonRoot: true
 #   ❌ No readOnlyRootFilesystem
 #   ✅ Resource limits set
-#   ❌ Image: nginx:1.24.0 (has known CVEs — Trivy will detect)
+#   ❌ Image: nginx-unprivileged:1.24.0 (bản cũ, có CVE — Trivy sẽ phát hiện)
 #   ✅ Liveness + readiness probes set
 #   ❌ Missing some labels (version missing)
 #   ✅ allowPrivilegeEscalation: false
 #   ❌ Capabilities not explicitly dropped
+#
+# Dùng nginx-unprivileged (listen 8080, UID 101): nginx thường chạy non-root sẽ
+# không bind được port 80 và không chown được /var/cache/nginx -> Pod không Ready.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -28,10 +31,10 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true      # ✅
-        runAsUser: 1000
+        runAsUser: 101
       containers:
         - name: app
-          image: nginx:1.24.0   # ❌ Known CVEs (intentional for Trivy detection)
+          image: nginxinc/nginx-unprivileged:1.24.0   # ❌ Known CVEs (intentional for Trivy detection)
           securityContext:
             allowPrivilegeEscalation: false  # ✅
             # ❌ No readOnlyRootFilesystem
@@ -46,14 +49,14 @@ spec:
           readinessProbe:                     # ✅ Probes set
             httpGet:
               path: /
-              port: 80
+              port: 8080
             initialDelaySeconds: 10
             periodSeconds: 5
           livenessProbe:
             httpGet:
               path: /
-              port: 80
+              port: 8080
             initialDelaySeconds: 30
             periodSeconds: 10
           ports:
-            - containerPort: 80
+            - containerPort: 8080

@@ -5,12 +5,14 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "15"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://github.com/tranduyloc895/idp-gitops.git
+    repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
     targetRevision: main
-    path: platform/monitoring/dashboards
+    path: idp-gitops/platform/monitoring/dashboards
     # Kustomize tự detect qua kustomization.yaml
   destination:
     server: https://kubernetes.default.svc

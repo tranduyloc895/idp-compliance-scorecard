@@ -1,6 +1,6 @@
 # metrics-server — Resource Metrics API (CPU/memory) cho HorizontalPodAutoscaler.
 # Multi-source: chart upstream + values trong gitops.
-# sync-wave -5: lên cùng nhóm hạ tầng, trước các workload (wave 0) để HPA có metric.
+# sync-wave -5: lên cùng nhóm hạ tầng, trước các workload (wave 5) để HPA có metric.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -8,6 +8,8 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "-5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   sources:
@@ -17,8 +19,8 @@ spec:
       helm:
         releaseName: metrics-server
         valueFiles:
-          - $values/platform/metrics-server/values.yaml
-    - repoURL: https://github.com/tranduyloc895/idp-gitops.git
+          - $values/idp-gitops/platform/metrics-server/values.yaml
+    - repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
       targetRevision: main
       ref: values
   destination:

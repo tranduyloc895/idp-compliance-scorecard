@@ -86,7 +86,7 @@ After `terraform apply` on `02-cluster-eks` (which installs ArgoCD), run once:
 
 ```bash
 # 1. Point kubectl at the cluster
-aws eks update-kubeconfig --name ecommerce-cluster --region ap-southeast-1
+aws eks update-kubeconfig --name ecommerce-cluster --region us-east-1
 
 # 2. Clone the gitops repo (if not already present)
 git clone https://github.com/tranduyloc895/retail-store-gitops.git

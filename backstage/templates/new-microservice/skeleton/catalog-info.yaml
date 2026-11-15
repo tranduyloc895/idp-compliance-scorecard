@@ -13,7 +13,7 @@ metadata:
     github.com/project-slug: "tranduyloc895/${{ values.serviceName }}"
     github.com/workflows: ci.yml
     # ArgoCD integration — sync status + resource tree
-    argocd/app-name: ${{ values.serviceName }}
+    argocd/app-name: retail-store-${{ values.serviceName }}
     # TechDocs (future)
     backstage.io/techdocs-ref: dir:.
   tags:

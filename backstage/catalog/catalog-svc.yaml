@@ -8,7 +8,7 @@ metadata:
   annotations:
     github.com/project-slug: tranduyloc895/idp-microservices
     github.com/workflows: ci-catalog.yml
-    argocd/app-name: catalog
+    argocd/app-name: retail-store-catalog
   tags:
     - go
     - backend

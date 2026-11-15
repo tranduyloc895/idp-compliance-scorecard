@@ -1,0 +1,7 @@
+# MANAGED BY CI — workflow build/push ghi ECR registry của account vào đây.
+# Dùng làm valueFile đầu tiên cho mọi service (deep-merge với apps/<svc>/values.yaml),
+# để account ID chỉ xuất hiện ở MỘT file do CI quản lý (quyết định #5).
+# Giá trị ECR_REGISTRY_NOT_SET nghĩa là CI chưa build lần nào: scripts/aws-up.sh
+# dừng ở bước preflight với hướng dẫn chạy workflow "build-all".
+image:
+  registry: ECR_REGISTRY_NOT_SET

@@ -20,10 +20,29 @@ resource "helm_release" "argocd" {
   create_namespace = true
 
   # Gọn cho lab: 1 replica mỗi thành phần, tắt dex (không dùng SSO).
+  # Health check cho kind Application: Argo CD >= 1.8 bỏ health của Application
+  # con, nên app-of-apps không chờ sync-wave trước Healthy. Khai báo lại để
+  # thứ tự wave (namespace -> CRD/operator -> policy -> workload) có hiệu lực.
   values = [yamlencode({
     dex = { enabled = false }
     configs = {
       params = { "server.insecure" = true }
+      cm = {
+        "resource.customizations.health.argoproj.io_Application" = <<-EOT
+          hs = {}
+          hs.status = "Progressing"
+          hs.message = ""
+          if obj.status ~= nil then
+            if obj.status.health ~= nil then
+              hs.status = obj.status.health.status
+              if obj.status.health.message ~= nil then
+                hs.message = obj.status.health.message
+              end
+            end
+          end
+          return hs
+        EOT
+      }
     }
   })]
 

@@ -1,62 +1,37 @@
+# Kyverno engine (CRD + controllers). Policies tách ra Application riêng ở wave sau
+# để CRD ClusterPolicy có trước khi apply policy.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-kyverno
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   labels:
-    app.kubernetes.io/name: platform-kyverno
     app.kubernetes.io/part-of: idp-platform
 spec:
   project: default
-  source:
-    repoURL: https://kyverno.github.io/kyverno/
-    chart: kyverno
-    targetRevision: "3.*"
-    helm:
-      releaseName: kyverno
-      valueFiles:
-        - $values/idp-gitops/platform/kyverno/values.yaml
   sources:
     - repoURL: https://kyverno.github.io/kyverno/
       chart: kyverno
-      targetRevision: "3.*"
+      targetRevision: 3.2.6
       helm:
         releaseName: kyverno
         valueFiles:
           - $values/idp-gitops/platform/kyverno/values.yaml
-    - repoURL: https://github.com/YOUR_ORG/idp-platform
-      targetRevision: HEAD
+    - repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
+      targetRevision: main
       ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+    automated: { prune: true, selfHeal: true }
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true   # Required for Kyverno CRDs
----
-# Separate Application for Kyverno custom policies
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: platform-kyverno-policies
-  namespace: argocd
-  labels:
-    app.kubernetes.io/name: platform-kyverno-policies
-    app.kubernetes.io/part-of: idp-platform
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/YOUR_ORG/idp-platform
-    targetRevision: HEAD
-    path: idp-gitops/platform/kyverno/policies
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: kyverno
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+      - ServerSideApply=true   # CRD lớn của Kyverno
+    retry:
+      limit: 5
+      backoff: { duration: 30s, maxDuration: 5m, factor: 2 }

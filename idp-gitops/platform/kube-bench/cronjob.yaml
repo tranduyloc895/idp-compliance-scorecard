@@ -1,3 +1,12 @@
+# kube-bench — CIS Amazon EKS Benchmark cho worker node, chạy mỗi giờ.
+#
+# initContainer chạy kube-bench, ghi JSON ra emptyDir; container thứ hai dùng
+# kubectl (image riêng — image kube-bench không đảm bảo có kubectl, audit 5.5)
+# để ghi kết quả vào ConfigMap monitoring/kube-bench-results.
+# ConfigMap không nằm trong Git nên Argo CD selfHeal không ghi đè kết quả.
+#
+# Chạy ngay (không đợi lịch):
+#   kubectl -n monitoring create job kube-bench-manual --from=cronjob/kube-bench
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -5,71 +14,68 @@ metadata:
   namespace: monitoring
   labels:
     app.kubernetes.io/name: kube-bench
+    app.kubernetes.io/version: "0.8.0"
     app.kubernetes.io/part-of: idp-platform
 spec:
-  schedule: "0 */1 * * *"    # Every hour
-  concurrencyPolicy: Replace   # Cancel previous job if still running
+  schedule: "0 * * * *"
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 2
   jobTemplate:
     spec:
+      backoffLimit: 1
       template:
         metadata:
           labels:
             app.kubernetes.io/name: kube-bench
         spec:
           serviceAccountName: kube-bench
-          hostPID: true           # Required to inspect host processes
+          hostPID: true           # kube-bench cần xem process kubelet trên host
           restartPolicy: Never
-          containers:
+          initContainers:
             - name: kube-bench
               image: aquasec/kube-bench:v0.8.0
+              # EKS chỉ cho kiểm worker node (control plane do AWS quản lý).
+              command:
+                - /bin/sh
+                - -c
+                - kube-bench run --targets node --benchmark eks-1.2.0 --json > /results/results.json
+              resources:
+                requests: { cpu: 100m, memory: 128Mi }
+                limits: { cpu: 500m, memory: 256Mi }
+              volumeMounts:
+                - { name: results, mountPath: /results }
+                - { name: var-lib-kubelet, mountPath: /var/lib/kubelet, readOnly: true }
+                - { name: etc-systemd, mountPath: /etc/systemd, readOnly: true }
+                - { name: etc-kubernetes, mountPath: /etc/kubernetes, readOnly: true }
+          containers:
+            - name: publish
+              image: bitnami/kubectl:1.31.4
               command:
                 - /bin/sh
                 - -c
                 - |
-                  kube-bench run --json 2>/dev/null | \
-                  kubectl create configmap kube-bench-results \
-                    --from-literal=results.json="$(cat /dev/stdin)" \
-                    -n monitoring \
-                    --dry-run=client -o yaml | \
-                  kubectl apply -f -
+                  set -e
+                  test -s /results/results.json
+                  kubectl -n monitoring create configmap kube-bench-results \
+                    --from-file=results.json=/results/results.json \
+                    --dry-run=client -o yaml | kubectl apply -f -
               securityContext:
                 allowPrivilegeEscalation: false
+                runAsNonRoot: true
+                runAsUser: 1001
+                capabilities: { drop: ["ALL"] }
               resources:
-                requests:
-                  cpu: 100m
-                  memory: 128Mi
-                limits:
-                  cpu: 500m
-                  memory: 256Mi
+                requests: { cpu: 10m, memory: 32Mi }
+                limits: { cpu: 100m, memory: 128Mi }
               volumeMounts:
-                - name: var-lib-etcd
-                  mountPath: /var/lib/etcd
-                  readOnly: true
-                - name: var-lib-kubelet
-                  mountPath: /var/lib/kubelet
-                  readOnly: true
-                - name: etc-systemd
-                  mountPath: /etc/systemd
-                  readOnly: true
-                - name: etc-kubernetes
-                  mountPath: /etc/kubernetes
-                  readOnly: true
-                - name: usr-bin
-                  mountPath: /usr/local/mount-from-host/bin
-                  readOnly: true
+                - { name: results, mountPath: /results, readOnly: true }
           volumes:
-            - name: var-lib-etcd
-              hostPath:
-                path: /var/lib/etcd
+            - name: results
+              emptyDir: {}
             - name: var-lib-kubelet
-              hostPath:
-                path: /var/lib/kubelet
+              hostPath: { path: /var/lib/kubelet }
             - name: etc-systemd
-              hostPath:
-                path: /etc/systemd
+              hostPath: { path: /etc/systemd }
             - name: etc-kubernetes
-              hostPath:
-                path: /etc/kubernetes
-            - name: usr-bin
-              hostPath:
-                path: /usr/bin
+              hostPath: { path: /etc/kubernetes }

@@ -26,14 +26,15 @@ spec:
         fsGroup: 2000
       containers:
         - name: compliance-engine
-          image: YOUR_ECR_REGISTRY/compliance-engine:latest  # Replace with actual image
-          imagePullPolicy: Always
+          # Tên logic; kustomization.yaml (images:) thay bằng <ECR registry>/retail-store/compliance-engine:<tag> do CI ghi.
+          image: compliance-engine
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
               name: http
           env:
             - name: POSTGRES_HOST
-              value: "postgresql.backstage.svc.cluster.local"  # Shared PostgreSQL
+              value: "compliance-postgres"  # PostgreSQL riêng trong namespace compliance (audit #18)
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_USER
@@ -55,6 +56,7 @@ spec:
                 secretKeyRef:
                   name: compliance-engine-secrets
                   key: gemini-api-key
+                  optional: true   # Không có key: AI recommendation trả 503, phần còn lại vẫn chạy
             - name: K8S_IN_CLUSTER
               value: "true"
             - name: LOG_LEVEL

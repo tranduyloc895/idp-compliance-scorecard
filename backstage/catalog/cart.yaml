@@ -8,7 +8,7 @@ metadata:
   annotations:
     github.com/project-slug: tranduyloc895/idp-microservices
     github.com/workflows: ci-cart.yml
-    argocd/app-name: cart
+    argocd/app-name: retail-store-cart
   tags:
     - java
     - spring-boot
