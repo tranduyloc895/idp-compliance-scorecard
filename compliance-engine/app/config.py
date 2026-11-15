@@ -6,7 +6,7 @@ Có thể override qua .env file (python-dotenv).
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -71,6 +71,12 @@ class Settings(BaseSettings):
     # -----------------------------------------------------------------------
     KUBECONFIG: Optional[str] = None  # None = in-cluster config
     K8S_IN_CLUSTER: bool = False  # True khi chạy trong Pod
+
+    # Nguồn dữ liệu collector:
+    #   "kubernetes" (mặc định): đọc PolicyReport/VulnerabilityReport/ConfigMap từ cluster
+    #   "fixtures": đọc file JSON trong FIXTURES_DIR (smoke test CI, không cần cluster)
+    COLLECTOR_MODE: Literal["kubernetes", "fixtures"] = "kubernetes"
+    FIXTURES_DIR: str = "fixtures/scenario-abc"
 
     # -----------------------------------------------------------------------
     # Compliance Engine behavior
