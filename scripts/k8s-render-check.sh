@@ -50,7 +50,10 @@ for d in apps/databases apps/namespace experiments platform/kube-bench platform/
   name="$(echo "$d" | tr '/' '-')"
   find "$G/$d" -name '*.y*ml' -print0 | sort -z | xargs -0 -I{} sh -c 'cat "{}"; echo; echo "---"' > "$OUT/ours/$name.yaml"
 done
-cat "$G/platform/monitoring/namespace.yml" "$G/platform/monitoring/storageclass-gp3.yaml" > "$OUT/ours/monitoring-base.yaml"
+# Thêm newline + '---' giữa file: namespace.yml không có newline cuối file.
+{ cat "$G/platform/monitoring/namespace.yml"; printf '
+---
+'; cat "$G/platform/monitoring/storageclass-gp3.yaml"; } > "$OUT/ours/monitoring-base.yaml"
 
 echo "==> kubeconform (repo manifests, strict, CRD schemas required)"
 "${KC[@]}" "$OUT"/ours/*.yaml
