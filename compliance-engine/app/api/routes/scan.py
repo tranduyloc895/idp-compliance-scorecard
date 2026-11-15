@@ -11,7 +11,7 @@ import logging
 from datetime import datetime
 from typing import Optional
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Body, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy import select, func
 
@@ -58,17 +58,22 @@ class ScanDetailResponse(BaseModel):
 
 @router.post("", response_model=ScanResponse, status_code=202)
 async def trigger_scan(
-    request: ScanRequest,
     background_tasks: BackgroundTasks,
     db: DBSession,
     cache: CacheClient,
+    request: Optional[ScanRequest] = Body(default=None),
 ) -> ScanResponse:
     """
     Trigger a new compliance scan.
 
     Scan chạy background — response trả về ngay với scan_id.
     Poll GET /api/v1/scans/{scan_id} để theo dõi progress.
+
+    Client nên gửi `Content-Type: application/json` và body `{}` (cluster-wide)
+    hoặc `{"namespace": "compliance-test"}`. Body rỗng được coi như `{}` (audit #15).
     """
+    if request is None:
+        request = ScanRequest()
     # Tạo ScanRecord với status PENDING
     scan = ScanRecord(
         status=ScanStatus.PENDING,

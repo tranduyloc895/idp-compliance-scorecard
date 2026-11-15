@@ -65,8 +65,7 @@
 ## Quyết định đã chốt
 (Xem `docs/plans/testable-rebuild.md` mục "Quyết định đã chốt"; quyết định bổ sung ghi dưới đây.)
 
-- **Tool local** (2026-11-15, được đồng ý): terraform 1.11.4 (`use_lockfile` của S3 backend cần ≥1.10), tflint 0.53.0, node 20.18.0, gh 2.62.0, aws-cli 2.22.0 (giải nén MSI) trong `C:	ools\*`. Python 3.12.10 có sẵn ở `C:	ools\python`. PATH: `C:	ools	erraform;C:	ools	flint;C:	ools
-ode;C:	ools\ghin;C:	oolswscli\Amazon\AWSCLIV2`.
+- **Tool local** (2026-11-15, được đồng ý): terraform 1.11.4 (`use_lockfile` của S3 backend cần ≥1.10), tflint 0.53.0, node 20.18.0, gh 2.62.0, aws-cli 2.22.0 (giải nén MSI) trong `C:/tools/*`. Python 3.12.10 có sẵn ở `C:/tools/python`. PATH (Git Bash): `/c/tools/terraform:/c/tools/tflint:/c/tools/node:/c/tools/gh/bin:/c/tools/awscli/Amazon/AWSCLIV2`.
 - **Schema DB**: dùng `Base.metadata.create_all` lúc startup, bỏ Alembic. Lý do: migration duy nhất tham chiếu bảng `scans` chưa tồn tại, startup đã dùng create_all; một cơ chế idempotent là đủ cho khóa luận. Đổi schema sau này thì cần thêm Alembic lại có baseline.
 - **Compose local**: mặc định fixture mode, không mount kubeconfig (image không có AWS CLI cho EKS exec credential, #16).
 - **Line endings**: `.gitattributes` ép LF (trừ `.ps1`) để script chạy được trên Linux/CI.
@@ -75,4 +74,4 @@ ode;C:	ools\ghin;C:	oolswscli\Amazon\AWSCLIV2`.
 (chưa có)
 
 ## Bước tiếp theo
-Kiểm tra tool local, hỏi cài tool thiếu.
+Giai đoạn 0: #15, rồi Terraform (00-bootstrap, backend, remote_state).
