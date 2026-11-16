@@ -125,3 +125,14 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 1. [x] Sửa ref trivy-action → SHA v0.36.0 (commit b058f7b), PR `fix/aws-lab-1` → main.
 2. [x] 2026-11-16 03:17 UTC: `gh secret set AWS_ROLE_ARN` (người dùng đồng ý) = role ARN CI. Workflow permissions mặc định của repo = `read`, **không cần đổi**: `_build-push.yml`/`build-all.yml`/`ci-*.yml` khai báo `permissions: contents: write, id-token: write, security-events: write` ở cấp workflow (repo cá nhân, không có giới hạn org). `main` không có branch protection/ruleset nên `GITHUB_TOKEN` push được commit tag.
 3. Merge fix vào main (hỏi), rồi chạy `build-all` trên main (hỏi).
+
+## CI build trên main sau merge PR #2 (2026-11-16 03:20 UTC)
+- Merge PR #2 tự kích hoạt 6 workflow `CI — *` (path filter có `_build-push.yml`); người dùng đồng ý cho chạy thay `build-all`.
+- Kết quả: cả 6 qua *Set up job* (fix trivy-action OK) nhưng fail ở `Configure AWS credentials (OIDC)`: `Not authorized to perform sts:AssumeRoleWithWebIdentity`. Không có image nào lên ECR, không có commit nào của CI vào main.
+- Nguyên nhân: repo bật **immutable subject** (`use_immutable_subject: true`), `sub` = `repo:tranduyloc895@141894428/idp-compliance-scorecard@1405539355:...`; trust policy chỉ có `repo:tranduyloc895/idp-compliance-scorecard:*`.
+- Sửa (branch `fix/aws-lab-2`): `04-oidc` thêm `github_owner_id`/`github_repo_id`, `sub` StringLike nhận cả hai dạng. `terraform plan 04-oidc`: 0 add, 1 change (assume_role_policy), 0 destroy. validate-local PASS.
+
+## Bước tiếp theo (cập nhật 2026-11-16 03:25)
+1. Hỏi người dùng → `terraform apply 04-oidc` (chỉ đổi trust policy, $0).
+2. Chạy lại 6 workflow build (hoặc `build-all`) trên main — hỏi người dùng.
+3. Merge PR `fix/aws-lab-2` (hỏi).

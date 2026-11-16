@@ -28,6 +28,20 @@ variable "github_repo" {
   default     = "idp-compliance-scorecard"
 }
 
+# ID số của GitHub (công khai, không phải secret) cho claim `sub` dạng immutable.
+# Lấy bằng: gh api repos/<owner>/<repo> -q '.owner.id, .id'. Để trống thì chỉ dùng dạng mặc định.
+variable "github_owner_id" {
+  description = "GitHub numeric owner ID (immutable OIDC subject)"
+  type        = string
+  default     = "141894428"
+}
+
+variable "github_repo_id" {
+  description = "GitHub numeric repository ID (immutable OIDC subject)"
+  type        = string
+  default     = "1405539355"
+}
+
 
 variable "iam_role_name" {
   description = "Name of the IAM Role created for GitHub Actions"

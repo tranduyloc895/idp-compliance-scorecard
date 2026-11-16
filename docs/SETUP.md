@@ -161,6 +161,7 @@ Chỉ ghi các lỗi **đã gặp thật** trong quá trình làm. Lỗi trên A
 | Script bash lỗi `$'\r'` trên Linux | CRLF từ Windows | `.gitattributes` ép LF; validate-local kiểm CRLF |
 | CI build (`ci-*`, `build-all`) fail ở *Set up job*: `Unable to resolve action aquasecurity/trivy-action@0.28.0` | Tag không có tiền tố `v` của trivy-action đã bị xoá; toàn bộ tag được tạo lại ngày 2026-03-20 | Pin theo commit SHA: `aquasecurity/trivy-action@ed142fd… # v0.36.0` (`_build-push.yml`, template skeleton) |
 | `validate-local.sh`: `[03-ecr] init` báo *No valid credential sources found* sau khi đã chạy `aws-foundation-up` | `.terraform/` của module đã init backend S3; `init -backend=false` vẫn đọc backend đó | `terraform-validate.sh` dùng `TF_DATA_DIR` riêng trong `/tmp/tf-validate/<module>` |
+| CI: `Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity` | Repo bật *immutable subject*: `sub` = `repo:<owner>@<owner_id>/<repo>@<repo_id>:...`, không khớp pattern `repo:<owner>/<repo>:*` | `04-oidc` chấp nhận cả hai dạng (`github_owner_id`, `github_repo_id`); kiểm bằng `gh api repos/<owner>/<repo>/actions/oidc/customization/sub` |
 
 ## 7. Chi phí (cấu hình thật trong Terraform, us-east-1)
 

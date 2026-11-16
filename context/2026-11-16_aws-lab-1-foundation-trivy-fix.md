@@ -20,3 +20,6 @@
 - trivy-action v0.36.0 mặc định cài Trivy v0.70.0 (trước đây ~0.56); DB lỗ hổng mới hơn nên gate CRITICAL có thể chặn image Retail Store.
 - State `00-bootstrap` chỉ nằm ở local (`infrastructure/00-bootstrap/terraform.tfstate`, git ignore).
 - Trust policy role CI cho mọi ref của repo (`repo:tranduyloc895/idp-compliance-scorecard:*`).
+
+## Cập nhật 03:25 UTC — OIDC immutable subject
+- CI build trên main (sau merge PR #2) fail ở `Configure AWS credentials`: repo bật immutable subject nên claim `sub` có owner/repo ID; trust policy không khớp. Sửa `infrastructure/04-oidc/{main,variables}.tf` nhận cả hai dạng `sub`; plan 0/1/0. Chưa apply.
