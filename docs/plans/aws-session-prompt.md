@@ -28,11 +28,11 @@ Sau khi đọc xong, tóm tắt lại cho tôi trong 5–8 dòng: trạng thái 
 - Windows 11, Git Bash. Tool ở `C:\tools\*`: terraform 1.11.4, node 20.18.0, gh 2.62.0 (đã login `tranduyloc895`), aws-cli 2.22.0. Python 3.12 ở `C:\tools\python`.
 - Windows Application Control chặn `terraform-provider-*.exe`, nên **mọi lệnh terraform và script `aws-*.sh`/`smoke.sh` phải chạy trong WSL `Ubuntu-22.04`**. Repo trong WSL nằm ở `/mnt/c/workspace/it/project/idp-compliance-scorecard`; terraform và tflint ở `~/tools/bin`.
 - Gọi WSL từ Git Bash: `MSYS_NO_PATHCONV=1 wsl.exe -d Ubuntu-22.04 -- bash /mnt/c/.../<file>.sh`. `wsl.exe` tự expand `$VAR` trong tham số, nên không truyền chuỗi lệnh có `$`. Hãy viết lệnh vào một file script (trong scratchpad hoặc repo) rồi gọi file đó.
-- Credential: tôi đã chạy `aws configure --profile idp-lab` **trong WSL** (region `us-east-1`). Script dùng `export AWS_PROFILE=idp-lab`. Không yêu cầu tôi dán key vào chat; không in key ra log.
+- Credential: tôi đã chạy `aws configure --profile idp` **trong WSL** (region `us-east-1`). Script dùng `export AWS_PROFILE=idp`. Không yêu cầu tôi dán key vào chat; không in key ra log.
 - kubectl: "cho phép cài kubectl v1.35.0 vào ~/tools/bin trong WSL"
 
 ## Quy tắc buổi này
-- Đầu buổi chạy `aws sts get-caller-identity` (profile `idp-lab`, trong WSL) và báo account ID/ARN cho tôi xác nhận.
+- Đầu buổi chạy `aws sts get-caller-identity` (profile `idp`, trong WSL) và báo account ID/ARN cho tôi xác nhận.
 - Luôn `--dry-run` trước (chỉ plan/liệt kê), cho tôi xem tóm tắt plan (số resource add/change/destroy và các resource tốn tiền), rồi **hỏi** trước khi chạy thật.
 - Trước mỗi lệnh tạo tài nguyên hoặc tốn tiền: ghi vào progress file (lệnh, thời điểm, chi phí ước tính) và commit.
 - Buổi lab **luôn kết thúc bằng `bash scripts/aws-down.sh`**, rồi kiểm không còn tài nguyên mồ côi, trừ khi tôi nói giữ lại. Nếu phải dừng giữa chừng: chạy `aws-down.sh --dry-run` để liệt kê còn gì, báo tôi, ghi "Bước tiếp theo".

@@ -5,7 +5,7 @@
 **Plan gốc:** `docs/plans/testable-rebuild.md`
 
 ## Đang làm
-- Dừng ngày 2026-11-15 sau khi mở PR `feat/testable-rebuild` → `main` (chưa merge).
+- 2026-11-16: PR #1 đã merge vào `main` (d52d859). Buổi AWS làm trên branch `fix/aws-lab-1`. Đang chờ người dùng xác nhận account trước khi chạy `aws-foundation-up.sh --dry-run`.
 
 ## Checklist
 
@@ -57,7 +57,7 @@
 
 ### Giai đoạn 3
 - [x] `aws-foundation-up.sh`, `aws-up.sh`, `aws-down.sh`, `smoke.sh` (có `--dry-run`) — bash -n + dry-run không credential (máy); chưa chạy với AWS
-- [x] Tool trong WSL (2026-11-16, `scripts/wsl-tools.sh`): terraform 1.11.4, tflint 0.53.0, kubectl v1.35.0 (sha256 OK), aws-cli 2.22.0 ở `~/tools/bin`; PATH thêm vào `~/.bashrc`. Chưa có AWS profile (người dùng sẽ chạy `aws configure --profile idp-lab`).
+- [x] Tool trong WSL (2026-11-16, `scripts/wsl-tools.sh`): terraform 1.11.4, tflint 0.53.0, kubectl v1.35.0 (sha256 OK), aws-cli 2.22.0 ở `~/tools/bin`; PATH thêm vào `~/.bashrc`. AWS profile `idp` (us-east-1) do người dùng cấu hình trong WSL; STS 2026-11-16: account 736508008585, `arn:aws:iam::736508008585:user/idp`.
 - [ ] Chạy thật trên EKS (chờ xác nhận: push branch → CI; merge main; dùng credential AWS)
 
 ### Giai đoạn 4
@@ -77,7 +77,7 @@
 - **Đường Backstage EC2 → engine**: Service `compliance-engine-internal` type LoadBalancer internal (Classic ELB của legacy cloud provider, không cần AWS LB Controller). Đây là LB duy nhất; aws-down xoá trước khi destroy VPC.
 - **Backstage EC2 mặc định không dựng trong aws-up** (cần `--with-backstage`): repo chưa có `packages/app`, `packages/backend` (audit #22) nên image Backstage chưa build được.
 - **kubectl/helm**: không cài trên Windows. Script AWS chạy trong AWS CloudShell hoặc Linux; nếu có Docker thì gọi kubectl qua image.
-- **kubectl cho buổi AWS** (2026-11-15, người dùng chốt): cài kubectl v1.35.0 vào `~/tools/bin` trong WSL Ubuntu-22.04 (không cài trên Windows); script AWS chạy trong WSL với `AWS_PROFILE=idp-lab`.
+- **kubectl cho buổi AWS** (2026-11-15, người dùng chốt): cài kubectl v1.35.0 vào `~/tools/bin` trong WSL Ubuntu-22.04 (không cài trên Windows); script AWS chạy trong WSL với `AWS_PROFILE=idp`.
 - **Line endings**: `.gitattributes` ép LF (trừ `.ps1`) để script chạy được trên Linux/CI.
 
 ## Lỗi đang dở
@@ -99,3 +99,11 @@
 2. Khi được đồng ý dùng credential AWS: trong CloudShell `bash scripts/cloudshell-tools.sh`, rồi `bash scripts/aws-foundation-up.sh --dry-run` → chạy thật → đặt GitHub secret `AWS_ROLE_ARN` (+ Workflow permissions Read and write) → chạy workflow `build-all` trên `main`.
 3. `bash scripts/aws-up.sh --dry-run` → aws-up → smoke → sửa lỗi → **luôn** `aws-down`; ghi tiến độ vào file này trước mỗi lệnh tốn tiền.
 4. Chưa kiểm chứng (sẽ thấy ở bước 3): chart 2024 trên K8s 1.35, internal CLB, `kube-bench v0.8.0 --benchmark eks-1.2.0`, image `cluster-autoscaler v1.35.0`, đủ tài nguyên 2× t3.large.
+
+## CI trên main sau merge (2026-11-16)
+| Workflow | Run | Kết quả | Nguyên nhân |
+|---|---|---|---|
+| validate | 43791263227 | pass | — |
+| CI — ui/cart/catalog/orders/checkout/compliance-engine | 43791263217 … 43791263366 | fail ở "Set up job" (4–8s) | `aquasecurity/trivy-action@0.28.0` không resolve được (không phải lỗi thiếu `AWS_ROLE_ARN` như dự đoán). Chặn `build-all`; cần sửa ref action trong `_build-push.yml` trước khi chạy build-all. |
+
+Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau khi merge) → cherry-pick sang `fix/aws-lab-1`.
