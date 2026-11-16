@@ -149,7 +149,7 @@ Evidence mỗi lần chạy nằm trong `docs/evidence/aws/<timestamp>-<up|smoke
 
 ## 6. Troubleshooting
 
-Chỉ ghi các lỗi **đã gặp thật** trong quá trình làm. Lỗi trên AWS sẽ bổ sung sau lần chạy đầu.
+Chỉ ghi các lỗi **đã gặp thật** trong quá trình làm. Lỗi trên AWS bổ sung dần từ buổi lab 2026-11-16.
 
 | Triệu chứng | Nguyên nhân | Cách xử lý |
 |---|---|---|
@@ -159,6 +159,8 @@ Chỉ ghi các lỗi **đã gặp thật** trong quá trình làm. Lỗi trên A
 | `pip install -e .[dev]` lỗi `setuptools.backends.legacy` | build-backend sai (#13) | Đã sửa: `setuptools.build_meta` |
 | `tsc`: `Property 'gap' does not exist on type BoxProps` | MUI v4 `Box` không có prop `gap` | Đã sửa: `style={{ gap: 8 }}` |
 | Script bash lỗi `$'\r'` trên Linux | CRLF từ Windows | `.gitattributes` ép LF; validate-local kiểm CRLF |
+| CI build (`ci-*`, `build-all`) fail ở *Set up job*: `Unable to resolve action aquasecurity/trivy-action@0.28.0` | Tag không có tiền tố `v` của trivy-action đã bị xoá; toàn bộ tag được tạo lại ngày 2026-03-20 | Pin theo commit SHA: `aquasecurity/trivy-action@ed142fd… # v0.36.0` (`_build-push.yml`, template skeleton) |
+| `validate-local.sh`: `[03-ecr] init` báo *No valid credential sources found* sau khi đã chạy `aws-foundation-up` | `.terraform/` của module đã init backend S3; `init -backend=false` vẫn đọc backend đó | `terraform-validate.sh` dùng `TF_DATA_DIR` riêng trong `/tmp/tf-validate/<module>` |
 
 ## 7. Chi phí (cấu hình thật trong Terraform, us-east-1)
 

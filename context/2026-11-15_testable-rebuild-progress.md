@@ -122,6 +122,6 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 - SSM `/idp/...`: 5 SecureString tự sinh (postgres-password, catalog-db-password, catalog-db-root-password, orders-db-password, grafana-admin-password); chưa có gemini-api-key, telegram-bot-token
 
 ## Bước tiếp theo (cập nhật 2026-11-16)
-1. Sửa ref `aquasecurity/trivy-action@0.28.0` trong `.github/workflows/_build-push.yml` (không resolve được) trên `fix/aws-lab-1`.
+1. [x] Sửa ref trivy-action → SHA v0.36.0 (commit b058f7b), PR `fix/aws-lab-1` → main.
 2. Hỏi người dùng: `gh secret set AWS_ROLE_ARN`, kiểm Workflow permissions = Read and write.
 3. Merge fix vào main (hỏi), rồi chạy `build-all` trên main (hỏi).
