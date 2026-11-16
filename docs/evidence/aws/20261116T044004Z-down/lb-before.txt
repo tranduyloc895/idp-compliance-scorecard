@@ -1,0 +1,1 @@
+compliance     compliance-engine-internal                  LoadBalancer   172.20.246.126   internal-ad605f6853d204bc693949f4796e2a56-1629755641.us-east-1.elb.amazonaws.com   8000:32248/TCP                 15m

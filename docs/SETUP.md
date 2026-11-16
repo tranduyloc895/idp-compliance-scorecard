@@ -150,7 +150,7 @@ Evidence mỗi lần chạy nằm trong `docs/evidence/aws/<timestamp>-<up|smoke
 
 ## 6. Troubleshooting
 
-Chỉ ghi các lỗi **đã gặp thật** trong quá trình làm. Lỗi trên AWS bổ sung dần từ buổi lab 2026-11-16.
+Chỉ ghi các lỗi **đã gặp thật** trong quá trình làm. Lỗi trên AWS bổ sung dần từ buổi lab 2026-11-16 (lần dựng đầu: up tới secret ~21 phút, down ~32 phút).
 
 | Triệu chứng | Nguyên nhân | Cách xử lý |
 |---|---|---|
@@ -164,6 +164,12 @@ Chỉ ghi các lỗi **đã gặp thật** trong quá trình làm. Lỗi trên A
 | `validate-local.sh`: `[03-ecr] init` báo *No valid credential sources found* sau khi đã chạy `aws-foundation-up` | `.terraform/` của module đã init backend S3; `init -backend=false` vẫn đọc backend đó | `terraform-validate.sh` dùng `TF_DATA_DIR` riêng trong `/tmp/tf-validate/<module>` |
 | CI: `Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity` | Repo bật *immutable subject*: `sub` = `repo:<owner>@<owner_id>/<repo>@<repo_id>:...`, không khớp pattern `repo:<owner>/<repo>:*` | `04-oidc` chấp nhận cả hai dạng (`github_owner_id`, `github_repo_id`); kiểm bằng `gh api repos/<owner>/<repo>/actions/oidc/customization/sub` |
 | `build-all`: 5 job Retail Store fail ở bước Trivy (`Total: 9–10 (CRITICAL)`), không push image | Trivy v0.70.0 (trivy-action v0.36.0) phát hiện CVE CRITICAL trong netty/tomcat/spring 6.2/thymeleaf, grpc-go, gói npm | Retail Store dùng `trivy_gate: false` (report-only); `compliance-engine` vẫn bị gate |
+| CI `update GitOps`: `remote: Permission to <repo>.git denied to github-actions[bot]` (403) ngay lần push đầu, dù token có `Contents: write` và job khác push được | Chưa rõ; gặp khi 6 workflow chạy đồng thời sau merge (2026-11-16), rerun thì hết | `gh run rerun <run-id> --failed` từng run một; nếu lặp lại, đặt secret `GITOPS_TOKEN` (PAT fine-grained, Contents: Read and write) |
+| Argo CD app `Unknown`: `ComparisonError ... .status.terminatingReplicas: field not declared in schema` | Argo CD chart 5.51.4 (app v2.9) không biết trường Deployment status mới (K8s ≥ 1.33) | Nâng `argocd_chart_version` lên chart 10.x (Argo CD 3.x) — **chưa sửa** |
+| Pod `kyverno-clean-reports`, `kyverno-cleanup-*` `ImagePullBackOff`: `docker.io/bitnami/kubectl:1.28.5: not found` | Chart Kyverno 3.2.6 dùng image bitnami đã bị xoá | Nâng chart Kyverno hoặc override image cleanup — **chưa sửa** |
+| Pod Pending `0/2 nodes are available: 2 Insufficient cpu` (loki, cart, catalog, ui) | Tổng CPU request vượt 2× t3.large dù CPU dùng thật thấp; cluster-autoscaler không scale | Giảm request / tăng node; kiểm log autoscaler — **chưa sửa** |
+| `aws-down`: chờ xoá Application tới hết timeout 900s, rồi `application.argoproj.io/root patched` | `root` chờ child đang xoá, finalizer không kịp gỡ | Script tự gỡ finalizer; tài nguyên vẫn được dọn. Cải tiến: xoá child trước root |
+| `aws-down` cảnh báo `NAT gateway: nat-...` trước khi destroy VPC | Bước kiểm trước destroy tính cả NAT do Terraform quản lý | Bỏ qua: NAT bị destroy cùng `01-network` |
 
 ## 7. Chi phí (cấu hình thật trong Terraform, us-east-1)
 

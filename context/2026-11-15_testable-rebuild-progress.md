@@ -59,7 +59,8 @@
 - [x] `aws-foundation-up.sh`, `aws-up.sh`, `aws-down.sh`, `smoke.sh` (có `--dry-run`) — bash -n + dry-run không credential (máy); chưa chạy với AWS
 - [x] Tool trong WSL (2026-11-16, `scripts/wsl-tools.sh`): terraform 1.11.4, tflint 0.53.0, kubectl v1.35.0 (sha256 OK), aws-cli 2.22.0 ở `~/tools/bin`; PATH thêm vào `~/.bashrc`. AWS profile `idp` (us-east-1) do người dùng cấu hình trong WSL; STS 2026-11-16: account 736508008585, `arn:aws:iam::736508008585:user/idp`.
 - [x] Lớp nền trên AWS (2026-11-16, `aws-foundation-up.sh`, 174s) — kiểm bằng `aws iam get-role`, `ecr describe-repositories`, `s3 ls`, `ssm get-parameters-by-path`
-- [ ] Chạy thật trên EKS (chờ xác nhận: push branch → CI; merge main; dùng credential AWS)
+- [~] Chạy thật trên EKS (2026-11-16, lần 1): hạ tầng dựng/huỷ OK (up ~21 phút tới secret, down 32 phút); Argo CD chưa all Healthy, chưa chạy smoke — xem `context/2026-11-16_aws-lab-1-eks-first-run.md`
+- [ ] Smoke pass trên EKS (chờ xác nhận: push branch → CI; merge main; dùng credential AWS)
 
 ### Giai đoạn 4
 - [x] Viết lại `docs/SETUP.md` (troubleshooting mới có lỗi local; bổ sung lỗi AWS sau lần chạy đầu)
@@ -154,3 +155,18 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 ## Bước tiếp theo (cập nhật 2026-11-16)
 1. PR `fix/aws-lab-2` → main (OIDC immutable subject + Trivy report-only). Hỏi trước khi merge. Lưu ý: merge sửa `_build-push.yml` nên **tự kích hoạt 6 workflow `CI — *`** trên main (tương đương build-all) → theo dõi tới khi 6 image lên ECR và tag được commit.
 2. Kiểm `image-registry.yaml` + tag 5 service trong main; `aws-up.sh --dry-run`.
+
+## Merge PR #3 → 6 workflow CI trên main (2026-11-16 03:36–03:50 UTC)
+- PR #3 merge `f474fb2` (validate xanh trước khi merge). Tự kích hoạt 6 `CI — *`.
+- Build → Trivy → push: **6/6 pass** (Retail Store report-only, compliance-engine pass gate).
+- Update GitOps: chỉ ui push được; 5 job còn lại bị `remote: Permission to ... denied to github-actions[bot]` (403) ở **cả lần push đầu**, kể cả compliance-engine (03:41:52, trước khi ui push lúc 03:42:07, push fast-forward). Quyền token giống hệt nhau (Contents: write). Không xác định được nguyên nhân từ log; `gh run rerun --failed` lần lượt từng job → cả 5 push thành công (retry/rebase hoạt động). Coi là lỗi tạm thời phía GitHub; theo dõi nếu lặp lại (giải pháp dự phòng: `GITOPS_TOKEN` là PAT fine-grained, hoặc gộp commit tag vào một job).
+- main hiện tại: `5fa651c`. `image-registry.yaml` = `736508008585.dkr.ecr.us-east-1.amazonaws.com`; tag cả 6 service = `f474fb2`.
+- ECR (tag `f474fb2`): ui 168 MB, cart 235 MB, catalog 67 MB, orders 409 MB, checkout 162 MB, compliance-engine 98 MB (+ `f71fced` 98 MB) ≈ 1.2 GB ≈ $0.12/tháng.
+
+## Bước tiếp theo (cập nhật 2026-11-16 03:52)
+1. [x] `aws-up.sh --dry-run` (03:55 UTC): exit 0; preflight pass (6 image f474fb2); 01-network plan 19 add/0/0; 02 chưa plan được. Evidence `docs/evidence/aws/20261116T035455Z-up/`.
+2. **2026-11-16 04:00 UTC: người dùng đồng ý → `aws-up.sh --yes`** (WSL, AWS_PROFILE=idp). Tạo: VPC + NAT/EIP, EKS 1.35 + 2× t3.large, KMS, CloudWatch Logs, Argo CD + root app; sau sync: internal CLB + ~111 GB EBS. **Bắt đầu tính tiền ≈ $0.35/giờ** cho tới `aws-down.sh`. — hạ tầng xong (network 143s, EKS ~17m, secret 65s); Argo CD kẹt (chart cũ); người dùng dừng lúc ~04:32 UTC. Chi tiết: `context/2026-11-16_aws-lab-1-eks-first-run.md`.
+
+## Bước tiếp theo (cập nhật 2026-11-16 04:35)
+1. [x] `aws-down.sh --yes` (04:40–05:12 UTC, 1923s, exit 0): 02 46 destroyed, 01 19 destroyed, không tài nguyên mồ côi (kiểm thêm bằng CLI). Lớp nền còn nguyên. Chi phí buổi ước tính < $1.
+2. Buổi sau: nâng Argo CD lên 3.x; Kyverno chart mới hoặc override image `bitnami/kubectl`; xử lý thiếu CPU request + autoscaler không scale; rà version trivy-operator/kps/loki; rồi `aws-up` → smoke. Xem `context/2026-11-16_aws-lab-1-eks-first-run.md` mục "Lỗi tìm được".

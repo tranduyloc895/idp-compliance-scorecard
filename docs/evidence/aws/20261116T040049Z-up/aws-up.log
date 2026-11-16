@@ -1,0 +1,2248 @@
+[04:00:49] account=736508008585 region=us-east-1 state_bucket=idp-tfstate-736508008585-us-east-1
+[04:00:49] evidence: /mnt/c/workspace/it/project/idp-compliance-scorecard/docs/evidence/aws/20261116T040049Z-up
+[04:00:49] === aws-up (dry-run=0, backstage=0) ===
+[04:00:55] image ok  retail-store/ui:f474fb2
+[04:00:56] image ok  retail-store/cart:f474fb2
+[04:00:58] image ok  retail-store/catalog:f474fb2
+[04:01:00] image ok  retail-store/orders:f474fb2
+[04:01:02] image ok  retail-store/checkout:f474fb2
+[04:01:04] image ok  retail-store/compliance-engine:f474fb2
+[04:01:12] [01-network] terraform apply
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # module.vpc.aws_default_network_acl.this[0] will be created
+  + resource "aws_default_network_acl" "this" {
+      + arn                    = (known after apply)
+      + default_network_acl_id = (known after apply)
+      + id                     = (known after apply)
+      + owner_id               = (known after apply)
+      + tags                   = {
+          + "Name" = "ecommerce-vpc-default"
+        }
+      + tags_all               = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "ecommerce-vpc-default"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + vpc_id                 = (known after apply)
+
+      + egress {
+          + action          = "allow"
+          + from_port       = 0
+          + ipv6_cidr_block = "::/0"
+          + protocol        = "-1"
+          + rule_no         = 101
+          + to_port         = 0
+            # (1 unchanged attribute hidden)
+        }
+      + egress {
+          + action          = "allow"
+          + cidr_block      = "0.0.0.0/0"
+          + from_port       = 0
+          + protocol        = "-1"
+          + rule_no         = 100
+          + to_port         = 0
+            # (1 unchanged attribute hidden)
+        }
+
+      + ingress {
+          + action          = "allow"
+          + from_port       = 0
+          + ipv6_cidr_block = "::/0"
+          + protocol        = "-1"
+          + rule_no         = 101
+          + to_port         = 0
+            # (1 unchanged attribute hidden)
+        }
+      + ingress {
+          + action          = "allow"
+          + cidr_block      = "0.0.0.0/0"
+          + from_port       = 0
+          + protocol        = "-1"
+          + rule_no         = 100
+          + to_port         = 0
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # module.vpc.aws_default_route_table.default[0] will be created
+  + resource "aws_default_route_table" "default" {
+      + arn                    = (known after apply)
+      + default_route_table_id = (known after apply)
+      + id                     = (known after apply)
+      + owner_id               = (known after apply)
+      + route                  = (known after apply)
+      + tags                   = {
+          + "Name" = "ecommerce-vpc-default"
+        }
+      + tags_all               = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "ecommerce-vpc-default"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + vpc_id                 = (known after apply)
+
+      + timeouts {
+          + create = "5m"
+          + update = "5m"
+        }
+    }
+
+  # module.vpc.aws_default_security_group.this[0] will be created
+  + resource "aws_default_security_group" "this" {
+      + arn                    = (known after apply)
+      + description            = (known after apply)
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = (known after apply)
+      + name_prefix            = (known after apply)
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "ecommerce-vpc-default"
+        }
+      + tags_all               = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "ecommerce-vpc-default"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + vpc_id                 = (known after apply)
+    }
+
+  # module.vpc.aws_eip.nat[0] will be created
+  + resource "aws_eip" "nat" {
+      + allocation_id        = (known after apply)
+      + arn                  = (known after apply)
+      + association_id       = (known after apply)
+      + carrier_ip           = (known after apply)
+      + customer_owned_ip    = (known after apply)
+      + domain               = "vpc"
+      + id                   = (known after apply)
+      + instance             = (known after apply)
+      + ipam_pool_id         = (known after apply)
+      + network_border_group = (known after apply)
+      + network_interface    = (known after apply)
+      + private_dns          = (known after apply)
+      + private_ip           = (known after apply)
+      + ptr_record           = (known after apply)
+      + public_dns           = (known after apply)
+      + public_ip            = (known after apply)
+      + public_ipv4_pool     = (known after apply)
+      + tags                 = {
+          + "Name" = "ecommerce-vpc-us-east-1a"
+        }
+      + tags_all             = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "ecommerce-vpc-us-east-1a"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + vpc                  = (known after apply)
+    }
+
+  # module.vpc.aws_internet_gateway.this[0] will be created
+  + resource "aws_internet_gateway" "this" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + owner_id = (known after apply)
+      + tags     = {
+          + "Name" = "ecommerce-vpc"
+        }
+      + tags_all = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "ecommerce-vpc"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + vpc_id   = (known after apply)
+    }
+
+  # module.vpc.aws_nat_gateway.this[0] will be created
+  + resource "aws_nat_gateway" "this" {
+      + allocation_id                      = (known after apply)
+      + association_id                     = (known after apply)
+      + connectivity_type                  = "public"
+      + id                                 = (known after apply)
+      + network_interface_id               = (known after apply)
+      + private_ip                         = (known after apply)
+      + public_ip                          = (known after apply)
+      + secondary_private_ip_address_count = (known after apply)
+      + secondary_private_ip_addresses     = (known after apply)
+      + subnet_id                          = (known after apply)
+      + tags                               = {
+          + "Name" = "ecommerce-vpc-us-east-1a"
+        }
+      + tags_all                           = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "ecommerce-vpc-us-east-1a"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+    }
+
+  # module.vpc.aws_route.private_nat_gateway[0] will be created
+  + resource "aws_route" "private_nat_gateway" {
+      + destination_cidr_block = "0.0.0.0/0"
+      + id                     = (known after apply)
+      + instance_id            = (known after apply)
+      + instance_owner_id      = (known after apply)
+      + nat_gateway_id         = (known after apply)
+      + network_interface_id   = (known after apply)
+      + origin                 = (known after apply)
+      + route_table_id         = (known after apply)
+      + state                  = (known after apply)
+
+      + timeouts {
+          + create = "5m"
+        }
+    }
+
+  # module.vpc.aws_route.public_internet_gateway[0] will be created
+  + resource "aws_route" "public_internet_gateway" {
+      + destination_cidr_block = "0.0.0.0/0"
+      + gateway_id             = (known after apply)
+      + id                     = (known after apply)
+      + instance_id            = (known after apply)
+      + instance_owner_id      = (known after apply)
+      + network_interface_id   = (known after apply)
+      + origin                 = (known after apply)
+      + route_table_id         = (known after apply)
+      + state                  = (known after apply)
+
+      + timeouts {
+          + create = "5m"
+        }
+    }
+
+  # module.vpc.aws_route_table.private[0] will be created
+  + resource "aws_route_table" "private" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + route            = (known after apply)
+      + tags             = {
+          + "Name" = "ecommerce-vpc-private"
+        }
+      + tags_all         = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "ecommerce-vpc-private"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.vpc.aws_route_table.public[0] will be created
+  + resource "aws_route_table" "public" {
+      + arn              = (known after apply)
+      + id               = (known after apply)
+      + owner_id         = (known after apply)
+      + propagating_vgws = (known after apply)
+      + route            = (known after apply)
+      + tags             = {
+          + "Name" = "ecommerce-vpc-public"
+        }
+      + tags_all         = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "ecommerce-vpc-public"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + vpc_id           = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.private[0] will be created
+  + resource "aws_route_table_association" "private" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.private[1] will be created
+  + resource "aws_route_table_association" "private" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.public[0] will be created
+  + resource "aws_route_table_association" "public" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_route_table_association.public[1] will be created
+  + resource "aws_route_table_association" "public" {
+      + id             = (known after apply)
+      + route_table_id = (known after apply)
+      + subnet_id      = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.private[0] will be created
+  + resource "aws_subnet" "private" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "us-east-1a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.1.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name"                                    = "ecommerce-vpc-private-us-east-1a"
+          + "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          + "kubernetes.io/role/internal-elb"         = "1"
+        }
+      + tags_all                                       = {
+          + "Environment"                             = "Dev"
+          + "Layer"                                   = "lab"
+          + "ManagedBy"                               = "Terraform"
+          + "Name"                                    = "ecommerce-vpc-private-us-east-1a"
+          + "Project"                                 = "idp-compliance-scorecard"
+          + "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          + "kubernetes.io/role/internal-elb"         = "1"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.private[1] will be created
+  + resource "aws_subnet" "private" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "us-east-1b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.2.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name"                                    = "ecommerce-vpc-private-us-east-1b"
+          + "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          + "kubernetes.io/role/internal-elb"         = "1"
+        }
+      + tags_all                                       = {
+          + "Environment"                             = "Dev"
+          + "Layer"                                   = "lab"
+          + "ManagedBy"                               = "Terraform"
+          + "Name"                                    = "ecommerce-vpc-private-us-east-1b"
+          + "Project"                                 = "idp-compliance-scorecard"
+          + "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          + "kubernetes.io/role/internal-elb"         = "1"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.public[0] will be created
+  + resource "aws_subnet" "public" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "us-east-1a"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.101.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name"                                    = "ecommerce-vpc-public-us-east-1a"
+          + "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          + "kubernetes.io/role/elb"                  = "1"
+        }
+      + tags_all                                       = {
+          + "Environment"                             = "Dev"
+          + "Layer"                                   = "lab"
+          + "ManagedBy"                               = "Terraform"
+          + "Name"                                    = "ecommerce-vpc-public-us-east-1a"
+          + "Project"                                 = "idp-compliance-scorecard"
+          + "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          + "kubernetes.io/role/elb"                  = "1"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_subnet.public[1] will be created
+  + resource "aws_subnet" "public" {
+      + arn                                            = (known after apply)
+      + assign_ipv6_address_on_creation                = false
+      + availability_zone                              = "us-east-1b"
+      + availability_zone_id                           = (known after apply)
+      + cidr_block                                     = "10.0.102.0/24"
+      + enable_dns64                                   = false
+      + enable_resource_name_dns_a_record_on_launch    = false
+      + enable_resource_name_dns_aaaa_record_on_launch = false
+      + id                                             = (known after apply)
+      + ipv6_cidr_block_association_id                 = (known after apply)
+      + ipv6_native                                    = false
+      + map_public_ip_on_launch                        = false
+      + owner_id                                       = (known after apply)
+      + private_dns_hostname_type_on_launch            = (known after apply)
+      + tags                                           = {
+          + "Name"                                    = "ecommerce-vpc-public-us-east-1b"
+          + "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          + "kubernetes.io/role/elb"                  = "1"
+        }
+      + tags_all                                       = {
+          + "Environment"                             = "Dev"
+          + "Layer"                                   = "lab"
+          + "ManagedBy"                               = "Terraform"
+          + "Name"                                    = "ecommerce-vpc-public-us-east-1b"
+          + "Project"                                 = "idp-compliance-scorecard"
+          + "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          + "kubernetes.io/role/elb"                  = "1"
+        }
+      + vpc_id                                         = (known after apply)
+    }
+
+  # module.vpc.aws_vpc.this[0] will be created
+  + resource "aws_vpc" "this" {
+      + arn                                  = (known after apply)
+      + cidr_block                           = "10.0.0.0/16"
+      + default_network_acl_id               = (known after apply)
+      + default_route_table_id               = (known after apply)
+      + default_security_group_id            = (known after apply)
+      + dhcp_options_id                      = (known after apply)
+      + enable_dns_hostnames                 = true
+      + enable_dns_support                   = true
+      + enable_network_address_usage_metrics = (known after apply)
+      + id                                   = (known after apply)
+      + instance_tenancy                     = "default"
+      + ipv6_association_id                  = (known after apply)
+      + ipv6_cidr_block                      = (known after apply)
+      + ipv6_cidr_block_network_border_group = (known after apply)
+      + main_route_table_id                  = (known after apply)
+      + owner_id                             = (known after apply)
+      + tags                                 = {
+          + "Name" = "ecommerce-vpc"
+        }
+      + tags_all                             = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "ecommerce-vpc"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+    }
+
+Plan: 19 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + availability_zones    = [
+      + "us-east-1a",
+      + "us-east-1b",
+    ]
+  + nat_gateway_public_ip = [
+      + (known after apply),
+    ]
+  + private_subnet_ids    = [
+      + (known after apply),
+      + (known after apply),
+    ]
+  + public_subnet_ids     = [
+      + (known after apply),
+      + (known after apply),
+    ]
+  + vpc_cidr_block        = "10.0.0.0/16"
+  + vpc_id                = (known after apply)
+module.vpc.aws_vpc.this[0]: Creating...
+module.vpc.aws_vpc.this[0]: Still creating... [10s elapsed]
+module.vpc.aws_vpc.this[0]: Creation complete after 17s [id=vpc-021161aa6d1618d82]
+module.vpc.aws_default_route_table.default[0]: Creating...
+module.vpc.aws_default_security_group.this[0]: Creating...
+module.vpc.aws_default_network_acl.this[0]: Creating...
+module.vpc.aws_subnet.public[1]: Creating...
+module.vpc.aws_route_table.private[0]: Creating...
+module.vpc.aws_subnet.private[1]: Creating...
+module.vpc.aws_subnet.public[0]: Creating...
+module.vpc.aws_internet_gateway.this[0]: Creating...
+module.vpc.aws_route_table.public[0]: Creating...
+module.vpc.aws_subnet.private[0]: Creating...
+module.vpc.aws_default_route_table.default[0]: Creation complete after 2s [id=rtb-066fb7e8e72c8ba83]
+module.vpc.aws_subnet.public[1]: Creation complete after 3s [id=subnet-0d759a96ebb59b0ba]
+module.vpc.aws_subnet.public[0]: Creation complete after 3s [id=subnet-04db64488eaa901fa]
+module.vpc.aws_internet_gateway.this[0]: Creation complete after 3s [id=igw-0465ab27cf8324c33]
+module.vpc.aws_eip.nat[0]: Creating...
+module.vpc.aws_subnet.private[0]: Creation complete after 3s [id=subnet-01fd0299a24a9c281]
+module.vpc.aws_route_table.public[0]: Creation complete after 3s [id=rtb-0e20925c02822f960]
+module.vpc.aws_route_table_association.public[0]: Creating...
+module.vpc.aws_route_table_association.public[1]: Creating...
+module.vpc.aws_route.public_internet_gateway[0]: Creating...
+module.vpc.aws_route_table.private[0]: Creation complete after 3s [id=rtb-0f44d2cd612eec299]
+module.vpc.aws_route_table_association.public[1]: Creation complete after 1s [id=rtbassoc-07ce8d23695af2673]
+module.vpc.aws_route_table_association.public[0]: Creation complete after 1s [id=rtbassoc-0df7618a4e4515386]
+module.vpc.aws_default_network_acl.this[0]: Creation complete after 5s [id=acl-087b3d08cbc03c8e1]
+module.vpc.aws_default_security_group.this[0]: Creation complete after 5s [id=sg-087603b6a307c44ff]
+module.vpc.aws_route.public_internet_gateway[0]: Creation complete after 2s [id=r-rtb-0e20925c02822f9601080289494]
+module.vpc.aws_eip.nat[0]: Creation complete after 4s [id=eipalloc-028c7bf0736497937]
+module.vpc.aws_nat_gateway.this[0]: Creating...
+module.vpc.aws_subnet.private[1]: Creation complete after 7s [id=subnet-0d4437684d9cbd194]
+module.vpc.aws_route_table_association.private[0]: Creating...
+module.vpc.aws_route_table_association.private[1]: Creating...
+module.vpc.aws_route_table_association.private[1]: Creation complete after 1s [id=rtbassoc-02dba7005101227d9]
+module.vpc.aws_route_table_association.private[0]: Creation complete after 1s [id=rtbassoc-086d363f69aafd47f]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [10s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [20s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [30s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [40s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [50s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m0s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m10s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m20s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still creating... [1m30s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Creation complete after 1m37s [id=nat-0b974ad684de5cf47]
+module.vpc.aws_route.private_nat_gateway[0]: Creating...
+module.vpc.aws_route.private_nat_gateway[0]: Creation complete after 2s [id=r-rtb-0f44d2cd612eec2991080289494]
+Releasing state lock. This may take a few moments...
+
+Apply complete! Resources: 19 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+availability_zones = tolist([
+  "us-east-1a",
+  "us-east-1b",
+])
+nat_gateway_public_ip = tolist([
+  "3.215.13.111",
+])
+private_subnet_ids = [
+  "subnet-01fd0299a24a9c281",
+  "subnet-0d4437684d9cbd194",
+]
+public_subnet_ids = [
+  "subnet-04db64488eaa901fa",
+  "subnet-0d759a96ebb59b0ba",
+]
+vpc_cidr_block = "10.0.0.0/16"
+vpc_id = "vpc-021161aa6d1618d82"
+[04:03:46] [02-cluster-eks] terraform apply
+data.terraform_remote_state.network: Reading...
+module.cluster_autoscaler_irsa.data.aws_caller_identity.current: Reading...
+module.ebs_csi_irsa.data.aws_partition.current: Reading...
+module.ebs_csi_irsa.data.aws_region.current: Reading...
+data.aws_caller_identity.current: Reading...
+module.cluster_autoscaler_irsa.data.aws_iam_policy_document.cluster_autoscaler[0]: Reading...
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_caller_identity.current: Reading...
+module.cluster_autoscaler_irsa.data.aws_region.current: Reading...
+module.eks.data.aws_caller_identity.current[0]: Reading...
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_iam_policy_document.assume_role_policy[0]: Reading...
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_iam_policy_document.assume_role_policy[0]: Read complete after 0s [id=2560088296]
+module.cluster_autoscaler_irsa.data.aws_iam_policy_document.cluster_autoscaler[0]: Read complete after 0s [id=2797119702]
+module.cluster_autoscaler_irsa.data.aws_region.current: Read complete after 0s [id=us-east-1]
+module.ebs_csi_irsa.data.aws_partition.current: Read complete after 0s [id=aws]
+module.ebs_csi_irsa.data.aws_region.current: Read complete after 0s [id=us-east-1]
+module.eks.data.aws_iam_policy_document.assume_role_policy[0]: Reading...
+module.ebs_csi_irsa.data.aws_caller_identity.current: Reading...
+module.eks.data.aws_partition.current[0]: Reading...
+module.eks.data.aws_iam_policy_document.assume_role_policy[0]: Read complete after 0s [id=2830595799]
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_partition.current: Reading...
+module.eks.data.aws_partition.current[0]: Read complete after 0s [id=aws]
+module.cluster_autoscaler_irsa.data.aws_partition.current: Reading...
+module.cluster_autoscaler_irsa.data.aws_partition.current: Read complete after 0s [id=aws]
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_partition.current: Read complete after 0s [id=aws]
+module.ebs_csi_irsa.data.aws_iam_policy_document.ebs_csi[0]: Reading...
+module.eks.data.aws_iam_policy_document.custom[0]: Reading...
+module.eks.data.aws_iam_policy_document.custom[0]: Read complete after 0s [id=513122117]
+module.eks.module.kms.data.aws_caller_identity.current[0]: Reading...
+module.ebs_csi_irsa.data.aws_iam_policy_document.ebs_csi[0]: Read complete after 0s [id=4189668531]
+module.eks.module.kms.data.aws_partition.current[0]: Reading...
+module.eks.module.kms.data.aws_partition.current[0]: Read complete after 0s [id=aws]
+module.cluster_autoscaler_irsa.data.aws_caller_identity.current: Read complete after 0s [id=736508008585]
+data.aws_caller_identity.current: Read complete after 0s [id=736508008585]
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_caller_identity.current: Read complete after 1s [id=736508008585]
+module.eks.data.aws_caller_identity.current[0]: Read complete after 1s [id=736508008585]
+module.eks.data.aws_iam_session_context.current[0]: Reading...
+module.eks.data.aws_iam_session_context.current[0]: Read complete after 0s [id=arn:aws:iam::736508008585:user/idp]
+module.ebs_csi_irsa.data.aws_caller_identity.current: Read complete after 1s [id=736508008585]
+module.eks.module.kms.data.aws_caller_identity.current[0]: Read complete after 1s [id=736508008585]
+data.terraform_remote_state.network: Read complete after 5s
+data.aws_eks_cluster_auth.cluster: Reading...
+data.aws_eks_cluster_auth.cluster: Read complete after 0s [id=ecommerce-cluster]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # aws_kms_alias.eks will be created
+  + resource "aws_kms_alias" "eks" {
+      + arn            = (known after apply)
+      + id             = (known after apply)
+      + name           = "alias/ecommerce-cluster-eks-secrets"
+      + name_prefix    = (known after apply)
+      + target_key_arn = (known after apply)
+      + target_key_id  = (known after apply)
+    }
+
+  # aws_kms_key.eks will be created
+  + resource "aws_kms_key" "eks" {
+      + arn                                = (known after apply)
+      + bypass_policy_lockout_safety_check = false
+      + customer_master_key_spec           = "SYMMETRIC_DEFAULT"
+      + deletion_window_in_days            = 7
+      + description                        = "KMS key for EKS cluster ecommerce-cluster secrets encryption"
+      + enable_key_rotation                = true
+      + id                                 = (known after apply)
+      + is_enabled                         = true
+      + key_id                             = (known after apply)
+      + key_usage                          = "ENCRYPT_DECRYPT"
+      + multi_region                       = (known after apply)
+      + policy                             = (known after apply)
+      + rotation_period_in_days            = (known after apply)
+      + tags_all                           = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+    }
+
+  # helm_release.argocd will be created
+  + resource "helm_release" "argocd" {
+      + atomic                     = false
+      + chart                      = "argo-cd"
+      + cleanup_on_fail            = false
+      + create_namespace           = true
+      + dependency_update          = false
+      + disable_crd_hooks          = false
+      + disable_openapi_validation = false
+      + disable_webhooks           = false
+      + force_update               = false
+      + id                         = (known after apply)
+      + lint                       = false
+      + manifest                   = (known after apply)
+      + max_history                = 0
+      + metadata                   = (known after apply)
+      + name                       = "argocd"
+      + namespace                  = "argocd"
+      + pass_credentials           = false
+      + recreate_pods              = false
+      + render_subchart_notes      = true
+      + replace                    = false
+      + repository                 = "https://argoproj.github.io/argo-helm"
+      + reset_values               = false
+      + reuse_values               = false
+      + skip_crds                  = false
+      + status                     = "deployed"
+      + timeout                    = 300
+      + values                     = [
+          + <<-EOT
+                "configs":
+                  "cm":
+                    "resource.customizations.health.argoproj.io_Application": |
+                      hs = {}
+                      hs.status = "Progressing"
+                      hs.message = ""
+                      if obj.status ~= nil then
+                        if obj.status.health ~= nil then
+                          hs.status = obj.status.health.status
+                          if obj.status.health.message ~= nil then
+                            hs.message = obj.status.health.message
+                          end
+                        end
+                      end
+                      return hs
+                  "params":
+                    "server.insecure": true
+                "dex":
+                  "enabled": false
+            EOT,
+        ]
+      + verify                     = false
+      + version                    = "5.51.4"
+      + wait                       = true
+      + wait_for_jobs              = false
+    }
+
+  # helm_release.argocd_root will be created
+  + resource "helm_release" "argocd_root" {
+      + atomic                     = false
+      + chart                      = "argocd-apps"
+      + cleanup_on_fail            = false
+      + create_namespace           = false
+      + dependency_update          = false
+      + disable_crd_hooks          = false
+      + disable_openapi_validation = false
+      + disable_webhooks           = false
+      + force_update               = false
+      + id                         = (known after apply)
+      + lint                       = false
+      + manifest                   = (known after apply)
+      + max_history                = 0
+      + metadata                   = (known after apply)
+      + name                       = "argocd-root"
+      + namespace                  = "argocd"
+      + pass_credentials           = false
+      + recreate_pods              = false
+      + render_subchart_notes      = true
+      + replace                    = false
+      + repository                 = "https://argoproj.github.io/argo-helm"
+      + reset_values               = false
+      + reuse_values               = false
+      + skip_crds                  = false
+      + status                     = "deployed"
+      + timeout                    = 300
+      + values                     = [
+          + <<-EOT
+                "applications":
+                  "root":
+                    "destination":
+                      "namespace": "argocd"
+                      "server": "https://kubernetes.default.svc"
+                    "finalizers":
+                    - "resources-finalizer.argocd.argoproj.io"
+                    "namespace": "argocd"
+                    "project": "default"
+                    "source":
+                      "directory":
+                        "recurse": false
+                      "path": "idp-gitops/argocd"
+                      "repoURL": "https://github.com/tranduyloc895/idp-compliance-scorecard.git"
+                      "targetRevision": "main"
+                    "syncPolicy":
+                      "automated":
+                        "prune": true
+                        "selfHeal": true
+            EOT,
+        ]
+      + verify                     = false
+      + version                    = "2.0.2"
+      + wait                       = true
+      + wait_for_jobs              = false
+    }
+
+  # kubernetes_service_account_v1.cluster_autoscaler will be created
+  + resource "kubernetes_service_account_v1" "cluster_autoscaler" {
+      + automount_service_account_token = true
+      + default_secret_name             = (known after apply)
+      + id                              = (known after apply)
+
+      + metadata {
+          + annotations      = (known after apply)
+          + generation       = (known after apply)
+          + labels           = {
+              + "app.kubernetes.io/managed-by" = "terraform"
+            }
+          + name             = "cluster-autoscaler"
+          + namespace        = "kube-system"
+          + resource_version = (known after apply)
+          + uid              = (known after apply)
+        }
+    }
+
+  # module.cluster_autoscaler_irsa.data.aws_iam_policy_document.this[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "this" {
+      + id            = (known after apply)
+      + json          = (known after apply)
+      + minified_json = (known after apply)
+
+      + statement {
+          + actions = [
+              + "sts:AssumeRoleWithWebIdentity",
+            ]
+          + effect  = "Allow"
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "sts.amazonaws.com",
+                ]
+              + variable = (known after apply)
+            }
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "system:serviceaccount:kube-system:cluster-autoscaler",
+                ]
+              + variable = (known after apply)
+            }
+
+          + principals {
+              + identifiers = [
+                  + (known after apply),
+                ]
+              + type        = "Federated"
+            }
+        }
+    }
+
+  # module.cluster_autoscaler_irsa.aws_iam_policy.cluster_autoscaler[0] will be created
+  + resource "aws_iam_policy" "cluster_autoscaler" {
+      + arn              = (known after apply)
+      + attachment_count = (known after apply)
+      + description      = "Cluster autoscaler policy to allow examination and modification of EC2 Auto Scaling Groups"
+      + id               = (known after apply)
+      + name             = (known after apply)
+      + name_prefix      = "AmazonEKS_Cluster_Autoscaler_Policy-"
+      + path             = "/"
+      + policy           = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = [
+                          + "eks:DescribeNodegroup",
+                          + "ec2:GetInstanceTypesFromInstanceRequirements",
+                          + "ec2:DescribeLaunchTemplateVersions",
+                          + "ec2:DescribeInstanceTypes",
+                          + "ec2:DescribeImages",
+                          + "autoscaling:DescribeTags",
+                          + "autoscaling:DescribeScalingActivities",
+                          + "autoscaling:DescribeLaunchConfigurations",
+                          + "autoscaling:DescribeAutoScalingInstances",
+                          + "autoscaling:DescribeAutoScalingGroups",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "*"
+                    },
+                  + {
+                      + Action    = [
+                          + "autoscaling:TerminateInstanceInAutoScalingGroup",
+                          + "autoscaling:SetDesiredCapacity",
+                        ]
+                      + Condition = {
+                          + StringEquals = {
+                              + "autoscaling:ResourceTag/kubernetes.io/cluster/ecommerce-cluster" = "owned"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "*"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + policy_id        = (known after apply)
+      + tags_all         = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+    }
+
+  # module.cluster_autoscaler_irsa.aws_iam_role.this[0] will be created
+  + resource "aws_iam_role" "this" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = (known after apply)
+      + create_date           = (known after apply)
+      + force_detach_policies = true
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "ecommerce-cluster-cluster-autoscaler"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.cluster_autoscaler_irsa.aws_iam_role_policy_attachment.cluster_autoscaler[0] will be created
+  + resource "aws_iam_role_policy_attachment" "cluster_autoscaler" {
+      + id         = (known after apply)
+      + policy_arn = (known after apply)
+      + role       = "ecommerce-cluster-cluster-autoscaler"
+    }
+
+  # module.ebs_csi_irsa.data.aws_iam_policy_document.this[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "this" {
+      + id            = (known after apply)
+      + json          = (known after apply)
+      + minified_json = (known after apply)
+
+      + statement {
+          + actions = [
+              + "sts:AssumeRoleWithWebIdentity",
+            ]
+          + effect  = "Allow"
+
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "sts.amazonaws.com",
+                ]
+              + variable = (known after apply)
+            }
+          + condition {
+              + test     = "StringEquals"
+              + values   = [
+                  + "system:serviceaccount:kube-system:ebs-csi-controller-sa",
+                ]
+              + variable = (known after apply)
+            }
+
+          + principals {
+              + identifiers = [
+                  + (known after apply),
+                ]
+              + type        = "Federated"
+            }
+        }
+    }
+
+  # module.ebs_csi_irsa.aws_iam_policy.ebs_csi[0] will be created
+  + resource "aws_iam_policy" "ebs_csi" {
+      + arn              = (known after apply)
+      + attachment_count = (known after apply)
+      + description      = "Provides permissions to manage EBS volumes via the container storage interface driver"
+      + id               = (known after apply)
+      + name             = (known after apply)
+      + name_prefix      = "AmazonEKS_EBS_CSI_Policy-"
+      + path             = "/"
+      + policy           = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action   = [
+                          + "ec2:DescribeVolumesModifications",
+                          + "ec2:DescribeVolumes",
+                          + "ec2:DescribeTags",
+                          + "ec2:DescribeSnapshots",
+                          + "ec2:DescribeInstances",
+                          + "ec2:DescribeAvailabilityZones",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "*"
+                    },
+                  + {
+                      + Action   = [
+                          + "ec2:ModifyVolume",
+                          + "ec2:CreateSnapshot",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  + {
+                      + Action   = [
+                          + "ec2:DetachVolume",
+                          + "ec2:AttachVolume",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = [
+                          + "arn:aws:ec2:*:*:volume/*",
+                          + "arn:aws:ec2:*:*:instance/*",
+                        ]
+                    },
+                  + {
+                      + Action   = [
+                          + "ec2:EnableFastSnapshotRestores",
+                          + "ec2:CreateVolume",
+                        ]
+                      + Effect   = "Allow"
+                      + Resource = "arn:aws:ec2:*:*:snapshot/*"
+                    },
+                  + {
+                      + Action    = "ec2:CreateTags"
+                      + Condition = {
+                          + StringEquals = {
+                              + "ec2:CreateAction" = [
+                                  + "CreateVolume",
+                                  + "CreateSnapshot",
+                                ]
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = [
+                          + "arn:aws:ec2:*:*:volume/*",
+                          + "arn:aws:ec2:*:*:snapshot/*",
+                        ]
+                    },
+                  + {
+                      + Action   = "ec2:DeleteTags"
+                      + Effect   = "Allow"
+                      + Resource = [
+                          + "arn:aws:ec2:*:*:volume/*",
+                          + "arn:aws:ec2:*:*:snapshot/*",
+                        ]
+                    },
+                  + {
+                      + Action    = "ec2:CreateVolume"
+                      + Condition = {
+                          + StringLike = {
+                              + "aws:RequestTag/ebs.csi.aws.com/cluster" = "true"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  + {
+                      + Action    = "ec2:CreateVolume"
+                      + Condition = {
+                          + StringLike = {
+                              + "aws:RequestTag/CSIVolumeName" = "*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  + {
+                      + Action    = "ec2:DeleteVolume"
+                      + Condition = {
+                          + StringLike = {
+                              + "aws:ResourceTag/ebs.csi.aws.com/cluster" = "true"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  + {
+                      + Action    = "ec2:DeleteVolume"
+                      + Condition = {
+                          + StringLike = {
+                              + "aws:ResourceTag/CSIVolumeName" = "*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  + {
+                      + Action    = "ec2:DeleteVolume"
+                      + Condition = {
+                          + StringLike = {
+                              + "ec2:ResourceTag/kubernetes.io/created-for/pvc/name" = "*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  + {
+                      + Action    = "ec2:CreateSnapshot"
+                      + Condition = {
+                          + StringLike = {
+                              + "aws:RequestTag/CSIVolumeSnapshotName" = "*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "arn:aws:ec2:*:*:snapshot/*"
+                    },
+                  + {
+                      + Action    = "ec2:CreateSnapshot"
+                      + Condition = {
+                          + StringLike = {
+                              + "aws:RequestTag/ebs.csi.aws.com/cluster" = "true"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "arn:aws:ec2:*:*:snapshot/*"
+                    },
+                  + {
+                      + Action    = "ec2:DeleteSnapshot"
+                      + Condition = {
+                          + StringLike = {
+                              + "aws:ResourceTag/CSIVolumeSnapshotName" = "*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "arn:aws:ec2:*:*:snapshot/*"
+                    },
+                  + {
+                      + Action    = "ec2:DeleteSnapshot"
+                      + Condition = {
+                          + StringLike = {
+                              + "aws:ResourceTag/ebs.csi.aws.com/cluster" = "true"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "arn:aws:ec2:*:*:snapshot/*"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + policy_id        = (known after apply)
+      + tags_all         = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+    }
+
+  # module.ebs_csi_irsa.aws_iam_role.this[0] will be created
+  + resource "aws_iam_role" "this" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = (known after apply)
+      + create_date           = (known after apply)
+      + force_detach_policies = true
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = "ecommerce-cluster-ebs-csi-driver"
+      + name_prefix           = (known after apply)
+      + path                  = "/"
+      + tags_all              = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.ebs_csi_irsa.aws_iam_role_policy_attachment.ebs_csi[0] will be created
+  + resource "aws_iam_role_policy_attachment" "ebs_csi" {
+      + id         = (known after apply)
+      + policy_arn = (known after apply)
+      + role       = "ecommerce-cluster-ebs-csi-driver"
+    }
+
+  # module.eks.data.aws_eks_addon_version.this["aws-ebs-csi-driver"] will be read during apply
+  # (depends on a resource or a module with changes pending)
+ <= data "aws_eks_addon_version" "this" {
+      + addon_name         = "aws-ebs-csi-driver"
+      + id                 = (known after apply)
+      + kubernetes_version = "1.35"
+      + most_recent        = true
+      + version            = (known after apply)
+    }
+
+  # module.eks.data.tls_certificate.this[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "tls_certificate" "this" {
+      + certificates = (known after apply)
+      + id           = (known after apply)
+      + url          = (known after apply)
+    }
+
+  # module.eks.aws_cloudwatch_log_group.this[0] will be created
+  + resource "aws_cloudwatch_log_group" "this" {
+      + arn               = (known after apply)
+      + id                = (known after apply)
+      + log_group_class   = (known after apply)
+      + name              = "/aws/eks/ecommerce-cluster/cluster"
+      + name_prefix       = (known after apply)
+      + retention_in_days = 7
+      + skip_destroy      = false
+      + tags              = {
+          + "Name" = "/aws/eks/ecommerce-cluster/cluster"
+        }
+      + tags_all          = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "/aws/eks/ecommerce-cluster/cluster"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+    }
+
+  # module.eks.aws_eks_access_entry.this["cluster_creator"] will be created
+  + resource "aws_eks_access_entry" "this" {
+      + access_entry_arn  = (known after apply)
+      + cluster_name      = (known after apply)
+      + created_at        = (known after apply)
+      + id                = (known after apply)
+      + kubernetes_groups = (known after apply)
+      + modified_at       = (known after apply)
+      + principal_arn     = "arn:aws:iam::736508008585:user/idp"
+      + tags_all          = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + type              = "STANDARD"
+      + user_name         = (known after apply)
+    }
+
+  # module.eks.aws_eks_access_policy_association.this["cluster_creator_admin"] will be created
+  + resource "aws_eks_access_policy_association" "this" {
+      + associated_at = (known after apply)
+      + cluster_name  = (known after apply)
+      + id            = (known after apply)
+      + modified_at   = (known after apply)
+      + policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+      + principal_arn = "arn:aws:iam::736508008585:user/idp"
+
+      + access_scope {
+          + type = "cluster"
+        }
+    }
+
+  # module.eks.aws_eks_addon.this["aws-ebs-csi-driver"] will be created
+  + resource "aws_eks_addon" "this" {
+      + addon_name                  = "aws-ebs-csi-driver"
+      + addon_version               = (known after apply)
+      + arn                         = (known after apply)
+      + cluster_name                = (known after apply)
+      + configuration_values        = (known after apply)
+      + created_at                  = (known after apply)
+      + id                          = (known after apply)
+      + modified_at                 = (known after apply)
+      + preserve                    = true
+      + resolve_conflicts_on_create = "OVERWRITE"
+      + resolve_conflicts_on_update = "OVERWRITE"
+      + service_account_role_arn    = (known after apply)
+      + tags_all                    = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+
+      + timeouts {}
+    }
+
+  # module.eks.aws_eks_cluster.this[0] will be created
+  + resource "aws_eks_cluster" "this" {
+      + arn                           = (known after apply)
+      + bootstrap_self_managed_addons = true
+      + certificate_authority         = (known after apply)
+      + cluster_id                    = (known after apply)
+      + created_at                    = (known after apply)
+      + enabled_cluster_log_types     = [
+          + "api",
+          + "audit",
+          + "authenticator",
+        ]
+      + endpoint                      = (known after apply)
+      + id                            = (known after apply)
+      + identity                      = (known after apply)
+      + name                          = "ecommerce-cluster"
+      + platform_version              = (known after apply)
+      + role_arn                      = (known after apply)
+      + status                        = (known after apply)
+      + tags                          = {
+          + "terraform-aws-modules" = "eks"
+        }
+      + tags_all                      = {
+          + "Environment"           = "Dev"
+          + "Layer"                 = "lab"
+          + "ManagedBy"             = "Terraform"
+          + "Project"               = "idp-compliance-scorecard"
+          + "terraform-aws-modules" = "eks"
+        }
+      + version                       = "1.35"
+
+      + access_config {
+          + authentication_mode                         = "API_AND_CONFIG_MAP"
+          + bootstrap_cluster_creator_admin_permissions = false
+        }
+
+      + encryption_config {
+          + resources = [
+              + "secrets",
+            ]
+
+          + provider {
+              + key_arn = (known after apply)
+            }
+        }
+
+      + kubernetes_network_config {
+          + ip_family         = "ipv4"
+          + service_ipv4_cidr = (known after apply)
+          + service_ipv6_cidr = (known after apply)
+
+          + elastic_load_balancing (known after apply)
+        }
+
+      + timeouts {}
+
+      + upgrade_policy (known after apply)
+
+      + vpc_config {
+          + cluster_security_group_id = (known after apply)
+          + endpoint_private_access   = true
+          + endpoint_public_access    = true
+          + public_access_cidrs       = [
+              + "0.0.0.0/0",
+            ]
+          + security_group_ids        = (known after apply)
+          + subnet_ids                = [
+              + "subnet-01fd0299a24a9c281",
+              + "subnet-0d4437684d9cbd194",
+            ]
+          + vpc_id                    = (known after apply)
+        }
+    }
+
+  # module.eks.aws_iam_openid_connect_provider.oidc_provider[0] will be created
+  + resource "aws_iam_openid_connect_provider" "oidc_provider" {
+      + arn             = (known after apply)
+      + client_id_list  = [
+          + "sts.amazonaws.com",
+        ]
+      + id              = (known after apply)
+      + tags            = {
+          + "Name" = "ecommerce-cluster-eks-irsa"
+        }
+      + tags_all        = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "ecommerce-cluster-eks-irsa"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + thumbprint_list = (known after apply)
+      + url             = (known after apply)
+    }
+
+  # module.eks.aws_iam_policy.cluster_encryption[0] will be created
+  + resource "aws_iam_policy" "cluster_encryption" {
+      + arn              = (known after apply)
+      + attachment_count = (known after apply)
+      + description      = "Cluster encryption policy to allow cluster role to utilize CMK provided"
+      + id               = (known after apply)
+      + name             = (known after apply)
+      + name_prefix      = "ecommerce-cluster-cluster-ClusterEncryption"
+      + path             = "/"
+      + policy           = (known after apply)
+      + policy_id        = (known after apply)
+      + tags_all         = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+    }
+
+  # module.eks.aws_iam_policy.custom[0] will be created
+  + resource "aws_iam_policy" "custom" {
+      + arn              = (known after apply)
+      + attachment_count = (known after apply)
+      + id               = (known after apply)
+      + name             = (known after apply)
+      + name_prefix      = "ecommerce-cluster-cluster-"
+      + path             = "/"
+      + policy           = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = [
+                          + "ec2:RunInstances",
+                          + "ec2:CreateLaunchTemplate",
+                          + "ec2:CreateFleet",
+                        ]
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:RequestTag/eks:eks-cluster-name" = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                            }
+                          + StringLike   = {
+                              + "aws:RequestTag/eks:kubernetes-node-class-name" = "*"
+                              + "aws:RequestTag/eks:kubernetes-node-pool-name"  = "*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "*"
+                      + Sid       = "Compute"
+                    },
+                  + {
+                      + Action    = [
+                          + "ec2:CreateVolume",
+                          + "ec2:CreateSnapshot",
+                        ]
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:RequestTag/eks:eks-cluster-name" = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = [
+                          + "arn:aws:ec2:*:*:volume/*",
+                          + "arn:aws:ec2:*:*:snapshot/*",
+                        ]
+                      + Sid       = "Storage"
+                    },
+                  + {
+                      + Action    = "ec2:CreateNetworkInterface"
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:RequestTag/eks:eks-cluster-name"         = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                              + "aws:RequestTag/eks:kubernetes-cni-node-name" = "*"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "*"
+                      + Sid       = "Networking"
+                    },
+                  + {
+                      + Action    = [
+                          + "elasticloadbalancing:CreateTargetGroup",
+                          + "elasticloadbalancing:CreateRule",
+                          + "elasticloadbalancing:CreateLoadBalancer",
+                          + "elasticloadbalancing:CreateListener",
+                          + "ec2:CreateSecurityGroup",
+                        ]
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:RequestTag/eks:eks-cluster-name" = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "*"
+                      + Sid       = "LoadBalancer"
+                    },
+                  + {
+                      + Action    = "shield:CreateProtection"
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:RequestTag/eks:eks-cluster-name" = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "*"
+                      + Sid       = "ShieldProtection"
+                    },
+                  + {
+                      + Action    = "shield:TagResource"
+                      + Condition = {
+                          + StringEquals = {
+                              + "aws:RequestTag/eks:eks-cluster-name" = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                            }
+                        }
+                      + Effect    = "Allow"
+                      + Resource  = "arn:aws:shield::*:protection/*"
+                      + Sid       = "ShieldTagResource"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + policy_id        = (known after apply)
+      + tags_all         = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+    }
+
+  # module.eks.aws_iam_role.this[0] will be created
+  + resource "aws_iam_role" "this" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = [
+                          + "sts:TagSession",
+                          + "sts:AssumeRole",
+                        ]
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "eks.amazonaws.com"
+                        }
+                      + Sid       = "EKSClusterAssumeRole"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + force_detach_policies = true
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = (known after apply)
+      + name_prefix           = "ecommerce-cluster-cluster-"
+      + path                  = "/"
+      + tags_all              = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.eks.aws_iam_role_policy_attachment.cluster_encryption[0] will be created
+  + resource "aws_iam_role_policy_attachment" "cluster_encryption" {
+      + id         = (known after apply)
+      + policy_arn = (known after apply)
+      + role       = (known after apply)
+    }
+
+  # module.eks.aws_iam_role_policy_attachment.custom[0] will be created
+  + resource "aws_iam_role_policy_attachment" "custom" {
+      + id         = (known after apply)
+      + policy_arn = (known after apply)
+      + role       = (known after apply)
+    }
+
+  # module.eks.aws_iam_role_policy_attachment.this["AmazonEKSClusterPolicy"] will be created
+  + resource "aws_iam_role_policy_attachment" "this" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+      + role       = (known after apply)
+    }
+
+  # module.eks.aws_iam_role_policy_attachment.this["AmazonEKSVPCResourceController"] will be created
+  + resource "aws_iam_role_policy_attachment" "this" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+      + role       = (known after apply)
+    }
+
+  # module.eks.aws_security_group.cluster[0] will be created
+  + resource "aws_security_group" "cluster" {
+      + arn                    = (known after apply)
+      + description            = "EKS cluster security group"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = (known after apply)
+      + name_prefix            = "ecommerce-cluster-cluster-"
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name" = "ecommerce-cluster-cluster"
+        }
+      + tags_all               = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "ecommerce-cluster-cluster"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + vpc_id                 = "vpc-021161aa6d1618d82"
+    }
+
+  # module.eks.aws_security_group.node[0] will be created
+  + resource "aws_security_group" "node" {
+      + arn                    = (known after apply)
+      + description            = "EKS node shared security group"
+      + egress                 = (known after apply)
+      + id                     = (known after apply)
+      + ingress                = (known after apply)
+      + name                   = (known after apply)
+      + name_prefix            = "ecommerce-cluster-node-"
+      + owner_id               = (known after apply)
+      + revoke_rules_on_delete = false
+      + tags                   = {
+          + "Name"                                    = "ecommerce-cluster-node"
+          + "kubernetes.io/cluster/ecommerce-cluster" = "owned"
+        }
+      + tags_all               = {
+          + "Environment"                             = "Dev"
+          + "Layer"                                   = "lab"
+          + "ManagedBy"                               = "Terraform"
+          + "Name"                                    = "ecommerce-cluster-node"
+          + "Project"                                 = "idp-compliance-scorecard"
+          + "kubernetes.io/cluster/ecommerce-cluster" = "owned"
+        }
+      + vpc_id                 = "vpc-021161aa6d1618d82"
+    }
+
+  # module.eks.aws_security_group_rule.cluster["ingress_nodes_443"] will be created
+  + resource "aws_security_group_rule" "cluster" {
+      + description              = "Node groups to cluster API"
+      + from_port                = 443
+      + id                       = (known after apply)
+      + protocol                 = "tcp"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 443
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node["egress_all"] will be created
+  + resource "aws_security_group_rule" "node" {
+      + cidr_blocks              = [
+          + "0.0.0.0/0",
+        ]
+      + description              = "Allow all egress"
+      + from_port                = 0
+      + id                       = (known after apply)
+      + prefix_list_ids          = []
+      + protocol                 = "-1"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 0
+      + type                     = "egress"
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_443"] will be created
+  + resource "aws_security_group_rule" "node" {
+      + description              = "Cluster API to node groups"
+      + from_port                = 443
+      + id                       = (known after apply)
+      + prefix_list_ids          = []
+      + protocol                 = "tcp"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 443
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_4443_webhook"] will be created
+  + resource "aws_security_group_rule" "node" {
+      + description              = "Cluster API to node 4443/tcp webhook"
+      + from_port                = 4443
+      + id                       = (known after apply)
+      + prefix_list_ids          = []
+      + protocol                 = "tcp"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 4443
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_6443_webhook"] will be created
+  + resource "aws_security_group_rule" "node" {
+      + description              = "Cluster API to node 6443/tcp webhook"
+      + from_port                = 6443
+      + id                       = (known after apply)
+      + prefix_list_ids          = []
+      + protocol                 = "tcp"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 6443
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_8443_webhook"] will be created
+  + resource "aws_security_group_rule" "node" {
+      + description              = "Cluster API to node 8443/tcp webhook"
+      + from_port                = 8443
+      + id                       = (known after apply)
+      + prefix_list_ids          = []
+      + protocol                 = "tcp"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 8443
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_9443_webhook"] will be created
+  + resource "aws_security_group_rule" "node" {
+      + description              = "Cluster API to node 9443/tcp webhook"
+      + from_port                = 9443
+      + id                       = (known after apply)
+      + prefix_list_ids          = []
+      + protocol                 = "tcp"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 9443
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_kubelet"] will be created
+  + resource "aws_security_group_rule" "node" {
+      + description              = "Cluster API to node kubelets"
+      + from_port                = 10250
+      + id                       = (known after apply)
+      + prefix_list_ids          = []
+      + protocol                 = "tcp"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = false
+      + source_security_group_id = (known after apply)
+      + to_port                  = 10250
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_nodes_ephemeral"] will be created
+  + resource "aws_security_group_rule" "node" {
+      + description              = "Node to node ingress on ephemeral ports"
+      + from_port                = 1025
+      + id                       = (known after apply)
+      + prefix_list_ids          = []
+      + protocol                 = "tcp"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = true
+      + source_security_group_id = (known after apply)
+      + to_port                  = 65535
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_self_coredns_tcp"] will be created
+  + resource "aws_security_group_rule" "node" {
+      + description              = "Node to node CoreDNS"
+      + from_port                = 53
+      + id                       = (known after apply)
+      + prefix_list_ids          = []
+      + protocol                 = "tcp"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = true
+      + source_security_group_id = (known after apply)
+      + to_port                  = 53
+      + type                     = "ingress"
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_self_coredns_udp"] will be created
+  + resource "aws_security_group_rule" "node" {
+      + description              = "Node to node CoreDNS UDP"
+      + from_port                = 53
+      + id                       = (known after apply)
+      + prefix_list_ids          = []
+      + protocol                 = "udp"
+      + security_group_id        = (known after apply)
+      + security_group_rule_id   = (known after apply)
+      + self                     = true
+      + source_security_group_id = (known after apply)
+      + to_port                  = 53
+      + type                     = "ingress"
+    }
+
+  # module.eks.time_sleep.this[0] will be created
+  + resource "time_sleep" "this" {
+      + create_duration = "30s"
+      + id              = (known after apply)
+      + triggers        = {
+          + "cluster_certificate_authority_data" = (known after apply)
+          + "cluster_endpoint"                   = (known after apply)
+          + "cluster_name"                       = (known after apply)
+          + "cluster_service_cidr"               = (known after apply)
+          + "cluster_version"                    = "1.35"
+        }
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0] will be created
+  + resource "aws_eks_node_group" "this" {
+      + ami_type               = (known after apply)
+      + arn                    = (known after apply)
+      + capacity_type          = "ON_DEMAND"
+      + cluster_name           = (known after apply)
+      + disk_size              = 30
+      + id                     = (known after apply)
+      + instance_types         = [
+          + "t3.large",
+        ]
+      + node_group_name        = (known after apply)
+      + node_group_name_prefix = "main_nodes-"
+      + node_role_arn          = (known after apply)
+      + release_version        = (known after apply)
+      + resources              = (known after apply)
+      + status                 = (known after apply)
+      + subnet_ids             = [
+          + "subnet-01fd0299a24a9c281",
+          + "subnet-0d4437684d9cbd194",
+        ]
+      + tags                   = {
+          + "Name" = "main_nodes"
+        }
+      + tags_all               = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Name"        = "main_nodes"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + version                = "1.35"
+
+      + node_repair_config (known after apply)
+
+      + scaling_config {
+          + desired_size = 2
+          + max_size     = 3
+          + min_size     = 2
+        }
+
+      + timeouts {}
+
+      + update_config {
+          + max_unavailable_percentage = 33
+        }
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role.this[0] will be created
+  + resource "aws_iam_role" "this" {
+      + arn                   = (known after apply)
+      + assume_role_policy    = jsonencode(
+            {
+              + Statement = [
+                  + {
+                      + Action    = "sts:AssumeRole"
+                      + Effect    = "Allow"
+                      + Principal = {
+                          + Service = "ec2.amazonaws.com"
+                        }
+                      + Sid       = "EKSNodeAssumeRole"
+                    },
+                ]
+              + Version   = "2012-10-17"
+            }
+        )
+      + create_date           = (known after apply)
+      + description           = "EKS managed node group IAM role"
+      + force_detach_policies = true
+      + id                    = (known after apply)
+      + managed_policy_arns   = (known after apply)
+      + max_session_duration  = 3600
+      + name                  = (known after apply)
+      + name_prefix           = "main_nodes-eks-node-group-"
+      + path                  = "/"
+      + tags_all              = {
+          + "Environment" = "Dev"
+          + "Layer"       = "lab"
+          + "ManagedBy"   = "Terraform"
+          + "Project"     = "idp-compliance-scorecard"
+        }
+      + unique_id             = (known after apply)
+
+      + inline_policy (known after apply)
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEC2ContainerRegistryReadOnly"] will be created
+  + resource "aws_iam_role_policy_attachment" "this" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+      + role       = (known after apply)
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKSWorkerNodePolicy"] will be created
+  + resource "aws_iam_role_policy_attachment" "this" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+      + role       = (known after apply)
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKS_CNI_Policy"] will be created
+  + resource "aws_iam_role_policy_attachment" "this" {
+      + id         = (known after apply)
+      + policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+      + role       = (known after apply)
+    }
+
+  # module.eks.module.kms.data.aws_iam_policy_document.this[0] will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "this" {
+      + id                        = (known after apply)
+      + json                      = (known after apply)
+      + minified_json             = (known after apply)
+      + override_policy_documents = []
+      + source_policy_documents   = []
+
+      + statement {
+          + actions   = [
+              + "kms:*",
+            ]
+          + resources = [
+              + "*",
+            ]
+          + sid       = "Default"
+
+          + principals {
+              + identifiers = [
+                  + "arn:aws:iam::736508008585:root",
+                ]
+              + type        = "AWS"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "kms:CancelKeyDeletion",
+              + "kms:Create*",
+              + "kms:Delete*",
+              + "kms:Describe*",
+              + "kms:Disable*",
+              + "kms:Enable*",
+              + "kms:Get*",
+              + "kms:ImportKeyMaterial",
+              + "kms:List*",
+              + "kms:Put*",
+              + "kms:ReplicateKey",
+              + "kms:Revoke*",
+              + "kms:ScheduleKeyDeletion",
+              + "kms:TagResource",
+              + "kms:UntagResource",
+              + "kms:Update*",
+            ]
+          + resources = [
+              + "*",
+            ]
+          + sid       = "KeyAdministration"
+
+          + principals {
+              + identifiers = [
+                  + "arn:aws:iam::736508008585:user/idp",
+                ]
+              + type        = "AWS"
+            }
+        }
+      + statement {
+          + actions   = [
+              + "kms:Decrypt",
+              + "kms:DescribeKey",
+              + "kms:Encrypt",
+              + "kms:GenerateDataKey*",
+              + "kms:ReEncrypt*",
+            ]
+          + resources = [
+              + "*",
+            ]
+          + sid       = "KeyUsage"
+
+          + principals {
+              + identifiers = [
+                  + (known after apply),
+                ]
+              + type        = "AWS"
+            }
+        }
+    }
+
+  # module.eks.module.kms.aws_kms_alias.this["cluster"] will be created
+  + resource "aws_kms_alias" "this" {
+      + arn            = (known after apply)
+      + id             = (known after apply)
+      + name           = "alias/eks/ecommerce-cluster"
+      + name_prefix    = (known after apply)
+      + target_key_arn = (known after apply)
+      + target_key_id  = (known after apply)
+    }
+
+  # module.eks.module.kms.aws_kms_key.this[0] will be created
+  + resource "aws_kms_key" "this" {
+      + arn                                = (known after apply)
+      + bypass_policy_lockout_safety_check = false
+      + customer_master_key_spec           = "SYMMETRIC_DEFAULT"
+      + description                        = "ecommerce-cluster cluster encryption key"
+      + enable_key_rotation                = true
+      + id                                 = (known after apply)
+      + is_enabled                         = true
+      + key_id                             = (known after apply)
+      + key_usage                          = "ENCRYPT_DECRYPT"
+      + multi_region                       = false
+      + policy                             = (known after apply)
+      + rotation_period_in_days            = (known after apply)
+      + tags                               = {
+          + "terraform-aws-modules" = "eks"
+        }
+      + tags_all                           = {
+          + "Environment"           = "Dev"
+          + "Layer"                 = "lab"
+          + "ManagedBy"             = "Terraform"
+          + "Project"               = "idp-compliance-scorecard"
+          + "terraform-aws-modules" = "eks"
+        }
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].module.user_data.null_resource.validate_cluster_service_cidr will be created
+  + resource "null_resource" "validate_cluster_service_cidr" {
+      + id = (known after apply)
+    }
+
+Plan: 46 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + account_id                         = "736508008585"
+  + cluster_autoscaler_iam_role_arn    = (known after apply)
+  + cluster_certificate_authority_data = (sensitive value)
+  + cluster_endpoint                   = (known after apply)
+  + cluster_name                       = "ecommerce-cluster"
+  + cluster_security_group_id          = (known after apply)
+  + ecr_registry                       = "736508008585.dkr.ecr.us-east-1.amazonaws.com"
+  + kms_key_arn                        = (known after apply)
+  + kubeconfig_command                 = "aws eks update-kubeconfig --name ecommerce-cluster --region us-east-1"
+  + node_security_group_id             = (known after apply)
+  + region                             = "us-east-1"
+module.eks.aws_iam_role.this[0]: Creating...
+module.eks.aws_security_group.cluster[0]: Creating...
+module.cluster_autoscaler_irsa.aws_iam_policy.cluster_autoscaler[0]: Creating...
+aws_kms_key.eks: Creating...
+module.ebs_csi_irsa.aws_iam_policy.ebs_csi[0]: Creating...
+module.eks.aws_iam_policy.custom[0]: Creating...
+module.eks.aws_security_group.node[0]: Creating...
+module.eks.aws_cloudwatch_log_group.this[0]: Creating...
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role.this[0]: Creating...
+module.cluster_autoscaler_irsa.aws_iam_policy.cluster_autoscaler[0]: Creation complete after 3s [id=arn:aws:iam::736508008585:policy/AmazonEKS_Cluster_Autoscaler_Policy-20261116040415210200000002]
+module.ebs_csi_irsa.aws_iam_policy.ebs_csi[0]: Creation complete after 3s [id=arn:aws:iam::736508008585:policy/AmazonEKS_EBS_CSI_Policy-20261116040415211800000006]
+module.eks.aws_iam_policy.custom[0]: Creation complete after 3s [id=arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-20261116040415210200000001]
+module.eks.aws_cloudwatch_log_group.this[0]: Creation complete after 3s [id=/aws/eks/ecommerce-cluster/cluster]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role.this[0]: Creation complete after 3s [id=main_nodes-eks-node-group-20261116040415211800000005]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEC2ContainerRegistryReadOnly"]: Creating...
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKS_CNI_Policy"]: Creating...
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKSWorkerNodePolicy"]: Creating...
+module.eks.aws_iam_role.this[0]: Creation complete after 3s [id=ecommerce-cluster-cluster-20261116040415210800000004]
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSClusterPolicy"]: Creating...
+module.eks.aws_iam_role_policy_attachment.custom[0]: Creating...
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSVPCResourceController"]: Creating...
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKSWorkerNodePolicy"]: Creation complete after 1s [id=main_nodes-eks-node-group-20261116040415211800000005-20261116040418665000000008]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEC2ContainerRegistryReadOnly"]: Creation complete after 1s [id=main_nodes-eks-node-group-20261116040415211800000005-20261116040418688800000009]
+module.eks.aws_iam_role_policy_attachment.custom[0]: Creation complete after 1s [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604041870770000000a]
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSClusterPolicy"]: Creation complete after 1s [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604041872880000000b]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKS_CNI_Policy"]: Creation complete after 1s [id=main_nodes-eks-node-group-20261116040415211800000005-2026111604041874690000000c]
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSVPCResourceController"]: Creation complete after 1s [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604041898770000000d]
+module.eks.aws_security_group.cluster[0]: Creation complete after 8s [id=sg-077cabc9092f591e0]
+module.eks.aws_security_group.node[0]: Creation complete after 8s [id=sg-0e93e57dc2ec4f7f1]
+module.eks.aws_security_group_rule.node["ingress_self_coredns_tcp"]: Creating...
+module.eks.aws_security_group_rule.node["ingress_cluster_kubelet"]: Creating...
+module.eks.aws_security_group_rule.node["egress_all"]: Creating...
+module.eks.aws_security_group_rule.node["ingress_cluster_8443_webhook"]: Creating...
+module.eks.aws_security_group_rule.node["ingress_cluster_443"]: Creating...
+module.eks.aws_security_group_rule.node["ingress_self_coredns_udp"]: Creating...
+module.eks.aws_security_group_rule.node["ingress_cluster_9443_webhook"]: Creating...
+module.eks.aws_security_group_rule.node["ingress_cluster_6443_webhook"]: Creating...
+module.eks.aws_security_group_rule.cluster["ingress_nodes_443"]: Creating...
+module.eks.aws_security_group_rule.cluster["ingress_nodes_443"]: Creation complete after 1s [id=sgrule-1111666134]
+module.eks.aws_security_group_rule.node["ingress_cluster_4443_webhook"]: Creating...
+module.eks.aws_security_group_rule.node["ingress_cluster_kubelet"]: Creation complete after 1s [id=sgrule-4085642085]
+module.eks.aws_security_group_rule.node["ingress_nodes_ephemeral"]: Creating...
+aws_kms_key.eks: Still creating... [10s elapsed]
+module.eks.aws_security_group_rule.node["ingress_self_coredns_tcp"]: Creation complete after 3s [id=sgrule-4191808355]
+module.eks.aws_security_group_rule.node["ingress_self_coredns_udp"]: Creation complete after 4s [id=sgrule-1569081484]
+module.eks.aws_security_group_rule.node["ingress_cluster_8443_webhook"]: Creation complete after 5s [id=sgrule-1796801413]
+aws_kms_key.eks: Creation complete after 14s [id=612c045e-46ae-4996-b681-f53fe0a4ec8f]
+aws_kms_alias.eks: Creating...
+module.eks.module.kms.data.aws_iam_policy_document.this[0]: Reading...
+module.eks.module.kms.data.aws_iam_policy_document.this[0]: Read complete after 0s [id=2503043926]
+module.eks.module.kms.aws_kms_key.this[0]: Creating...
+module.eks.aws_security_group_rule.node["ingress_cluster_443"]: Creation complete after 7s [id=sgrule-2058012360]
+aws_kms_alias.eks: Creation complete after 1s [id=alias/ecommerce-cluster-eks-secrets]
+module.eks.aws_security_group_rule.node["ingress_cluster_9443_webhook"]: Creation complete after 8s [id=sgrule-263729230]
+module.eks.aws_security_group_rule.node["egress_all"]: Creation complete after 9s [id=sgrule-4004449486]
+module.eks.aws_security_group_rule.node["ingress_cluster_6443_webhook"]: Still creating... [10s elapsed]
+module.eks.aws_security_group_rule.node["ingress_cluster_6443_webhook"]: Creation complete after 11s [id=sgrule-2017804196]
+module.eks.aws_security_group_rule.node["ingress_cluster_4443_webhook"]: Still creating... [10s elapsed]
+module.eks.aws_security_group_rule.node["ingress_nodes_ephemeral"]: Still creating... [10s elapsed]
+module.eks.aws_security_group_rule.node["ingress_cluster_4443_webhook"]: Creation complete after 11s [id=sgrule-2970048562]
+module.eks.aws_security_group_rule.node["ingress_nodes_ephemeral"]: Creation complete after 12s [id=sgrule-1031087289]
+module.eks.module.kms.aws_kms_key.this[0]: Still creating... [10s elapsed]
+module.eks.module.kms.aws_kms_key.this[0]: Creation complete after 19s [id=210f3c1c-39b3-41d8-a750-5c8fb531d276]
+module.eks.aws_iam_policy.cluster_encryption[0]: Creating...
+module.eks.module.kms.aws_kms_alias.this["cluster"]: Creating...
+module.eks.aws_eks_cluster.this[0]: Creating...
+module.eks.module.kms.aws_kms_alias.this["cluster"]: Creation complete after 0s [id=alias/eks/ecommerce-cluster]
+module.eks.aws_iam_policy.cluster_encryption[0]: Creation complete after 1s [id=arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-ClusterEncryption2026111604045065540000000e]
+module.eks.aws_iam_role_policy_attachment.cluster_encryption[0]: Creating...
+module.eks.aws_iam_role_policy_attachment.cluster_encryption[0]: Creation complete after 0s [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604045198370000000f]
+module.eks.aws_eks_cluster.this[0]: Still creating... [10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [1m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [2m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [3m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [4m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [4m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [4m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [4m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [4m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [4m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [5m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [5m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [5m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [5m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [5m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [5m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [6m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [6m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [6m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [6m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [6m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [6m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [7m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [7m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [7m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [7m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [7m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [7m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [8m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [8m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [8m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [8m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [8m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [8m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [9m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [9m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [9m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [9m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [9m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [9m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [10m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [10m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still creating... [10m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Creation complete after 10m21s [id=ecommerce-cluster]
+module.eks.data.tls_certificate.this[0]: Reading...
+module.eks.aws_eks_access_entry.this["cluster_creator"]: Creating...
+module.eks.time_sleep.this[0]: Creating...
+module.eks.aws_eks_access_entry.this["cluster_creator"]: Creation complete after 1s [id=ecommerce-cluster:arn:aws:iam::736508008585:user/idp]
+module.eks.aws_eks_access_policy_association.this["cluster_creator_admin"]: Creating...
+module.eks.data.tls_certificate.this[0]: Read complete after 2s [id=b1b539daa206035ae3c3e28288b0681fa1b462f3]
+module.eks.aws_iam_openid_connect_provider.oidc_provider[0]: Creating...
+module.eks.aws_eks_access_policy_association.this["cluster_creator_admin"]: Creation complete after 1s [id=ecommerce-cluster#arn:aws:iam::736508008585:user/idp#arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy]
+module.eks.aws_iam_openid_connect_provider.oidc_provider[0]: Creation complete after 2s [id=arn:aws:iam::736508008585:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB]
+module.cluster_autoscaler_irsa.data.aws_iam_policy_document.this[0]: Reading...
+module.ebs_csi_irsa.data.aws_iam_policy_document.this[0]: Reading...
+module.ebs_csi_irsa.data.aws_iam_policy_document.this[0]: Read complete after 0s [id=2032299344]
+module.cluster_autoscaler_irsa.data.aws_iam_policy_document.this[0]: Read complete after 0s [id=4063373980]
+module.ebs_csi_irsa.aws_iam_role.this[0]: Creating...
+module.cluster_autoscaler_irsa.aws_iam_role.this[0]: Creating...
+module.ebs_csi_irsa.aws_iam_role.this[0]: Creation complete after 2s [id=ecommerce-cluster-ebs-csi-driver]
+module.eks.data.aws_eks_addon_version.this["aws-ebs-csi-driver"]: Reading...
+module.ebs_csi_irsa.aws_iam_role_policy_attachment.ebs_csi[0]: Creating...
+module.cluster_autoscaler_irsa.aws_iam_role.this[0]: Creation complete after 2s [id=ecommerce-cluster-cluster-autoscaler]
+module.cluster_autoscaler_irsa.aws_iam_role_policy_attachment.cluster_autoscaler[0]: Creating...
+module.eks.data.aws_eks_addon_version.this["aws-ebs-csi-driver"]: Read complete after 1s [id=aws-ebs-csi-driver]
+module.ebs_csi_irsa.aws_iam_role_policy_attachment.ebs_csi[0]: Creation complete after 1s [id=ecommerce-cluster-ebs-csi-driver-20261116041521486300000010]
+module.cluster_autoscaler_irsa.aws_iam_role_policy_attachment.cluster_autoscaler[0]: Creation complete after 1s [id=ecommerce-cluster-cluster-autoscaler-20261116041521667700000011]
+module.eks.time_sleep.this[0]: Still creating... [10s elapsed]
+module.eks.time_sleep.this[0]: Still creating... [20s elapsed]
+module.eks.time_sleep.this[0]: Still creating... [30s elapsed]
+module.eks.time_sleep.this[0]: Creation complete after 30s [id=2026-11-16T04:15:44Z]
+module.eks.module.eks_managed_node_group["main_nodes"].module.user_data.null_resource.validate_cluster_service_cidr: Creating...
+module.eks.module.eks_managed_node_group["main_nodes"].module.user_data.null_resource.validate_cluster_service_cidr: Creation complete after 0s [id=2171524856263970653]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Creating...
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still creating... [10s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still creating... [20s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still creating... [30s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still creating... [40s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still creating... [50s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still creating... [1m0s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still creating... [1m10s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still creating... [1m20s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still creating... [1m30s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still creating... [1m40s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still creating... [1m50s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Creation complete after 1m50s [id=ecommerce-cluster:main_nodes-20261116041547545300000012]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Creating...
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [10s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [20s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [30s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still creating... [40s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Creation complete after 48s [id=ecommerce-cluster:aws-ebs-csi-driver]
+kubernetes_service_account_v1.cluster_autoscaler: Creating...
+kubernetes_service_account_v1.cluster_autoscaler: Creation complete after 3s [id=kube-system/cluster-autoscaler]
+helm_release.argocd: Creating...
+helm_release.argocd: Still creating... [10s elapsed]
+helm_release.argocd: Still creating... [20s elapsed]
+helm_release.argocd: Still creating... [30s elapsed]
+helm_release.argocd: Still creating... [40s elapsed]
+helm_release.argocd: Still creating... [50s elapsed]
+helm_release.argocd: Still creating... [1m0s elapsed]
+helm_release.argocd: Still creating... [1m10s elapsed]
+helm_release.argocd: Still creating... [1m20s elapsed]
+helm_release.argocd: Still creating... [1m30s elapsed]
+helm_release.argocd: Creation complete after 1m38s [id=argocd]
+helm_release.argocd_root: Creating...
+helm_release.argocd_root: Creation complete after 8s [id=argocd-root]
+Releasing state lock. This may take a few moments...
+
+Apply complete! Resources: 46 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+account_id = "736508008585"
+cluster_autoscaler_iam_role_arn = "arn:aws:iam::736508008585:role/ecommerce-cluster-cluster-autoscaler"
+cluster_certificate_authority_data = <sensitive>
+cluster_endpoint = "https://9177B314289B8E0C0BC3CEF466F44CFB.gr7.us-east-1.eks.amazonaws.com"
+cluster_name = "ecommerce-cluster"
+cluster_security_group_id = "sg-077cabc9092f591e0"
+ecr_registry = "736508008585.dkr.ecr.us-east-1.amazonaws.com"
+kms_key_arn = "arn:aws:kms:us-east-1:736508008585:key/612c045e-46ae-4996-b681-f53fe0a4ec8f"
+kubeconfig_command = "aws eks update-kubeconfig --name ecommerce-cluster --region us-east-1"
+node_security_group_id = "sg-0e93e57dc2ec4f7f1"
+region = "us-east-1"
+[04:20:43] kubectl mode: native
+[04:20:44] account=736508008585 region=us-east-1 state_bucket=idp-tfstate-736508008585-us-east-1
+[04:20:46] kubectl mode: native
+[04:21:04] secret compliance/compliance-engine-secrets
+[04:21:16] secret retail-store/catalog-mysql-secret
+[04:21:25] secret retail-store/orders-postgres-secret
+[04:21:36] secret monitoring/grafana-admin
+[04:21:45] secret monitoring/telegram-alertmanager-secret
+[04:21:45] k8s-secrets: OK
+[04:21:45] Chờ Argo CD Applications Synced/Healthy (tối đa 2400s)
+[04:21:48] apps: 9, chưa xong: 5
+[04:22:22] apps: 9, chưa xong: 3
+[04:22:55] apps: 9, chưa xong: 3
+[04:23:28] apps: 9, chưa xong: 3
+[04:24:02] apps: 9, chưa xong: 3
+[04:24:35] apps: 9, chưa xong: 3
+[04:25:09] apps: 13, chưa xong: 5
+[04:25:43] apps: 13, chưa xong: 5
+[04:26:16] apps: 13, chưa xong: 4
+[04:26:49] apps: 19, chưa xong: 10
+[04:27:23] apps: 19, chưa xong: 10
+[04:27:56] apps: 19, chưa xong: 8
+[04:28:30] apps: 19, chưa xong: 8
+[04:29:04] apps: 19, chưa xong: 8
+[04:29:37] apps: 19, chưa xong: 8
+[04:30:10] apps: 19, chưa xong: 8
+[04:30:44] apps: 19, chưa xong: 8
+[04:31:17] apps: 19, chưa xong: 8
+[04:31:51] apps: 19, chưa xong: 8
+[04:32:23] apps: 19, chưa xong: 8
+[04:32:57] apps: 19, chưa xong: 8
+[04:33:30] apps: 19, chưa xong: 8
+[04:34:03] apps: 19, chưa xong: 8
+[04:34:37] apps: 19, chưa xong: 8
+[04:35:11] apps: 19, chưa xong: 8
+[04:35:44] apps: 19, chưa xong: 8
+[04:36:17] apps: 19, chưa xong: 8
+[04:36:51] apps: 19, chưa xong: 8
+[04:37:24] apps: 19, chưa xong: 8
+[04:37:57] apps: 19, chưa xong: 8
+[04:38:29] apps: 19, chưa xong: 8

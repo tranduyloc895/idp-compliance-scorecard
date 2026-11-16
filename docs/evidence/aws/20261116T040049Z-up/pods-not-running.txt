@@ -1,0 +1,13 @@
+kyverno        kyverno-clean-reports-9mbmq                                  0/1   ErrImagePull       0             16m
+kyverno        kyverno-cleanup-admission-reports-29913390-rrf8c             0/1   ImagePullBackOff   0             8m16s
+kyverno        kyverno-cleanup-cluster-admission-reports-29913390-ckbh6     0/1   ImagePullBackOff   0             8m16s
+kyverno        kyverno-cleanup-cluster-ephemeral-reports-29913390-kkkzc     0/1   ImagePullBackOff   0             8m16s
+kyverno        kyverno-cleanup-ephemeral-reports-29913390-g4m9b             0/1   ImagePullBackOff   0             8m16s
+kyverno        kyverno-cleanup-update-requests-29913390-4q2z6               0/1   ImagePullBackOff   0             8m16s
+monitoring     loki-0                                                       0/1   Pending            0             11m
+retail-store   cart-6cffb969b8-5vgqd                                        0/1   Pending            0             11m
+retail-store   cart-6cffb969b8-7j8jt                                        0/1   Pending            0             11m
+retail-store   catalog-69679cfc4d-csqrg                                     0/1   Pending            0             11m
+retail-store   ui-96795bcd6-lxfhh                                           0/1   Pending            0             11m
+trivy-system   scan-vulnerabilityreport-74b9cf67dd-7w59n                    0/1   Error              0             17m
+trivy-system   scan-vulnerabilityreport-978494f65-pp9lz                     0/3   Error              0             17m
