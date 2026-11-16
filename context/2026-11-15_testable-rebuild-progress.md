@@ -134,5 +134,18 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 
 ## Bước tiếp theo (cập nhật 2026-11-16 03:25)
 1. 2026-11-16 03:27 UTC: người dùng đồng ý → `terraform apply 04-oidc` (WSL, AWS_PROFILE=idp; chỉ đổi assume_role_policy, $0) — **xong**: 0 add, 1 change, 0 destroy; `aws iam get-role` xác nhận sub có cả hai dạng.
-2. 2026-11-16 03:29 UTC: người dùng đồng ý → `gh workflow run build-all --ref main` (6 image → Trivy gate → push ECR → CI commit tag vào main). Chi phí: ECR ~$0.10/GB-tháng (ước tính 1–2 GB) + phút GitHub Actions (repo public, miễn phí) — đang chạy.
+2. 2026-11-16 03:29 UTC: người dùng đồng ý → `gh workflow run build-all --ref main` (6 image → Trivy gate → push ECR → CI commit tag vào main). Chi phí: ECR ~$0.10/GB-tháng (ước tính 1–2 GB) + phút GitHub Actions (repo public, miễn phí) — **xong, run 43798460094: 1/6 pass**.
 3. Merge PR `fix/aws-lab-2` (hỏi).
+
+## Kết quả build-all lần 1 (run 43798460094, 2026-11-16 03:26–03:31 UTC)
+- OIDC/ECR login OK cho cả 6 (fix 04-oidc có hiệu lực).
+- `compliance-engine`: pass Trivy gate → push `retail-store/compliance-engine:f71fced` (~98 MB) → CI commit `98dff48` vào main (kustomization.yaml).
+- 5 service Retail Store **bị Trivy gate chặn** (CRITICAL có bản sửa; Trivy v0.70.0 qua trivy-action v0.36.0). Không push, không commit tag:
+  | Service | CRITICAL | Gói chính (cài → bản sửa) |
+  |---|---|---|
+  | ui (Java, Boot 3.5.5) | 9 | netty-handler 4.1.124 → 4.1.137; spring-webflux 6.2.10 → **chỉ có 7.0.9**; thymeleaf(+spring6) 3.1.3 → 3.1.5 |
+  | cart (Java, Boot 3.5.5) | 10 | netty-handler; tomcat-embed-core 10.1.44 → 10.1.58; spring-webmvc 6.2.10 → **chỉ có 7.0.9** |
+  | orders (Java, Boot 3.5.5) | 10 | như cart |
+  | catalog (Go) | 1 | google.golang.org/grpc v1.73.0 (indirect) → 1.79.3 |
+  | checkout (Node) | 6 | form-data 2.3.3, protobufjs 7.4.0, proxy-addr 2.0.7, tar 7.5.7 (+2) |
+- CVE của Spring Framework chỉ có bản sửa ở 7.0.x → cần Spring Boot 4 (đổi major). Chờ người dùng chọn hướng xử lý.
