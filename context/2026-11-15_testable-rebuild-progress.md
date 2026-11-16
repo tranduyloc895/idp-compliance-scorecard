@@ -134,5 +134,5 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 
 ## Bước tiếp theo (cập nhật 2026-11-16 03:25)
 1. 2026-11-16 03:27 UTC: người dùng đồng ý → `terraform apply 04-oidc` (WSL, AWS_PROFILE=idp; chỉ đổi assume_role_policy, $0) — **xong**: 0 add, 1 change, 0 destroy; `aws iam get-role` xác nhận sub có cả hai dạng.
-2. Chạy lại 6 workflow build (hoặc `build-all`) trên main — hỏi người dùng.
+2. 2026-11-16 03:29 UTC: người dùng đồng ý → `gh workflow run build-all --ref main` (6 image → Trivy gate → push ECR → CI commit tag vào main). Chi phí: ECR ~$0.10/GB-tháng (ước tính 1–2 GB) + phút GitHub Actions (repo public, miễn phí) — đang chạy.
 3. Merge PR `fix/aws-lab-2` (hỏi).
