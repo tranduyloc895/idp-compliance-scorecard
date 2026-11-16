@@ -1,0 +1,7 @@
+compliance     compliance-postgres-data   Bound     pvc-ceadd218-d90c-48e2-bb9b-e4f12024b5ed   2Gi   RWO   gp3   <unset>   15m
+monitoring     kps-grafana                Bound     pvc-76a29bb9-2446-4e6f-b915-6de7390e0f29   5Gi   RWO   gp3   <unset>   15m
+monitoring     storage-loki-0             Pending                                                          gp3   <unset>   13m
+retail-store   cart-dynamodb-data         Bound     pvc-2007d80a-6cdf-4230-9d80-160685299389   1Gi   RWO   gp3   <unset>   19m
+retail-store   catalog-mysql-data         Bound     pvc-a550a8de-3c59-4edd-9894-7d395128543e   5Gi   RWO   gp3   <unset>   19m
+retail-store   checkout-redis-data        Bound     pvc-82c450ef-9718-484b-8b20-3971196a4c0f   1Gi   RWO   gp3   <unset>   19m
+retail-store   orders-postgres-data       Bound     pvc-541836dd-da47-44ff-b72f-862a2d02ac99   5Gi   RWO   gp3   <unset>   19m

@@ -1,0 +1,2582 @@
+no aws-up process
+[04:40:04] account=736508008585 region=us-east-1 state_bucket=idp-tfstate-736508008585-us-east-1
+[04:40:04] evidence: /mnt/c/workspace/it/project/idp-compliance-scorecard/docs/evidence/aws/20261116T044004Z-down
+[04:40:04] === aws-down (dry-run=0) ===
+[04:40:14] vpc_id=vpc-021161aa6d1618d82
+[04:40:17] kubectl mode: native
+[04:40:17] Applications hiện có:
+compliance-engine                Synced      Healthy
+platform-cluster-autoscaler      Synced      Healthy
+platform-kube-bench              Synced      Healthy
+platform-kube-prometheus-stack   Unknown     Healthy
+platform-kyverno                 Unknown     Healthy
+platform-kyverno-policies        Synced      Healthy
+platform-loki                    Unknown     Progressing
+platform-metrics-server          Synced      Healthy
+platform-namespace               Synced      Healthy
+platform-storageclass            Synced      Healthy
+platform-trivy-operator          Unknown     Healthy
+retail-store-cart                Synced      Degraded
+retail-store-catalog             Synced      Degraded
+retail-store-checkout            Synced      Healthy
+retail-store-databases           Synced      Healthy
+retail-store-namespace           Synced      Healthy
+retail-store-orders              Synced      Healthy
+retail-store-ui                  Synced      Degraded
+root                             OutOfSync   Degraded
+[04:40:20] Service LoadBalancer:
+compliance     compliance-engine-internal                  LoadBalancer   172.20.246.126   internal-ad605f6853d204bc693949f4796e2a56-1629755641.us-east-1.elb.amazonaws.com   8000:32248/TCP                 15m
+[04:40:23] PVC:
+compliance     compliance-postgres-data   Bound     pvc-ceadd218-d90c-48e2-bb9b-e4f12024b5ed   2Gi   RWO   gp3   <unset>   15m
+monitoring     kps-grafana                Bound     pvc-76a29bb9-2446-4e6f-b915-6de7390e0f29   5Gi   RWO   gp3   <unset>   15m
+monitoring     storage-loki-0             Pending                                                          gp3   <unset>   13m
+retail-store   cart-dynamodb-data         Bound     pvc-2007d80a-6cdf-4230-9d80-160685299389   1Gi   RWO   gp3   <unset>   19m
+retail-store   catalog-mysql-data         Bound     pvc-a550a8de-3c59-4edd-9894-7d395128543e   5Gi   RWO   gp3   <unset>   19m
+retail-store   checkout-redis-data        Bound     pvc-82c450ef-9718-484b-8b20-3971196a4c0f   1Gi   RWO   gp3   <unset>   19m
+retail-store   orders-postgres-data       Bound     pvc-541836dd-da47-44ff-b72f-862a2d02ac99   5Gi   RWO   gp3   <unset>   19m
+[04:40:26] 1. delete Application root (cascade)
+application.argoproj.io "root" deleted from argocd namespace
+application.argoproj.io "compliance-engine" deleted from argocd namespace
+application.argoproj.io "platform-cluster-autoscaler" deleted from argocd namespace
+application.argoproj.io "platform-kube-bench" deleted from argocd namespace
+application.argoproj.io "platform-kube-prometheus-stack" deleted from argocd namespace
+application.argoproj.io "platform-kyverno" deleted from argocd namespace
+application.argoproj.io "platform-kyverno-policies" deleted from argocd namespace
+application.argoproj.io "platform-loki" deleted from argocd namespace
+application.argoproj.io "platform-metrics-server" deleted from argocd namespace
+application.argoproj.io "platform-namespace" deleted from argocd namespace
+application.argoproj.io "platform-storageclass" deleted from argocd namespace
+application.argoproj.io "platform-trivy-operator" deleted from argocd namespace
+application.argoproj.io "retail-store-cart" deleted from argocd namespace
+application.argoproj.io "retail-store-catalog" deleted from argocd namespace
+application.argoproj.io "retail-store-checkout" deleted from argocd namespace
+application.argoproj.io "retail-store-databases" deleted from argocd namespace
+application.argoproj.io "retail-store-namespace" deleted from argocd namespace
+application.argoproj.io "retail-store-orders" deleted from argocd namespace
+application.argoproj.io "retail-store-ui" deleted from argocd namespace
+application.argoproj.io "root" deleted from argocd namespace
+[04:40:42]    Applications còn lại: 18
+[04:41:00]    Applications còn lại: 5
+[04:41:18]    Applications còn lại: 2
+[04:41:36]    Applications còn lại: 2
+[04:41:54]    Applications còn lại: 2
+[04:42:12]    Applications còn lại: 2
+[04:42:29]    Applications còn lại: 2
+[04:42:47]    Applications còn lại: 2
+[04:43:05]    Applications còn lại: 2
+[04:43:23]    Applications còn lại: 1
+[04:43:41]    Applications còn lại: 1
+[04:43:59]    Applications còn lại: 1
+[04:44:17]    Applications còn lại: 1
+[04:44:35]    Applications còn lại: 1
+[04:44:53]    Applications còn lại: 1
+[04:45:11]    Applications còn lại: 1
+[04:45:29]    Applications còn lại: 1
+[04:45:47]    Applications còn lại: 1
+[04:46:05]    Applications còn lại: 1
+[04:46:23]    Applications còn lại: 1
+[04:46:40]    Applications còn lại: 1
+[04:46:58]    Applications còn lại: 1
+[04:47:16]    Applications còn lại: 1
+[04:47:34]    Applications còn lại: 1
+[04:47:52]    Applications còn lại: 1
+[04:48:10]    Applications còn lại: 1
+[04:48:28]    Applications còn lại: 1
+[04:48:46]    Applications còn lại: 1
+[04:49:04]    Applications còn lại: 1
+[04:49:23]    Applications còn lại: 1
+[04:49:41]    Applications còn lại: 1
+[04:49:58]    Applications còn lại: 1
+[04:50:16]    Applications còn lại: 1
+[04:50:34]    Applications còn lại: 1
+[04:50:52]    Applications còn lại: 1
+[04:51:10]    Applications còn lại: 1
+[04:51:28]    Applications còn lại: 1
+[04:51:46]    Applications còn lại: 1
+[04:52:03]    Applications còn lại: 1
+[04:52:21]    Applications còn lại: 1
+[04:52:39]    Applications còn lại: 1
+[04:52:57]    Applications còn lại: 1
+[04:53:15]    Applications còn lại: 1
+[04:53:33]    Applications còn lại: 1
+[04:53:51]    Applications còn lại: 1
+[04:54:09]    Applications còn lại: 1
+[04:54:26]    Applications còn lại: 1
+[04:54:44]    Applications còn lại: 1
+[04:55:02]    Applications còn lại: 1
+[04:55:20]    Applications còn lại: 1
+[04:55:38]    Applications còn lại: 1
+[04:55:56]    Applications còn lại: 1
+[warn] Timeout chờ Application bị xoá; gỡ finalizer để tiếp tục (resource sẽ dọn ở bước 2)
+application.argoproj.io/root patched
+[04:56:02] 2. xoá Service LoadBalancer + PVC còn lại (PVC của StatefulSet không bị cascade)
+[04:56:11]    LB services: 0, PV: 0
+[warn] NAT gateway: nat-0b974ad684de5cf47
+[warn] Còn LB/EBS gắn cluster trước khi destroy VPC. Terraform có thể kẹt ở subnet/IGW; xoá tay theo danh sách trên nếu cần.
+[04:56:28] [05-backstage-ec2] không có state — bỏ qua
+[04:56:45] [02-cluster-eks] terraform destroy
+data.terraform_remote_state.network: Reading...
+module.ebs_csi_irsa.data.aws_partition.current: Reading...
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_caller_identity.current: Reading...
+data.aws_caller_identity.current: Reading...
+module.cluster_autoscaler_irsa.data.aws_partition.current: Reading...
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_partition.current: Reading...
+module.ebs_csi_irsa.data.aws_caller_identity.current: Reading...
+module.cluster_autoscaler_irsa.data.aws_caller_identity.current: Reading...
+module.cluster_autoscaler_irsa.data.aws_region.current: Reading...
+aws_kms_key.eks: Refreshing state... [id=612c045e-46ae-4996-b681-f53fe0a4ec8f]
+module.cluster_autoscaler_irsa.data.aws_region.current: Read complete after 0s [id=us-east-1]
+module.cluster_autoscaler_irsa.data.aws_partition.current: Read complete after 0s [id=aws]
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_partition.current: Read complete after 0s [id=aws]
+module.ebs_csi_irsa.data.aws_partition.current: Read complete after 0s [id=aws]
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_iam_policy_document.assume_role_policy[0]: Reading...
+module.ebs_csi_irsa.data.aws_region.current: Reading...
+module.eks.data.aws_iam_policy_document.assume_role_policy[0]: Reading...
+module.eks.aws_cloudwatch_log_group.this[0]: Refreshing state... [id=/aws/eks/ecommerce-cluster/cluster]
+module.ebs_csi_irsa.data.aws_region.current: Read complete after 0s [id=us-east-1]
+module.eks.data.aws_iam_policy_document.assume_role_policy[0]: Read complete after 0s [id=2830595799]
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_iam_policy_document.assume_role_policy[0]: Read complete after 0s [id=2560088296]
+module.eks.data.aws_caller_identity.current[0]: Reading...
+module.eks.data.aws_partition.current[0]: Reading...
+module.eks.data.aws_partition.current[0]: Read complete after 0s [id=aws]
+module.cluster_autoscaler_irsa.data.aws_iam_policy_document.cluster_autoscaler[0]: Reading...
+module.cluster_autoscaler_irsa.data.aws_iam_policy_document.cluster_autoscaler[0]: Read complete after 0s [id=2797119702]
+module.eks.aws_iam_role.this[0]: Refreshing state... [id=ecommerce-cluster-cluster-20261116040415210800000004]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role.this[0]: Refreshing state... [id=main_nodes-eks-node-group-20261116040415211800000005]
+module.eks.module.eks_managed_node_group["main_nodes"].data.aws_caller_identity.current: Read complete after 0s [id=736508008585]
+module.ebs_csi_irsa.data.aws_iam_policy_document.ebs_csi[0]: Reading...
+module.ebs_csi_irsa.data.aws_iam_policy_document.ebs_csi[0]: Read complete after 0s [id=4189668531]
+module.cluster_autoscaler_irsa.aws_iam_policy.cluster_autoscaler[0]: Refreshing state... [id=arn:aws:iam::736508008585:policy/AmazonEKS_Cluster_Autoscaler_Policy-20261116040415210200000002]
+module.ebs_csi_irsa.data.aws_caller_identity.current: Read complete after 0s [id=736508008585]
+module.eks.data.aws_iam_policy_document.custom[0]: Reading...
+module.eks.data.aws_iam_policy_document.custom[0]: Read complete after 0s [id=513122117]
+module.ebs_csi_irsa.aws_iam_policy.ebs_csi[0]: Refreshing state... [id=arn:aws:iam::736508008585:policy/AmazonEKS_EBS_CSI_Policy-20261116040415211800000006]
+data.aws_caller_identity.current: Read complete after 1s [id=736508008585]
+module.eks.aws_iam_policy.custom[0]: Refreshing state... [id=arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-20261116040415210200000001]
+module.cluster_autoscaler_irsa.data.aws_caller_identity.current: Read complete after 1s [id=736508008585]
+module.eks.data.aws_caller_identity.current[0]: Read complete after 1s [id=736508008585]
+module.eks.data.aws_iam_session_context.current[0]: Reading...
+module.eks.data.aws_iam_session_context.current[0]: Read complete after 0s [id=arn:aws:iam::736508008585:user/idp]
+aws_kms_alias.eks: Refreshing state... [id=alias/ecommerce-cluster-eks-secrets]
+module.eks.module.kms.data.aws_partition.current[0]: Reading...
+module.eks.module.kms.data.aws_caller_identity.current[0]: Reading...
+module.eks.module.kms.data.aws_partition.current[0]: Read complete after 0s [id=aws]
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSClusterPolicy"]: Refreshing state... [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604041872880000000b]
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSVPCResourceController"]: Refreshing state... [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604041898770000000d]
+module.eks.aws_iam_role_policy_attachment.custom[0]: Refreshing state... [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604041870770000000a]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKSWorkerNodePolicy"]: Refreshing state... [id=main_nodes-eks-node-group-20261116040415211800000005-20261116040418665000000008]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKS_CNI_Policy"]: Refreshing state... [id=main_nodes-eks-node-group-20261116040415211800000005-2026111604041874690000000c]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEC2ContainerRegistryReadOnly"]: Refreshing state... [id=main_nodes-eks-node-group-20261116040415211800000005-20261116040418688800000009]
+module.eks.module.kms.data.aws_caller_identity.current[0]: Read complete after 0s [id=736508008585]
+module.eks.module.kms.data.aws_iam_policy_document.this[0]: Reading...
+module.eks.module.kms.data.aws_iam_policy_document.this[0]: Read complete after 0s [id=2503043926]
+module.eks.module.kms.aws_kms_key.this[0]: Refreshing state... [id=210f3c1c-39b3-41d8-a750-5c8fb531d276]
+data.terraform_remote_state.network: Read complete after 5s
+module.eks.aws_security_group.node[0]: Refreshing state... [id=sg-0e93e57dc2ec4f7f1]
+module.eks.aws_security_group.cluster[0]: Refreshing state... [id=sg-077cabc9092f591e0]
+module.eks.module.kms.aws_kms_alias.this["cluster"]: Refreshing state... [id=alias/eks/ecommerce-cluster]
+module.eks.aws_iam_policy.cluster_encryption[0]: Refreshing state... [id=arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-ClusterEncryption2026111604045065540000000e]
+module.eks.aws_iam_role_policy_attachment.cluster_encryption[0]: Refreshing state... [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604045198370000000f]
+module.eks.aws_security_group_rule.cluster["ingress_nodes_443"]: Refreshing state... [id=sgrule-1111666134]
+module.eks.aws_security_group_rule.node["ingress_self_coredns_tcp"]: Refreshing state... [id=sgrule-4191808355]
+module.eks.aws_security_group_rule.node["ingress_cluster_9443_webhook"]: Refreshing state... [id=sgrule-263729230]
+module.eks.aws_security_group_rule.node["ingress_cluster_4443_webhook"]: Refreshing state... [id=sgrule-2970048562]
+module.eks.aws_security_group_rule.node["ingress_cluster_6443_webhook"]: Refreshing state... [id=sgrule-2017804196]
+module.eks.aws_security_group_rule.node["ingress_self_coredns_udp"]: Refreshing state... [id=sgrule-1569081484]
+module.eks.aws_security_group_rule.node["ingress_cluster_8443_webhook"]: Refreshing state... [id=sgrule-1796801413]
+module.eks.aws_security_group_rule.node["ingress_nodes_ephemeral"]: Refreshing state... [id=sgrule-1031087289]
+module.eks.aws_security_group_rule.node["egress_all"]: Refreshing state... [id=sgrule-4004449486]
+module.eks.aws_security_group_rule.node["ingress_cluster_443"]: Refreshing state... [id=sgrule-2058012360]
+module.eks.aws_security_group_rule.node["ingress_cluster_kubelet"]: Refreshing state... [id=sgrule-4085642085]
+module.eks.aws_eks_cluster.this[0]: Refreshing state... [id=ecommerce-cluster]
+module.eks.aws_eks_access_entry.this["cluster_creator"]: Refreshing state... [id=ecommerce-cluster:arn:aws:iam::736508008585:user/idp]
+module.eks.data.tls_certificate.this[0]: Reading...
+module.eks.time_sleep.this[0]: Refreshing state... [id=2026-11-16T04:15:44Z]
+module.eks.module.eks_managed_node_group["main_nodes"].module.user_data.null_resource.validate_cluster_service_cidr: Refreshing state... [id=2171524856263970653]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Refreshing state... [id=ecommerce-cluster:main_nodes-20261116041547545300000012]
+module.eks.aws_eks_access_policy_association.this["cluster_creator_admin"]: Refreshing state... [id=ecommerce-cluster#arn:aws:iam::736508008585:user/idp#arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy]
+data.aws_eks_cluster_auth.cluster: Reading...
+data.aws_eks_cluster_auth.cluster: Read complete after 0s [id=ecommerce-cluster]
+module.eks.data.tls_certificate.this[0]: Read complete after 2s [id=b1b539daa206035ae3c3e28288b0681fa1b462f3]
+module.eks.aws_iam_openid_connect_provider.oidc_provider[0]: Refreshing state... [id=arn:aws:iam::736508008585:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB]
+module.ebs_csi_irsa.data.aws_iam_policy_document.this[0]: Reading...
+module.cluster_autoscaler_irsa.data.aws_iam_policy_document.this[0]: Reading...
+module.ebs_csi_irsa.data.aws_iam_policy_document.this[0]: Read complete after 0s [id=2032299344]
+module.ebs_csi_irsa.aws_iam_role.this[0]: Refreshing state... [id=ecommerce-cluster-ebs-csi-driver]
+module.cluster_autoscaler_irsa.data.aws_iam_policy_document.this[0]: Read complete after 0s [id=4063373980]
+module.cluster_autoscaler_irsa.aws_iam_role.this[0]: Refreshing state... [id=ecommerce-cluster-cluster-autoscaler]
+module.cluster_autoscaler_irsa.aws_iam_role_policy_attachment.cluster_autoscaler[0]: Refreshing state... [id=ecommerce-cluster-cluster-autoscaler-20261116041521667700000011]
+module.ebs_csi_irsa.aws_iam_role_policy_attachment.ebs_csi[0]: Refreshing state... [id=ecommerce-cluster-ebs-csi-driver-20261116041521486300000010]
+module.eks.data.aws_eks_addon_version.this["aws-ebs-csi-driver"]: Reading...
+module.eks.data.aws_eks_addon_version.this["aws-ebs-csi-driver"]: Read complete after 0s [id=aws-ebs-csi-driver]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Refreshing state... [id=ecommerce-cluster:aws-ebs-csi-driver]
+kubernetes_service_account_v1.cluster_autoscaler: Refreshing state... [id=kube-system/cluster-autoscaler]
+helm_release.argocd: Refreshing state... [id=argocd]
+helm_release.argocd_root: Refreshing state... [id=argocd-root]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # aws_kms_alias.eks will be destroyed
+  - resource "aws_kms_alias" "eks" {
+      - arn            = "arn:aws:kms:us-east-1:736508008585:alias/ecommerce-cluster-eks-secrets" -> null
+      - id             = "alias/ecommerce-cluster-eks-secrets" -> null
+      - name           = "alias/ecommerce-cluster-eks-secrets" -> null
+      - target_key_arn = "arn:aws:kms:us-east-1:736508008585:key/612c045e-46ae-4996-b681-f53fe0a4ec8f" -> null
+      - target_key_id  = "612c045e-46ae-4996-b681-f53fe0a4ec8f" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # aws_kms_key.eks will be destroyed
+  - resource "aws_kms_key" "eks" {
+      - arn                                = "arn:aws:kms:us-east-1:736508008585:key/612c045e-46ae-4996-b681-f53fe0a4ec8f" -> null
+      - bypass_policy_lockout_safety_check = false -> null
+      - customer_master_key_spec           = "SYMMETRIC_DEFAULT" -> null
+      - deletion_window_in_days            = 7 -> null
+      - description                        = "KMS key for EKS cluster ecommerce-cluster secrets encryption" -> null
+      - enable_key_rotation                = true -> null
+      - id                                 = "612c045e-46ae-4996-b681-f53fe0a4ec8f" -> null
+      - is_enabled                         = true -> null
+      - key_id                             = "612c045e-46ae-4996-b681-f53fe0a4ec8f" -> null
+      - key_usage                          = "ENCRYPT_DECRYPT" -> null
+      - multi_region                       = false -> null
+      - policy                             = jsonencode(
+            {
+              - Id        = "key-default-1"
+              - Statement = [
+                  - {
+                      - Action    = "kms:*"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - AWS = "arn:aws:iam::736508008585:root"
+                        }
+                      - Resource  = "*"
+                      - Sid       = "Enable IAM User Permissions"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - rotation_period_in_days            = 365 -> null
+      - tags                               = {} -> null
+      - tags_all                           = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+        # (2 unchanged attributes hidden)
+    }
+
+  # helm_release.argocd will be destroyed
+  - resource "helm_release" "argocd" {
+      - atomic                     = false -> null
+      - chart                      = "argo-cd" -> null
+      - cleanup_on_fail            = false -> null
+      - create_namespace           = true -> null
+      - dependency_update          = false -> null
+      - disable_crd_hooks          = false -> null
+      - disable_openapi_validation = false -> null
+      - disable_webhooks           = false -> null
+      - force_update               = false -> null
+      - id                         = "argocd" -> null
+      - lint                       = false -> null
+      - max_history                = 0 -> null
+      - metadata                   = [
+          - {
+              - app_version = "v2.9.2"
+              - chart       = "argo-cd"
+              - name        = "argocd"
+              - namespace   = "argocd"
+              - revision    = 1
+              - values      = jsonencode(
+                    {
+                      - configs = {
+                          - cm     = {
+                              - "resource.customizations.health.argoproj.io_Application" = <<-EOT
+                                    hs = {}
+                                    hs.status = "Progressing"
+                                    hs.message = ""
+                                    if obj.status ~= nil then
+                                      if obj.status.health ~= nil then
+                                        hs.status = obj.status.health.status
+                                        if obj.status.health.message ~= nil then
+                                          hs.message = obj.status.health.message
+                                        end
+                                      end
+                                    end
+                                    return hs
+                                EOT
+                            }
+                          - params = {
+                              - "server.insecure" = true
+                            }
+                        }
+                      - dex     = {
+                          - enabled = false
+                        }
+                    }
+                )
+              - version     = "5.51.4"
+            },
+        ] -> null
+      - name                       = "argocd" -> null
+      - namespace                  = "argocd" -> null
+      - pass_credentials           = false -> null
+      - recreate_pods              = false -> null
+      - render_subchart_notes      = true -> null
+      - replace                    = false -> null
+      - repository                 = "https://argoproj.github.io/argo-helm" -> null
+      - reset_values               = false -> null
+      - reuse_values               = false -> null
+      - skip_crds                  = false -> null
+      - status                     = "deployed" -> null
+      - timeout                    = 300 -> null
+      - values                     = [
+          - <<-EOT
+                "configs":
+                  "cm":
+                    "resource.customizations.health.argoproj.io_Application": |
+                      hs = {}
+                      hs.status = "Progressing"
+                      hs.message = ""
+                      if obj.status ~= nil then
+                        if obj.status.health ~= nil then
+                          hs.status = obj.status.health.status
+                          if obj.status.health.message ~= nil then
+                            hs.message = obj.status.health.message
+                          end
+                        end
+                      end
+                      return hs
+                  "params":
+                    "server.insecure": true
+                "dex":
+                  "enabled": false
+            EOT,
+        ] -> null
+      - verify                     = false -> null
+      - version                    = "5.51.4" -> null
+      - wait                       = true -> null
+      - wait_for_jobs              = false -> null
+    }
+
+  # helm_release.argocd_root will be destroyed
+  - resource "helm_release" "argocd_root" {
+      - atomic                     = false -> null
+      - chart                      = "argocd-apps" -> null
+      - cleanup_on_fail            = false -> null
+      - create_namespace           = false -> null
+      - dependency_update          = false -> null
+      - disable_crd_hooks          = false -> null
+      - disable_openapi_validation = false -> null
+      - disable_webhooks           = false -> null
+      - force_update               = false -> null
+      - id                         = "argocd-root" -> null
+      - lint                       = false -> null
+      - max_history                = 0 -> null
+      - metadata                   = [
+          - {
+              - chart       = "argocd-apps"
+              - name        = "argocd-root"
+              - namespace   = "argocd"
+              - revision    = 1
+              - values      = jsonencode(
+                    {
+                      - applications = {
+                          - root = {
+                              - destination = {
+                                  - namespace = "argocd"
+                                  - server    = "https://kubernetes.default.svc"
+                                }
+                              - finalizers  = [
+                                  - "resources-finalizer.argocd.argoproj.io",
+                                ]
+                              - namespace   = "argocd"
+                              - project     = "default"
+                              - source      = {
+                                  - directory      = {
+                                      - recurse = false
+                                    }
+                                  - path           = "idp-gitops/argocd"
+                                  - repoURL        = "https://github.com/tranduyloc895/idp-compliance-scorecard.git"
+                                  - targetRevision = "main"
+                                }
+                              - syncPolicy  = {
+                                  - automated = {
+                                      - prune    = true
+                                      - selfHeal = true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                )
+              - version     = "2.0.2"
+                # (1 unchanged attribute hidden)
+            },
+        ] -> null
+      - name                       = "argocd-root" -> null
+      - namespace                  = "argocd" -> null
+      - pass_credentials           = false -> null
+      - recreate_pods              = false -> null
+      - render_subchart_notes      = true -> null
+      - replace                    = false -> null
+      - repository                 = "https://argoproj.github.io/argo-helm" -> null
+      - reset_values               = false -> null
+      - reuse_values               = false -> null
+      - skip_crds                  = false -> null
+      - status                     = "deployed" -> null
+      - timeout                    = 300 -> null
+      - values                     = [
+          - <<-EOT
+                "applications":
+                  "root":
+                    "destination":
+                      "namespace": "argocd"
+                      "server": "https://kubernetes.default.svc"
+                    "finalizers":
+                    - "resources-finalizer.argocd.argoproj.io"
+                    "namespace": "argocd"
+                    "project": "default"
+                    "source":
+                      "directory":
+                        "recurse": false
+                      "path": "idp-gitops/argocd"
+                      "repoURL": "https://github.com/tranduyloc895/idp-compliance-scorecard.git"
+                      "targetRevision": "main"
+                    "syncPolicy":
+                      "automated":
+                        "prune": true
+                        "selfHeal": true
+            EOT,
+        ] -> null
+      - verify                     = false -> null
+      - version                    = "2.0.2" -> null
+      - wait                       = true -> null
+      - wait_for_jobs              = false -> null
+    }
+
+  # kubernetes_service_account_v1.cluster_autoscaler will be destroyed
+  - resource "kubernetes_service_account_v1" "cluster_autoscaler" {
+      - automount_service_account_token = true -> null
+      - id                              = "kube-system/cluster-autoscaler" -> null
+        # (1 unchanged attribute hidden)
+
+      - metadata {
+          - annotations      = {
+              - "eks.amazonaws.com/role-arn" = "arn:aws:iam::736508008585:role/ecommerce-cluster-cluster-autoscaler"
+            } -> null
+          - generation       = 0 -> null
+          - labels           = {
+              - "app.kubernetes.io/managed-by" = "terraform"
+            } -> null
+          - name             = "cluster-autoscaler" -> null
+          - namespace        = "kube-system" -> null
+          - resource_version = "1794" -> null
+          - uid              = "6aacaffb-40cd-42e0-8123-53fbdb463e19" -> null
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # module.cluster_autoscaler_irsa.aws_iam_policy.cluster_autoscaler[0] will be destroyed
+  - resource "aws_iam_policy" "cluster_autoscaler" {
+      - arn              = "arn:aws:iam::736508008585:policy/AmazonEKS_Cluster_Autoscaler_Policy-20261116040415210200000002" -> null
+      - attachment_count = 1 -> null
+      - description      = "Cluster autoscaler policy to allow examination and modification of EC2 Auto Scaling Groups" -> null
+      - id               = "arn:aws:iam::736508008585:policy/AmazonEKS_Cluster_Autoscaler_Policy-20261116040415210200000002" -> null
+      - name             = "AmazonEKS_Cluster_Autoscaler_Policy-20261116040415210200000002" -> null
+      - name_prefix      = "AmazonEKS_Cluster_Autoscaler_Policy-" -> null
+      - path             = "/" -> null
+      - policy           = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action   = [
+                          - "eks:DescribeNodegroup",
+                          - "ec2:GetInstanceTypesFromInstanceRequirements",
+                          - "ec2:DescribeLaunchTemplateVersions",
+                          - "ec2:DescribeInstanceTypes",
+                          - "ec2:DescribeImages",
+                          - "autoscaling:DescribeTags",
+                          - "autoscaling:DescribeScalingActivities",
+                          - "autoscaling:DescribeLaunchConfigurations",
+                          - "autoscaling:DescribeAutoScalingInstances",
+                          - "autoscaling:DescribeAutoScalingGroups",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "*"
+                    },
+                  - {
+                      - Action    = [
+                          - "autoscaling:TerminateInstanceInAutoScalingGroup",
+                          - "autoscaling:SetDesiredCapacity",
+                        ]
+                      - Condition = {
+                          - StringEquals = {
+                              - "autoscaling:ResourceTag/kubernetes.io/cluster/ecommerce-cluster" = "owned"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "*"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - policy_id        = "ANPA2W62MLCERKRTESYSH" -> null
+      - tags             = {} -> null
+      - tags_all         = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+    }
+
+  # module.cluster_autoscaler_irsa.aws_iam_role.this[0] will be destroyed
+  - resource "aws_iam_role" "this" {
+      - arn                   = "arn:aws:iam::736508008585:role/ecommerce-cluster-cluster-autoscaler" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRoleWithWebIdentity"
+                      - Condition = {
+                          - StringEquals = {
+                              - "oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB:aud" = "sts.amazonaws.com"
+                              - "oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB:sub" = "system:serviceaccount:kube-system:cluster-autoscaler"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Federated = "arn:aws:iam::736508008585:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-11-16T04:15:19Z" -> null
+      - force_detach_policies = true -> null
+      - id                    = "ecommerce-cluster-cluster-autoscaler" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::736508008585:policy/AmazonEKS_Cluster_Autoscaler_Policy-20261116040415210200000002",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "ecommerce-cluster-cluster-autoscaler" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - unique_id             = "AROA2W62MLCEYN4SZXBR7" -> null
+        # (3 unchanged attributes hidden)
+    }
+
+  # module.cluster_autoscaler_irsa.aws_iam_role_policy_attachment.cluster_autoscaler[0] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "cluster_autoscaler" {
+      - id         = "ecommerce-cluster-cluster-autoscaler-20261116041521667700000011" -> null
+      - policy_arn = "arn:aws:iam::736508008585:policy/AmazonEKS_Cluster_Autoscaler_Policy-20261116040415210200000002" -> null
+      - role       = "ecommerce-cluster-cluster-autoscaler" -> null
+    }
+
+  # module.ebs_csi_irsa.aws_iam_policy.ebs_csi[0] will be destroyed
+  - resource "aws_iam_policy" "ebs_csi" {
+      - arn              = "arn:aws:iam::736508008585:policy/AmazonEKS_EBS_CSI_Policy-20261116040415211800000006" -> null
+      - attachment_count = 1 -> null
+      - description      = "Provides permissions to manage EBS volumes via the container storage interface driver" -> null
+      - id               = "arn:aws:iam::736508008585:policy/AmazonEKS_EBS_CSI_Policy-20261116040415211800000006" -> null
+      - name             = "AmazonEKS_EBS_CSI_Policy-20261116040415211800000006" -> null
+      - name_prefix      = "AmazonEKS_EBS_CSI_Policy-" -> null
+      - path             = "/" -> null
+      - policy           = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action   = [
+                          - "ec2:DescribeVolumesModifications",
+                          - "ec2:DescribeVolumes",
+                          - "ec2:DescribeTags",
+                          - "ec2:DescribeSnapshots",
+                          - "ec2:DescribeInstances",
+                          - "ec2:DescribeAvailabilityZones",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "*"
+                    },
+                  - {
+                      - Action   = [
+                          - "ec2:ModifyVolume",
+                          - "ec2:CreateSnapshot",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  - {
+                      - Action   = [
+                          - "ec2:DetachVolume",
+                          - "ec2:AttachVolume",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = [
+                          - "arn:aws:ec2:*:*:volume/*",
+                          - "arn:aws:ec2:*:*:instance/*",
+                        ]
+                    },
+                  - {
+                      - Action   = [
+                          - "ec2:EnableFastSnapshotRestores",
+                          - "ec2:CreateVolume",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:ec2:*:*:snapshot/*"
+                    },
+                  - {
+                      - Action    = "ec2:CreateTags"
+                      - Condition = {
+                          - StringEquals = {
+                              - "ec2:CreateAction" = [
+                                  - "CreateVolume",
+                                  - "CreateSnapshot",
+                                ]
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = [
+                          - "arn:aws:ec2:*:*:volume/*",
+                          - "arn:aws:ec2:*:*:snapshot/*",
+                        ]
+                    },
+                  - {
+                      - Action   = "ec2:DeleteTags"
+                      - Effect   = "Allow"
+                      - Resource = [
+                          - "arn:aws:ec2:*:*:volume/*",
+                          - "arn:aws:ec2:*:*:snapshot/*",
+                        ]
+                    },
+                  - {
+                      - Action    = "ec2:CreateVolume"
+                      - Condition = {
+                          - StringLike = {
+                              - "aws:RequestTag/ebs.csi.aws.com/cluster" = "true"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  - {
+                      - Action    = "ec2:CreateVolume"
+                      - Condition = {
+                          - StringLike = {
+                              - "aws:RequestTag/CSIVolumeName" = "*"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  - {
+                      - Action    = "ec2:DeleteVolume"
+                      - Condition = {
+                          - StringLike = {
+                              - "aws:ResourceTag/ebs.csi.aws.com/cluster" = "true"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  - {
+                      - Action    = "ec2:DeleteVolume"
+                      - Condition = {
+                          - StringLike = {
+                              - "aws:ResourceTag/CSIVolumeName" = "*"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  - {
+                      - Action    = "ec2:DeleteVolume"
+                      - Condition = {
+                          - StringLike = {
+                              - "ec2:ResourceTag/kubernetes.io/created-for/pvc/name" = "*"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "arn:aws:ec2:*:*:volume/*"
+                    },
+                  - {
+                      - Action    = "ec2:CreateSnapshot"
+                      - Condition = {
+                          - StringLike = {
+                              - "aws:RequestTag/CSIVolumeSnapshotName" = "*"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "arn:aws:ec2:*:*:snapshot/*"
+                    },
+                  - {
+                      - Action    = "ec2:CreateSnapshot"
+                      - Condition = {
+                          - StringLike = {
+                              - "aws:RequestTag/ebs.csi.aws.com/cluster" = "true"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "arn:aws:ec2:*:*:snapshot/*"
+                    },
+                  - {
+                      - Action    = "ec2:DeleteSnapshot"
+                      - Condition = {
+                          - StringLike = {
+                              - "aws:ResourceTag/CSIVolumeSnapshotName" = "*"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "arn:aws:ec2:*:*:snapshot/*"
+                    },
+                  - {
+                      - Action    = "ec2:DeleteSnapshot"
+                      - Condition = {
+                          - StringLike = {
+                              - "aws:ResourceTag/ebs.csi.aws.com/cluster" = "true"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "arn:aws:ec2:*:*:snapshot/*"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - policy_id        = "ANPA2W62MLCE3HRT6AGHY" -> null
+      - tags             = {} -> null
+      - tags_all         = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+    }
+
+  # module.ebs_csi_irsa.aws_iam_role.this[0] will be destroyed
+  - resource "aws_iam_role" "this" {
+      - arn                   = "arn:aws:iam::736508008585:role/ecommerce-cluster-ebs-csi-driver" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRoleWithWebIdentity"
+                      - Condition = {
+                          - StringEquals = {
+                              - "oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB:aud" = "sts.amazonaws.com"
+                              - "oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB:sub" = "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Federated = "arn:aws:iam::736508008585:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB"
+                        }
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-11-16T04:15:19Z" -> null
+      - force_detach_policies = true -> null
+      - id                    = "ecommerce-cluster-ebs-csi-driver" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::736508008585:policy/AmazonEKS_EBS_CSI_Policy-20261116040415211800000006",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "ecommerce-cluster-ebs-csi-driver" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - unique_id             = "AROA2W62MLCE5D3DXIJJZ" -> null
+        # (3 unchanged attributes hidden)
+    }
+
+  # module.ebs_csi_irsa.aws_iam_role_policy_attachment.ebs_csi[0] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "ebs_csi" {
+      - id         = "ecommerce-cluster-ebs-csi-driver-20261116041521486300000010" -> null
+      - policy_arn = "arn:aws:iam::736508008585:policy/AmazonEKS_EBS_CSI_Policy-20261116040415211800000006" -> null
+      - role       = "ecommerce-cluster-ebs-csi-driver" -> null
+    }
+
+  # module.eks.aws_cloudwatch_log_group.this[0] will be destroyed
+  - resource "aws_cloudwatch_log_group" "this" {
+      - arn               = "arn:aws:logs:us-east-1:736508008585:log-group:/aws/eks/ecommerce-cluster/cluster" -> null
+      - id                = "/aws/eks/ecommerce-cluster/cluster" -> null
+      - log_group_class   = "STANDARD" -> null
+      - name              = "/aws/eks/ecommerce-cluster/cluster" -> null
+      - retention_in_days = 7 -> null
+      - skip_destroy      = false -> null
+      - tags              = {
+          - "Name" = "/aws/eks/ecommerce-cluster/cluster"
+        } -> null
+      - tags_all          = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "/aws/eks/ecommerce-cluster/cluster"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.eks.aws_eks_access_entry.this["cluster_creator"] will be destroyed
+  - resource "aws_eks_access_entry" "this" {
+      - access_entry_arn  = "arn:aws:eks:us-east-1:736508008585:access-entry/ecommerce-cluster/user/736508008585/idp/88d0f148-7d8e-d5a2-17ea-e801ff3e6825" -> null
+      - cluster_name      = "ecommerce-cluster" -> null
+      - created_at        = "2026-11-16T04:15:14Z" -> null
+      - id                = "ecommerce-cluster:arn:aws:iam::736508008585:user/idp" -> null
+      - kubernetes_groups = [] -> null
+      - modified_at       = "2026-11-16T04:15:14Z" -> null
+      - principal_arn     = "arn:aws:iam::736508008585:user/idp" -> null
+      - tags              = {} -> null
+      - tags_all          = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - type              = "STANDARD" -> null
+      - user_name         = "arn:aws:iam::736508008585:user/idp" -> null
+    }
+
+  # module.eks.aws_eks_access_policy_association.this["cluster_creator_admin"] will be destroyed
+  - resource "aws_eks_access_policy_association" "this" {
+      - associated_at = "2026-11-16 04:15:15.967 +0000 UTC" -> null
+      - cluster_name  = "ecommerce-cluster" -> null
+      - id            = "ecommerce-cluster#arn:aws:iam::736508008585:user/idp#arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy" -> null
+      - modified_at   = "2026-11-16 04:15:15.967 +0000 UTC" -> null
+      - policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy" -> null
+      - principal_arn = "arn:aws:iam::736508008585:user/idp" -> null
+
+      - access_scope {
+          - namespaces = [] -> null
+          - type       = "cluster" -> null
+        }
+    }
+
+  # module.eks.aws_eks_addon.this["aws-ebs-csi-driver"] will be destroyed
+  - resource "aws_eks_addon" "this" {
+      - addon_name                  = "aws-ebs-csi-driver" -> null
+      - addon_version               = "v1.68.0-eksbuild.1" -> null
+      - arn                         = "arn:aws:eks:us-east-1:736508008585:addon/ecommerce-cluster/aws-ebs-csi-driver/30d0f149-9b6e-fbad-baaa-0630c4525107" -> null
+      - cluster_name                = "ecommerce-cluster" -> null
+      - created_at                  = "2026-11-16T04:17:41Z" -> null
+      - id                          = "ecommerce-cluster:aws-ebs-csi-driver" -> null
+      - modified_at                 = "2026-11-16T04:18:19Z" -> null
+      - preserve                    = true -> null
+      - resolve_conflicts_on_create = "OVERWRITE" -> null
+      - resolve_conflicts_on_update = "OVERWRITE" -> null
+      - service_account_role_arn    = "arn:aws:iam::736508008585:role/ecommerce-cluster-ebs-csi-driver" -> null
+      - tags                        = {} -> null
+      - tags_all                    = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+        # (1 unchanged attribute hidden)
+
+      - timeouts {}
+    }
+
+  # module.eks.aws_eks_cluster.this[0] will be destroyed
+  - resource "aws_eks_cluster" "this" {
+      - arn                           = "arn:aws:eks:us-east-1:736508008585:cluster/ecommerce-cluster" -> null
+      - bootstrap_self_managed_addons = true -> null
+      - certificate_authority         = [
+          - {
+              - data = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURNakNDQWhxZ0F3SUJBZ0lSQUtlOXdKZGQ0WXh1bStHelVOZUJHcVF3RFFZSktvWklodmNOQVFFTEJRQXcKSnpFUU1BNEdBMVVFQ2hNSFFWZFRJRVZMVXpFVE1CRUdBMVVFQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TmpFeApNVFl3TkRBME5UbGFGdzB6TVRFeE1UVXdOREEwTlRsYU1DY3hFREFPQmdOVkJBb1RCMEZYVXlCRlMxTXhFekFSCkJnTlZCQU1UQ210MVltVnlibVYwWlhNd2dnRWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUIKQVFEbFhGcCtvN3lSRXhxZUtTV3Zkem4vTXE0VHd1eGJQdlA3UXpjdUpqeXJrZWpRdXpxWUpKZXR4cG1LQ1BGaQpVb284aFJPMkdGNHJ5eFdBVmpwNzkxNURYODFZZEtFQjNDaE8vNWNyTnhtby9LbFFIVVdjNkkvQXlnVVRJZVpwCk5lcWZ1ZVYzSmxhVDRueU5CQWEvOUU3YnBrNFR0S25BUXhMeitvSHlET21SdGZoZ0JKN0d1MzZ0Q2d1TWpKVFoKL3VEUTZjOTlMU3ZJQTdYS2pMbnlncG91N3p3Qnh2MW1hd2RiSXpDQXkxYTdPcHM3UFBoSklkUXF0YkNHSnpnbAp4UHhPbVE4RmVORFEvd3ZVT1N6TjVqempVNWtyQW41dk9SanNlRHk2WlFQSlJNeGZSWCsxUTV3Z1pqU1hBRUN3CmhUVnhZazNvQ1BxK0JLRG5VZWN2bFJjcEFnTUJBQUdqV1RCWE1BNEdBMVVkRHdFQi93UUVBd0lDcERBUEJnTlYKSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCVFdVbS9IcEZobTA5blVycTZVOFFhSWI2SjBvVEFWQmdOVgpIUkVFRGpBTWdncHJkV0psY201bGRHVnpNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUNnVEVVS0dTMGlZRFhNCjlZK1diZ2lodHcrZk5FdXdwYStkN1RYa3VBcmk0L1J6UkFFMEo0Y0dXMnFKdWdEMEJJc2p5dTJFeXBvcmVtMVgKSmJlQ0doa2t6YXdXRytnMlpodHQwMDJXWElJVkExWStQTTMrcktzNW5hM3hyNFl1Y1MwLzJ3dkpoWnVlVUJFVwpJYWhEQjVyZ2xld2x0VFBVRHplYmpFUmZScWJBOGNPMVdXalVoKzFjT3VvdFBlU1Jvc2ZrcGZKTjFjMnVQLzQ3CkRBdWt5S3FsTlV0RVJSZWZCNTI3dU15M2l6WTRucW5iSHJSVXZ0Mzl4QkJKdlNodkhTdW5oZGlHVmY5cktrQmIKaVY5bmlQVS9tWHFaT0NFT3gyQTFKSXpOYlZDSEgvUUhnTlhKT3UzVEVLSEJDS0dScFpVQkVNa1hhajV5OVBETgprWWNCUVBaeAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+            },
+        ] -> null
+      - created_at                    = "2026-11-16T04:04:53Z" -> null
+      - enabled_cluster_log_types     = [
+          - "api",
+          - "audit",
+          - "authenticator",
+        ] -> null
+      - endpoint                      = "https://9177B314289B8E0C0BC3CEF466F44CFB.gr7.us-east-1.eks.amazonaws.com" -> null
+      - id                            = "ecommerce-cluster" -> null
+      - identity                      = [
+          - {
+              - oidc = [
+                  - {
+                      - issuer = "https://oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB"
+                    },
+                ]
+            },
+        ] -> null
+      - name                          = "ecommerce-cluster" -> null
+      - platform_version              = "eks.27" -> null
+      - role_arn                      = "arn:aws:iam::736508008585:role/ecommerce-cluster-cluster-20261116040415210800000004" -> null
+      - status                        = "ACTIVE" -> null
+      - tags                          = {
+          - "terraform-aws-modules" = "eks"
+        } -> null
+      - tags_all                      = {
+          - "Environment"           = "Dev"
+          - "Layer"                 = "lab"
+          - "ManagedBy"             = "Terraform"
+          - "Project"               = "idp-compliance-scorecard"
+          - "terraform-aws-modules" = "eks"
+        } -> null
+      - version                       = "1.35" -> null
+
+      - access_config {
+          - authentication_mode                         = "API_AND_CONFIG_MAP" -> null
+          - bootstrap_cluster_creator_admin_permissions = false -> null
+        }
+
+      - encryption_config {
+          - resources = [
+              - "secrets",
+            ] -> null
+
+          - provider {
+              - key_arn = "arn:aws:kms:us-east-1:736508008585:key/210f3c1c-39b3-41d8-a750-5c8fb531d276" -> null
+            }
+        }
+
+      - kubernetes_network_config {
+          - ip_family         = "ipv4" -> null
+          - service_ipv4_cidr = "172.20.0.0/16" -> null
+            # (1 unchanged attribute hidden)
+
+          - elastic_load_balancing {
+              - enabled = false -> null
+            }
+        }
+
+      - timeouts {}
+
+      - upgrade_policy {
+          - support_type = "EXTENDED" -> null
+        }
+
+      - vpc_config {
+          - cluster_security_group_id = "sg-0cd101153f28d8d59" -> null
+          - endpoint_private_access   = true -> null
+          - endpoint_public_access    = true -> null
+          - public_access_cidrs       = [
+              - "0.0.0.0/0",
+            ] -> null
+          - security_group_ids        = [
+              - "sg-077cabc9092f591e0",
+            ] -> null
+          - subnet_ids                = [
+              - "subnet-01fd0299a24a9c281",
+              - "subnet-0d4437684d9cbd194",
+            ] -> null
+          - vpc_id                    = "vpc-021161aa6d1618d82" -> null
+        }
+    }
+
+  # module.eks.aws_iam_openid_connect_provider.oidc_provider[0] will be destroyed
+  - resource "aws_iam_openid_connect_provider" "oidc_provider" {
+      - arn             = "arn:aws:iam::736508008585:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB" -> null
+      - client_id_list  = [
+          - "sts.amazonaws.com",
+        ] -> null
+      - id              = "arn:aws:iam::736508008585:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB" -> null
+      - tags            = {
+          - "Name" = "ecommerce-cluster-eks-irsa"
+        } -> null
+      - tags_all        = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "ecommerce-cluster-eks-irsa"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - thumbprint_list = [
+          - "06b25927c42a721631c1efd9431e648fa62e1e39",
+        ] -> null
+      - url             = "oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB" -> null
+    }
+
+  # module.eks.aws_iam_policy.cluster_encryption[0] will be destroyed
+  - resource "aws_iam_policy" "cluster_encryption" {
+      - arn              = "arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-ClusterEncryption2026111604045065540000000e" -> null
+      - attachment_count = 1 -> null
+      - description      = "Cluster encryption policy to allow cluster role to utilize CMK provided" -> null
+      - id               = "arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-ClusterEncryption2026111604045065540000000e" -> null
+      - name             = "ecommerce-cluster-cluster-ClusterEncryption2026111604045065540000000e" -> null
+      - name_prefix      = "ecommerce-cluster-cluster-ClusterEncryption" -> null
+      - path             = "/" -> null
+      - policy           = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action   = [
+                          - "kms:Encrypt",
+                          - "kms:Decrypt",
+                          - "kms:ListGrants",
+                          - "kms:DescribeKey",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:kms:us-east-1:736508008585:key/210f3c1c-39b3-41d8-a750-5c8fb531d276"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - policy_id        = "ANPA2W62MLCEW3DU5RAH7" -> null
+      - tags             = {} -> null
+      - tags_all         = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+    }
+
+  # module.eks.aws_iam_policy.custom[0] will be destroyed
+  - resource "aws_iam_policy" "custom" {
+      - arn              = "arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-20261116040415210200000001" -> null
+      - attachment_count = 1 -> null
+      - id               = "arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-20261116040415210200000001" -> null
+      - name             = "ecommerce-cluster-cluster-20261116040415210200000001" -> null
+      - name_prefix      = "ecommerce-cluster-cluster-" -> null
+      - path             = "/" -> null
+      - policy           = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = [
+                          - "ec2:RunInstances",
+                          - "ec2:CreateLaunchTemplate",
+                          - "ec2:CreateFleet",
+                        ]
+                      - Condition = {
+                          - StringEquals = {
+                              - "aws:RequestTag/eks:eks-cluster-name" = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                            }
+                          - StringLike   = {
+                              - "aws:RequestTag/eks:kubernetes-node-class-name" = "*"
+                              - "aws:RequestTag/eks:kubernetes-node-pool-name"  = "*"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "*"
+                      - Sid       = "Compute"
+                    },
+                  - {
+                      - Action    = [
+                          - "ec2:CreateVolume",
+                          - "ec2:CreateSnapshot",
+                        ]
+                      - Condition = {
+                          - StringEquals = {
+                              - "aws:RequestTag/eks:eks-cluster-name" = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = [
+                          - "arn:aws:ec2:*:*:volume/*",
+                          - "arn:aws:ec2:*:*:snapshot/*",
+                        ]
+                      - Sid       = "Storage"
+                    },
+                  - {
+                      - Action    = "ec2:CreateNetworkInterface"
+                      - Condition = {
+                          - StringEquals = {
+                              - "aws:RequestTag/eks:eks-cluster-name"         = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                              - "aws:RequestTag/eks:kubernetes-cni-node-name" = "*"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "*"
+                      - Sid       = "Networking"
+                    },
+                  - {
+                      - Action    = [
+                          - "elasticloadbalancing:CreateTargetGroup",
+                          - "elasticloadbalancing:CreateRule",
+                          - "elasticloadbalancing:CreateLoadBalancer",
+                          - "elasticloadbalancing:CreateListener",
+                          - "ec2:CreateSecurityGroup",
+                        ]
+                      - Condition = {
+                          - StringEquals = {
+                              - "aws:RequestTag/eks:eks-cluster-name" = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "*"
+                      - Sid       = "LoadBalancer"
+                    },
+                  - {
+                      - Action    = "shield:CreateProtection"
+                      - Condition = {
+                          - StringEquals = {
+                              - "aws:RequestTag/eks:eks-cluster-name" = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "*"
+                      - Sid       = "ShieldProtection"
+                    },
+                  - {
+                      - Action    = "shield:TagResource"
+                      - Condition = {
+                          - StringEquals = {
+                              - "aws:RequestTag/eks:eks-cluster-name" = "${aws:PrincipalTag/eks:eks-cluster-name}"
+                            }
+                        }
+                      - Effect    = "Allow"
+                      - Resource  = "arn:aws:shield::*:protection/*"
+                      - Sid       = "ShieldTagResource"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - policy_id        = "ANPA2W62MLCESKSLT5YDQ" -> null
+      - tags             = {} -> null
+      - tags_all         = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.eks.aws_iam_role.this[0] will be destroyed
+  - resource "aws_iam_role" "this" {
+      - arn                   = "arn:aws:iam::736508008585:role/ecommerce-cluster-cluster-20261116040415210800000004" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = [
+                          - "sts:TagSession",
+                          - "sts:AssumeRole",
+                        ]
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "eks.amazonaws.com"
+                        }
+                      - Sid       = "EKSClusterAssumeRole"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-11-16T04:04:17Z" -> null
+      - force_detach_policies = true -> null
+      - id                    = "ecommerce-cluster-cluster-20261116040415210800000004" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-20261116040415210200000001",
+          - "arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-ClusterEncryption2026111604045065540000000e",
+          - "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy",
+          - "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "ecommerce-cluster-cluster-20261116040415210800000004" -> null
+      - name_prefix           = "ecommerce-cluster-cluster-" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - unique_id             = "AROA2W62MLCET6YKBOWKE" -> null
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.eks.aws_iam_role_policy_attachment.cluster_encryption[0] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "cluster_encryption" {
+      - id         = "ecommerce-cluster-cluster-20261116040415210800000004-2026111604045198370000000f" -> null
+      - policy_arn = "arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-ClusterEncryption2026111604045065540000000e" -> null
+      - role       = "ecommerce-cluster-cluster-20261116040415210800000004" -> null
+    }
+
+  # module.eks.aws_iam_role_policy_attachment.custom[0] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "custom" {
+      - id         = "ecommerce-cluster-cluster-20261116040415210800000004-2026111604041870770000000a" -> null
+      - policy_arn = "arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-20261116040415210200000001" -> null
+      - role       = "ecommerce-cluster-cluster-20261116040415210800000004" -> null
+    }
+
+  # module.eks.aws_iam_role_policy_attachment.this["AmazonEKSClusterPolicy"] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "this" {
+      - id         = "ecommerce-cluster-cluster-20261116040415210800000004-2026111604041872880000000b" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy" -> null
+      - role       = "ecommerce-cluster-cluster-20261116040415210800000004" -> null
+    }
+
+  # module.eks.aws_iam_role_policy_attachment.this["AmazonEKSVPCResourceController"] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "this" {
+      - id         = "ecommerce-cluster-cluster-20261116040415210800000004-2026111604041898770000000d" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController" -> null
+      - role       = "ecommerce-cluster-cluster-20261116040415210800000004" -> null
+    }
+
+  # module.eks.aws_security_group.cluster[0] will be destroyed
+  - resource "aws_security_group" "cluster" {
+      - arn                    = "arn:aws:ec2:us-east-1:736508008585:security-group/sg-077cabc9092f591e0" -> null
+      - description            = "EKS cluster security group" -> null
+      - egress                 = [] -> null
+      - id                     = "sg-077cabc9092f591e0" -> null
+      - ingress                = [
+          - {
+              - cidr_blocks      = []
+              - description      = "Node groups to cluster API"
+              - from_port        = 443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-0e93e57dc2ec4f7f1",
+                ]
+              - self             = false
+              - to_port          = 443
+            },
+        ] -> null
+      - name                   = "ecommerce-cluster-cluster-20261116040415212300000007" -> null
+      - name_prefix            = "ecommerce-cluster-cluster-" -> null
+      - owner_id               = "736508008585" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {
+          - "Name" = "ecommerce-cluster-cluster"
+        } -> null
+      - tags_all               = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "ecommerce-cluster-cluster"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - vpc_id                 = "vpc-021161aa6d1618d82" -> null
+    }
+
+  # module.eks.aws_security_group.node[0] will be destroyed
+  - resource "aws_security_group" "node" {
+      - arn                    = "arn:aws:ec2:us-east-1:736508008585:security-group/sg-0e93e57dc2ec4f7f1" -> null
+      - description            = "EKS node shared security group" -> null
+      - egress                 = [
+          - {
+              - cidr_blocks      = [
+                  - "0.0.0.0/0",
+                ]
+              - description      = "Allow all egress"
+              - from_port        = 0
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "-1"
+              - security_groups  = []
+              - self             = false
+              - to_port          = 0
+            },
+        ] -> null
+      - id                     = "sg-0e93e57dc2ec4f7f1" -> null
+      - ingress                = [
+          - {
+              - cidr_blocks      = []
+              - description      = "Cluster API to node 4443/tcp webhook"
+              - from_port        = 4443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-077cabc9092f591e0",
+                ]
+              - self             = false
+              - to_port          = 4443
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Cluster API to node 6443/tcp webhook"
+              - from_port        = 6443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-077cabc9092f591e0",
+                ]
+              - self             = false
+              - to_port          = 6443
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Cluster API to node 8443/tcp webhook"
+              - from_port        = 8443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-077cabc9092f591e0",
+                ]
+              - self             = false
+              - to_port          = 8443
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Cluster API to node 9443/tcp webhook"
+              - from_port        = 9443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-077cabc9092f591e0",
+                ]
+              - self             = false
+              - to_port          = 9443
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Cluster API to node groups"
+              - from_port        = 443
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-077cabc9092f591e0",
+                ]
+              - self             = false
+              - to_port          = 443
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Cluster API to node kubelets"
+              - from_port        = 10250
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = [
+                  - "sg-077cabc9092f591e0",
+                ]
+              - self             = false
+              - to_port          = 10250
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Node to node CoreDNS UDP"
+              - from_port        = 53
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "udp"
+              - security_groups  = []
+              - self             = true
+              - to_port          = 53
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Node to node CoreDNS"
+              - from_port        = 53
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = true
+              - to_port          = 53
+            },
+          - {
+              - cidr_blocks      = []
+              - description      = "Node to node ingress on ephemeral ports"
+              - from_port        = 1025
+              - ipv6_cidr_blocks = []
+              - prefix_list_ids  = []
+              - protocol         = "tcp"
+              - security_groups  = []
+              - self             = true
+              - to_port          = 65535
+            },
+        ] -> null
+      - name                   = "ecommerce-cluster-node-20261116040415210200000003" -> null
+      - name_prefix            = "ecommerce-cluster-node-" -> null
+      - owner_id               = "736508008585" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {
+          - "Name"                                    = "ecommerce-cluster-node"
+          - "kubernetes.io/cluster/ecommerce-cluster" = "owned"
+        } -> null
+      - tags_all               = {
+          - "Environment"                             = "Dev"
+          - "Layer"                                   = "lab"
+          - "ManagedBy"                               = "Terraform"
+          - "Name"                                    = "ecommerce-cluster-node"
+          - "Project"                                 = "idp-compliance-scorecard"
+          - "kubernetes.io/cluster/ecommerce-cluster" = "owned"
+        } -> null
+      - vpc_id                 = "vpc-021161aa6d1618d82" -> null
+    }
+
+  # module.eks.aws_security_group_rule.cluster["ingress_nodes_443"] will be destroyed
+  - resource "aws_security_group_rule" "cluster" {
+      - description              = "Node groups to cluster API" -> null
+      - from_port                = 443 -> null
+      - id                       = "sgrule-1111666134" -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-077cabc9092f591e0" -> null
+      - security_group_rule_id   = "sgr-02868bbf04f02c10c" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-0e93e57dc2ec4f7f1" -> null
+      - to_port                  = 443 -> null
+      - type                     = "ingress" -> null
+    }
+
+  # module.eks.aws_security_group_rule.node["egress_all"] will be destroyed
+  - resource "aws_security_group_rule" "node" {
+      - cidr_blocks            = [
+          - "0.0.0.0/0",
+        ] -> null
+      - description            = "Allow all egress" -> null
+      - from_port              = 0 -> null
+      - id                     = "sgrule-4004449486" -> null
+      - prefix_list_ids        = [] -> null
+      - protocol               = "-1" -> null
+      - security_group_id      = "sg-0e93e57dc2ec4f7f1" -> null
+      - security_group_rule_id = "sgr-09bdbac36560e6dd6" -> null
+      - self                   = false -> null
+      - to_port                = 0 -> null
+      - type                   = "egress" -> null
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_443"] will be destroyed
+  - resource "aws_security_group_rule" "node" {
+      - description              = "Cluster API to node groups" -> null
+      - from_port                = 443 -> null
+      - id                       = "sgrule-2058012360" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-0e93e57dc2ec4f7f1" -> null
+      - security_group_rule_id   = "sgr-011d98078e0287b60" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-077cabc9092f591e0" -> null
+      - to_port                  = 443 -> null
+      - type                     = "ingress" -> null
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_4443_webhook"] will be destroyed
+  - resource "aws_security_group_rule" "node" {
+      - description              = "Cluster API to node 4443/tcp webhook" -> null
+      - from_port                = 4443 -> null
+      - id                       = "sgrule-2970048562" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-0e93e57dc2ec4f7f1" -> null
+      - security_group_rule_id   = "sgr-07b47aa9fee74db67" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-077cabc9092f591e0" -> null
+      - to_port                  = 4443 -> null
+      - type                     = "ingress" -> null
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_6443_webhook"] will be destroyed
+  - resource "aws_security_group_rule" "node" {
+      - description              = "Cluster API to node 6443/tcp webhook" -> null
+      - from_port                = 6443 -> null
+      - id                       = "sgrule-2017804196" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-0e93e57dc2ec4f7f1" -> null
+      - security_group_rule_id   = "sgr-022a9cfb0bcd1e627" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-077cabc9092f591e0" -> null
+      - to_port                  = 6443 -> null
+      - type                     = "ingress" -> null
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_8443_webhook"] will be destroyed
+  - resource "aws_security_group_rule" "node" {
+      - description              = "Cluster API to node 8443/tcp webhook" -> null
+      - from_port                = 8443 -> null
+      - id                       = "sgrule-1796801413" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-0e93e57dc2ec4f7f1" -> null
+      - security_group_rule_id   = "sgr-082d6925f386faba2" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-077cabc9092f591e0" -> null
+      - to_port                  = 8443 -> null
+      - type                     = "ingress" -> null
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_9443_webhook"] will be destroyed
+  - resource "aws_security_group_rule" "node" {
+      - description              = "Cluster API to node 9443/tcp webhook" -> null
+      - from_port                = 9443 -> null
+      - id                       = "sgrule-263729230" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-0e93e57dc2ec4f7f1" -> null
+      - security_group_rule_id   = "sgr-00170064c3a10cc30" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-077cabc9092f591e0" -> null
+      - to_port                  = 9443 -> null
+      - type                     = "ingress" -> null
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_cluster_kubelet"] will be destroyed
+  - resource "aws_security_group_rule" "node" {
+      - description              = "Cluster API to node kubelets" -> null
+      - from_port                = 10250 -> null
+      - id                       = "sgrule-4085642085" -> null
+      - prefix_list_ids          = [] -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-0e93e57dc2ec4f7f1" -> null
+      - security_group_rule_id   = "sgr-0c63327c8d96bccde" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-077cabc9092f591e0" -> null
+      - to_port                  = 10250 -> null
+      - type                     = "ingress" -> null
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_nodes_ephemeral"] will be destroyed
+  - resource "aws_security_group_rule" "node" {
+      - description            = "Node to node ingress on ephemeral ports" -> null
+      - from_port              = 1025 -> null
+      - id                     = "sgrule-1031087289" -> null
+      - prefix_list_ids        = [] -> null
+      - protocol               = "tcp" -> null
+      - security_group_id      = "sg-0e93e57dc2ec4f7f1" -> null
+      - security_group_rule_id = "sgr-0fe3718f3c31dc5ae" -> null
+      - self                   = true -> null
+      - to_port                = 65535 -> null
+      - type                   = "ingress" -> null
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_self_coredns_tcp"] will be destroyed
+  - resource "aws_security_group_rule" "node" {
+      - description            = "Node to node CoreDNS" -> null
+      - from_port              = 53 -> null
+      - id                     = "sgrule-4191808355" -> null
+      - prefix_list_ids        = [] -> null
+      - protocol               = "tcp" -> null
+      - security_group_id      = "sg-0e93e57dc2ec4f7f1" -> null
+      - security_group_rule_id = "sgr-04081caa211c3e311" -> null
+      - self                   = true -> null
+      - to_port                = 53 -> null
+      - type                   = "ingress" -> null
+    }
+
+  # module.eks.aws_security_group_rule.node["ingress_self_coredns_udp"] will be destroyed
+  - resource "aws_security_group_rule" "node" {
+      - description            = "Node to node CoreDNS UDP" -> null
+      - from_port              = 53 -> null
+      - id                     = "sgrule-1569081484" -> null
+      - prefix_list_ids        = [] -> null
+      - protocol               = "udp" -> null
+      - security_group_id      = "sg-0e93e57dc2ec4f7f1" -> null
+      - security_group_rule_id = "sgr-0eea0961e15f46450" -> null
+      - self                   = true -> null
+      - to_port                = 53 -> null
+      - type                   = "ingress" -> null
+    }
+
+  # module.eks.time_sleep.this[0] will be destroyed
+  - resource "time_sleep" "this" {
+      - create_duration = "30s" -> null
+      - id              = "2026-11-16T04:15:44Z" -> null
+      - triggers        = {
+          - "cluster_certificate_authority_data" = "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURNakNDQWhxZ0F3SUJBZ0lSQUtlOXdKZGQ0WXh1bStHelVOZUJHcVF3RFFZSktvWklodmNOQVFFTEJRQXcKSnpFUU1BNEdBMVVFQ2hNSFFWZFRJRVZMVXpFVE1CRUdBMVVFQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TmpFeApNVFl3TkRBME5UbGFGdzB6TVRFeE1UVXdOREEwTlRsYU1DY3hFREFPQmdOVkJBb1RCMEZYVXlCRlMxTXhFekFSCkJnTlZCQU1UQ210MVltVnlibVYwWlhNd2dnRWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUIKQVFEbFhGcCtvN3lSRXhxZUtTV3Zkem4vTXE0VHd1eGJQdlA3UXpjdUpqeXJrZWpRdXpxWUpKZXR4cG1LQ1BGaQpVb284aFJPMkdGNHJ5eFdBVmpwNzkxNURYODFZZEtFQjNDaE8vNWNyTnhtby9LbFFIVVdjNkkvQXlnVVRJZVpwCk5lcWZ1ZVYzSmxhVDRueU5CQWEvOUU3YnBrNFR0S25BUXhMeitvSHlET21SdGZoZ0JKN0d1MzZ0Q2d1TWpKVFoKL3VEUTZjOTlMU3ZJQTdYS2pMbnlncG91N3p3Qnh2MW1hd2RiSXpDQXkxYTdPcHM3UFBoSklkUXF0YkNHSnpnbAp4UHhPbVE4RmVORFEvd3ZVT1N6TjVqempVNWtyQW41dk9SanNlRHk2WlFQSlJNeGZSWCsxUTV3Z1pqU1hBRUN3CmhUVnhZazNvQ1BxK0JLRG5VZWN2bFJjcEFnTUJBQUdqV1RCWE1BNEdBMVVkRHdFQi93UUVBd0lDcERBUEJnTlYKSFJNQkFmOEVCVEFEQVFIL01CMEdBMVVkRGdRV0JCVFdVbS9IcEZobTA5blVycTZVOFFhSWI2SjBvVEFWQmdOVgpIUkVFRGpBTWdncHJkV0psY201bGRHVnpNQTBHQ1NxR1NJYjNEUUVCQ3dVQUE0SUJBUUNnVEVVS0dTMGlZRFhNCjlZK1diZ2lodHcrZk5FdXdwYStkN1RYa3VBcmk0L1J6UkFFMEo0Y0dXMnFKdWdEMEJJc2p5dTJFeXBvcmVtMVgKSmJlQ0doa2t6YXdXRytnMlpodHQwMDJXWElJVkExWStQTTMrcktzNW5hM3hyNFl1Y1MwLzJ3dkpoWnVlVUJFVwpJYWhEQjVyZ2xld2x0VFBVRHplYmpFUmZScWJBOGNPMVdXalVoKzFjT3VvdFBlU1Jvc2ZrcGZKTjFjMnVQLzQ3CkRBdWt5S3FsTlV0RVJSZWZCNTI3dU15M2l6WTRucW5iSHJSVXZ0Mzl4QkJKdlNodkhTdW5oZGlHVmY5cktrQmIKaVY5bmlQVS9tWHFaT0NFT3gyQTFKSXpOYlZDSEgvUUhnTlhKT3UzVEVLSEJDS0dScFpVQkVNa1hhajV5OVBETgprWWNCUVBaeAotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+          - "cluster_endpoint"                   = "https://9177B314289B8E0C0BC3CEF466F44CFB.gr7.us-east-1.eks.amazonaws.com"
+          - "cluster_name"                       = "ecommerce-cluster"
+          - "cluster_service_cidr"               = "172.20.0.0/16"
+          - "cluster_version"                    = "1.35"
+        } -> null
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0] will be destroyed
+  - resource "aws_eks_node_group" "this" {
+      - ami_type               = "AL2023_x86_64_STANDARD" -> null
+      - arn                    = "arn:aws:eks:us-east-1:736508008585:nodegroup/ecommerce-cluster/main_nodes-20261116041547545300000012/cad0f148-bda7-fcba-462d-737b5783b2ec" -> null
+      - capacity_type          = "ON_DEMAND" -> null
+      - cluster_name           = "ecommerce-cluster" -> null
+      - disk_size              = 30 -> null
+      - id                     = "ecommerce-cluster:main_nodes-20261116041547545300000012" -> null
+      - instance_types         = [
+          - "t3.large",
+        ] -> null
+      - labels                 = {} -> null
+      - node_group_name        = "main_nodes-20261116041547545300000012" -> null
+      - node_group_name_prefix = "main_nodes-" -> null
+      - node_role_arn          = "arn:aws:iam::736508008585:role/main_nodes-eks-node-group-20261116040415211800000005" -> null
+      - release_version        = "1.35.9-20261112" -> null
+      - resources              = [
+          - {
+              - autoscaling_groups              = [
+                  - {
+                      - name = "eks-main_nodes-20261116041547545300000012-cad0f148-bda7-fcba-462d-737b5783b2ec"
+                    },
+                ]
+                # (1 unchanged attribute hidden)
+            },
+        ] -> null
+      - status                 = "ACTIVE" -> null
+      - subnet_ids             = [
+          - "subnet-01fd0299a24a9c281",
+          - "subnet-0d4437684d9cbd194",
+        ] -> null
+      - tags                   = {
+          - "Name" = "main_nodes"
+        } -> null
+      - tags_all               = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "main_nodes"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - version                = "1.35" -> null
+
+      - scaling_config {
+          - desired_size = 2 -> null
+          - max_size     = 3 -> null
+          - min_size     = 2 -> null
+        }
+
+      - timeouts {}
+
+      - update_config {
+          - max_unavailable            = 0 -> null
+          - max_unavailable_percentage = 33 -> null
+        }
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role.this[0] will be destroyed
+  - resource "aws_iam_role" "this" {
+      - arn                   = "arn:aws:iam::736508008585:role/main_nodes-eks-node-group-20261116040415211800000005" -> null
+      - assume_role_policy    = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "sts:AssumeRole"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - Service = "ec2.amazonaws.com"
+                        }
+                      - Sid       = "EKSNodeAssumeRole"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - create_date           = "2026-11-16T04:04:17Z" -> null
+      - description           = "EKS managed node group IAM role" -> null
+      - force_detach_policies = true -> null
+      - id                    = "main_nodes-eks-node-group-20261116040415211800000005" -> null
+      - managed_policy_arns   = [
+          - "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly",
+          - "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
+          - "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+        ] -> null
+      - max_session_duration  = 3600 -> null
+      - name                  = "main_nodes-eks-node-group-20261116040415211800000005" -> null
+      - name_prefix           = "main_nodes-eks-node-group-" -> null
+      - path                  = "/" -> null
+      - tags                  = {} -> null
+      - tags_all              = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - unique_id             = "AROA2W62MLCERD7SUGYAR" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEC2ContainerRegistryReadOnly"] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "this" {
+      - id         = "main_nodes-eks-node-group-20261116040415211800000005-20261116040418688800000009" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly" -> null
+      - role       = "main_nodes-eks-node-group-20261116040415211800000005" -> null
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKSWorkerNodePolicy"] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "this" {
+      - id         = "main_nodes-eks-node-group-20261116040415211800000005-20261116040418665000000008" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy" -> null
+      - role       = "main_nodes-eks-node-group-20261116040415211800000005" -> null
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKS_CNI_Policy"] will be destroyed
+  - resource "aws_iam_role_policy_attachment" "this" {
+      - id         = "main_nodes-eks-node-group-20261116040415211800000005-2026111604041874690000000c" -> null
+      - policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy" -> null
+      - role       = "main_nodes-eks-node-group-20261116040415211800000005" -> null
+    }
+
+  # module.eks.module.kms.aws_kms_alias.this["cluster"] will be destroyed
+  - resource "aws_kms_alias" "this" {
+      - arn            = "arn:aws:kms:us-east-1:736508008585:alias/eks/ecommerce-cluster" -> null
+      - id             = "alias/eks/ecommerce-cluster" -> null
+      - name           = "alias/eks/ecommerce-cluster" -> null
+      - target_key_arn = "arn:aws:kms:us-east-1:736508008585:key/210f3c1c-39b3-41d8-a750-5c8fb531d276" -> null
+      - target_key_id  = "210f3c1c-39b3-41d8-a750-5c8fb531d276" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.eks.module.kms.aws_kms_key.this[0] will be destroyed
+  - resource "aws_kms_key" "this" {
+      - arn                                = "arn:aws:kms:us-east-1:736508008585:key/210f3c1c-39b3-41d8-a750-5c8fb531d276" -> null
+      - bypass_policy_lockout_safety_check = false -> null
+      - customer_master_key_spec           = "SYMMETRIC_DEFAULT" -> null
+      - description                        = "ecommerce-cluster cluster encryption key" -> null
+      - enable_key_rotation                = true -> null
+      - id                                 = "210f3c1c-39b3-41d8-a750-5c8fb531d276" -> null
+      - is_enabled                         = true -> null
+      - key_id                             = "210f3c1c-39b3-41d8-a750-5c8fb531d276" -> null
+      - key_usage                          = "ENCRYPT_DECRYPT" -> null
+      - multi_region                       = false -> null
+      - policy                             = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "kms:*"
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - AWS = "arn:aws:iam::736508008585:root"
+                        }
+                      - Resource  = "*"
+                      - Sid       = "Default"
+                    },
+                  - {
+                      - Action    = [
+                          - "kms:Update*",
+                          - "kms:UntagResource",
+                          - "kms:TagResource",
+                          - "kms:ScheduleKeyDeletion",
+                          - "kms:Revoke*",
+                          - "kms:ReplicateKey",
+                          - "kms:Put*",
+                          - "kms:List*",
+                          - "kms:ImportKeyMaterial",
+                          - "kms:Get*",
+                          - "kms:Enable*",
+                          - "kms:Disable*",
+                          - "kms:Describe*",
+                          - "kms:Delete*",
+                          - "kms:Create*",
+                          - "kms:CancelKeyDeletion",
+                        ]
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - AWS = "arn:aws:iam::736508008585:user/idp"
+                        }
+                      - Resource  = "*"
+                      - Sid       = "KeyAdministration"
+                    },
+                  - {
+                      - Action    = [
+                          - "kms:ReEncrypt*",
+                          - "kms:GenerateDataKey*",
+                          - "kms:Encrypt",
+                          - "kms:DescribeKey",
+                          - "kms:Decrypt",
+                        ]
+                      - Effect    = "Allow"
+                      - Principal = {
+                          - AWS = "arn:aws:iam::736508008585:role/ecommerce-cluster-cluster-20261116040415210800000004"
+                        }
+                      - Resource  = "*"
+                      - Sid       = "KeyUsage"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> null
+      - rotation_period_in_days            = 365 -> null
+      - tags                               = {
+          - "terraform-aws-modules" = "eks"
+        } -> null
+      - tags_all                           = {
+          - "Environment"           = "Dev"
+          - "Layer"                 = "lab"
+          - "ManagedBy"             = "Terraform"
+          - "Project"               = "idp-compliance-scorecard"
+          - "terraform-aws-modules" = "eks"
+        } -> null
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.eks.module.eks_managed_node_group["main_nodes"].module.user_data.null_resource.validate_cluster_service_cidr will be destroyed
+  - resource "null_resource" "validate_cluster_service_cidr" {
+      - id = "2171524856263970653" -> null
+    }
+
+Plan: 0 to add, 0 to change, 46 to destroy.
+
+Changes to Outputs:
+  - account_id                         = "736508008585" -> null
+  - cluster_autoscaler_iam_role_arn    = "arn:aws:iam::736508008585:role/ecommerce-cluster-cluster-autoscaler" -> null
+  - cluster_certificate_authority_data = (sensitive value) -> null
+  - cluster_endpoint                   = "https://9177B314289B8E0C0BC3CEF466F44CFB.gr7.us-east-1.eks.amazonaws.com" -> null
+  - cluster_name                       = "ecommerce-cluster" -> null
+  - cluster_security_group_id          = "sg-077cabc9092f591e0" -> null
+  - ecr_registry                       = "736508008585.dkr.ecr.us-east-1.amazonaws.com" -> null
+  - kms_key_arn                        = "arn:aws:kms:us-east-1:736508008585:key/612c045e-46ae-4996-b681-f53fe0a4ec8f" -> null
+  - kubeconfig_command                 = "aws eks update-kubeconfig --name ecommerce-cluster --region us-east-1" -> null
+  - node_security_group_id             = "sg-0e93e57dc2ec4f7f1" -> null
+  - region                             = "us-east-1" -> null
+module.cluster_autoscaler_irsa.aws_iam_role_policy_attachment.cluster_autoscaler[0]: Destroying... [id=ecommerce-cluster-cluster-autoscaler-20261116041521667700000011]
+module.ebs_csi_irsa.aws_iam_role_policy_attachment.ebs_csi[0]: Destroying... [id=ecommerce-cluster-ebs-csi-driver-20261116041521486300000010]
+aws_kms_alias.eks: Destroying... [id=alias/ecommerce-cluster-eks-secrets]
+kubernetes_service_account_v1.cluster_autoscaler: Destroying... [id=kube-system/cluster-autoscaler]
+helm_release.argocd_root: Destroying... [id=argocd-root]
+aws_kms_alias.eks: Destruction complete after 2s
+kubernetes_service_account_v1.cluster_autoscaler: Destruction complete after 2s
+module.cluster_autoscaler_irsa.aws_iam_role_policy_attachment.cluster_autoscaler[0]: Destruction complete after 2s
+module.cluster_autoscaler_irsa.aws_iam_policy.cluster_autoscaler[0]: Destroying... [id=arn:aws:iam::736508008585:policy/AmazonEKS_Cluster_Autoscaler_Policy-20261116040415210200000002]
+module.cluster_autoscaler_irsa.aws_iam_role.this[0]: Destroying... [id=ecommerce-cluster-cluster-autoscaler]
+module.ebs_csi_irsa.aws_iam_role_policy_attachment.ebs_csi[0]: Destruction complete after 2s
+module.ebs_csi_irsa.aws_iam_policy.ebs_csi[0]: Destroying... [id=arn:aws:iam::736508008585:policy/AmazonEKS_EBS_CSI_Policy-20261116040415211800000006]
+module.cluster_autoscaler_irsa.aws_iam_policy.cluster_autoscaler[0]: Destruction complete after 1s
+module.ebs_csi_irsa.aws_iam_policy.ebs_csi[0]: Destruction complete after 1s
+module.cluster_autoscaler_irsa.aws_iam_role.this[0]: Destruction complete after 2s
+helm_release.argocd_root: Destruction complete after 6s
+helm_release.argocd: Destroying... [id=argocd]
+helm_release.argocd: Still destroying... [id=argocd, 10s elapsed]
+helm_release.argocd: Still destroying... [id=argocd, 20s elapsed]
+helm_release.argocd: Still destroying... [id=argocd, 30s elapsed]
+helm_release.argocd: Still destroying... [id=argocd, 40s elapsed]
+helm_release.argocd: Still destroying... [id=argocd, 50s elapsed]
+helm_release.argocd: Still destroying... [id=argocd, 1m0s elapsed]
+helm_release.argocd: Destruction complete after 1m1s
+module.eks.aws_iam_role_policy_attachment.cluster_encryption[0]: Destroying... [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604045198370000000f]
+module.eks.aws_iam_role_policy_attachment.custom[0]: Destroying... [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604041870770000000a]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Destroying... [id=ecommerce-cluster:aws-ebs-csi-driver]
+module.eks.module.kms.aws_kms_alias.this["cluster"]: Destroying... [id=alias/eks/ecommerce-cluster]
+module.eks.aws_eks_access_policy_association.this["cluster_creator_admin"]: Destroying... [id=ecommerce-cluster#arn:aws:iam::736508008585:user/idp#arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy]
+module.eks.aws_iam_role_policy_attachment.cluster_encryption[0]: Destruction complete after 0s
+module.eks.aws_iam_policy.cluster_encryption[0]: Destroying... [id=arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-ClusterEncryption2026111604045065540000000e]
+module.eks.aws_iam_role_policy_attachment.custom[0]: Destruction complete after 0s
+module.eks.aws_iam_policy.custom[0]: Destroying... [id=arn:aws:iam::736508008585:policy/ecommerce-cluster-cluster-20261116040415210200000001]
+module.eks.aws_iam_policy.cluster_encryption[0]: Destruction complete after 0s
+module.eks.aws_iam_policy.custom[0]: Destruction complete after 1s
+module.eks.module.kms.aws_kms_alias.this["cluster"]: Destruction complete after 1s
+module.eks.aws_eks_access_policy_association.this["cluster_creator_admin"]: Destruction complete after 2s
+module.eks.aws_eks_access_entry.this["cluster_creator"]: Destroying... [id=ecommerce-cluster:arn:aws:iam::736508008585:user/idp]
+module.eks.aws_eks_access_entry.this["cluster_creator"]: Destruction complete after 0s
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Still destroying... [id=ecommerce-cluster:aws-ebs-csi-driver, 10s elapsed]
+module.eks.aws_eks_addon.this["aws-ebs-csi-driver"]: Destruction complete after 10s
+module.eks.module.eks_managed_node_group["main_nodes"].module.user_data.null_resource.validate_cluster_service_cidr: Destroying... [id=2171524856263970653]
+module.ebs_csi_irsa.aws_iam_role.this[0]: Destroying... [id=ecommerce-cluster-ebs-csi-driver]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012]
+module.eks.module.eks_managed_node_group["main_nodes"].module.user_data.null_resource.validate_cluster_service_cidr: Destruction complete after 0s
+module.ebs_csi_irsa.aws_iam_role.this[0]: Destruction complete after 1s
+module.eks.aws_iam_openid_connect_provider.oidc_provider[0]: Destroying... [id=arn:aws:iam::736508008585:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/9177B314289B8E0C0BC3CEF466F44CFB]
+module.eks.aws_iam_openid_connect_provider.oidc_provider[0]: Destruction complete after 1s
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 10s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 20s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 30s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 40s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 50s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 1m0s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 1m10s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 1m20s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 1m30s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 1m40s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 1m50s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 2m0s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 2m10s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 2m20s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 2m30s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 2m40s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 2m50s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 3m0s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 3m10s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 3m20s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 3m30s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 3m40s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 3m50s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 4m0s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 4m10s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 4m20s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 4m30s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 4m40s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 4m50s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 5m0s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 5m10s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 5m20s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 5m30s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 5m40s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 5m50s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 6m0s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 6m10s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 6m20s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 6m30s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 6m40s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 6m50s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 7m0s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 7m10s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 7m20s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 7m30s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 7m40s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 7m50s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 8m0s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Still destroying... [id=ecommerce-cluster:main_nodes-20261116041547545300000012, 8m10s elapsed]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_eks_node_group.this[0]: Destruction complete after 8m13s
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKSWorkerNodePolicy"]: Destroying... [id=main_nodes-eks-node-group-20261116040415211800000005-20261116040418665000000008]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEC2ContainerRegistryReadOnly"]: Destroying... [id=main_nodes-eks-node-group-20261116040415211800000005-20261116040418688800000009]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKS_CNI_Policy"]: Destroying... [id=main_nodes-eks-node-group-20261116040415211800000005-2026111604041874690000000c]
+module.eks.time_sleep.this[0]: Destroying... [id=2026-11-16T04:15:44Z]
+module.eks.time_sleep.this[0]: Destruction complete after 0s
+module.eks.aws_eks_cluster.this[0]: Destroying... [id=ecommerce-cluster]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEC2ContainerRegistryReadOnly"]: Destruction complete after 2s
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKSWorkerNodePolicy"]: Destruction complete after 2s
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role_policy_attachment.this["AmazonEKS_CNI_Policy"]: Destruction complete after 2s
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role.this[0]: Destroying... [id=main_nodes-eks-node-group-20261116040415211800000005]
+module.eks.module.eks_managed_node_group["main_nodes"].aws_iam_role.this[0]: Destruction complete after 1s
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 1m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 1m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 1m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 1m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 1m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 1m50s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 2m0s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 2m10s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 2m20s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 2m30s elapsed]
+module.eks.aws_eks_cluster.this[0]: Still destroying... [id=ecommerce-cluster, 2m40s elapsed]
+module.eks.aws_eks_cluster.this[0]: Destruction complete after 2m49s
+module.eks.aws_cloudwatch_log_group.this[0]: Destroying... [id=/aws/eks/ecommerce-cluster/cluster]
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSVPCResourceController"]: Destroying... [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604041898770000000d]
+module.eks.aws_security_group_rule.node["ingress_cluster_443"]: Destroying... [id=sgrule-2058012360]
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSClusterPolicy"]: Destroying... [id=ecommerce-cluster-cluster-20261116040415210800000004-2026111604041872880000000b]
+module.eks.module.kms.aws_kms_key.this[0]: Destroying... [id=210f3c1c-39b3-41d8-a750-5c8fb531d276]
+module.eks.aws_security_group_rule.node["ingress_cluster_6443_webhook"]: Destroying... [id=sgrule-2017804196]
+module.eks.aws_security_group_rule.node["ingress_cluster_kubelet"]: Destroying... [id=sgrule-4085642085]
+module.eks.aws_security_group_rule.cluster["ingress_nodes_443"]: Destroying... [id=sgrule-1111666134]
+module.eks.aws_security_group_rule.node["ingress_nodes_ephemeral"]: Destroying... [id=sgrule-1031087289]
+module.eks.aws_security_group_rule.node["egress_all"]: Destroying... [id=sgrule-4004449486]
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSVPCResourceController"]: Destruction complete after 2s
+module.eks.aws_security_group_rule.node["ingress_cluster_8443_webhook"]: Destroying... [id=sgrule-1796801413]
+module.eks.module.kms.aws_kms_key.this[0]: Destruction complete after 2s
+module.eks.aws_security_group_rule.node["ingress_cluster_4443_webhook"]: Destroying... [id=sgrule-2970048562]
+module.eks.aws_cloudwatch_log_group.this[0]: Destruction complete after 2s
+module.eks.aws_security_group_rule.node["ingress_cluster_9443_webhook"]: Destroying... [id=sgrule-263729230]
+module.eks.aws_iam_role_policy_attachment.this["AmazonEKSClusterPolicy"]: Destruction complete after 2s
+module.eks.aws_security_group_rule.node["ingress_self_coredns_tcp"]: Destroying... [id=sgrule-4191808355]
+module.eks.aws_security_group_rule.node["ingress_cluster_443"]: Destruction complete after 3s
+module.eks.aws_security_group_rule.node["ingress_self_coredns_udp"]: Destroying... [id=sgrule-1569081484]
+module.eks.aws_security_group_rule.cluster["ingress_nodes_443"]: Destruction complete after 3s
+aws_kms_key.eks: Destroying... [id=612c045e-46ae-4996-b681-f53fe0a4ec8f]
+aws_kms_key.eks: Destruction complete after 1s
+module.eks.aws_iam_role.this[0]: Destroying... [id=ecommerce-cluster-cluster-20261116040415210800000004]
+module.eks.aws_security_group_rule.node["ingress_cluster_6443_webhook"]: Destruction complete after 4s
+module.eks.aws_iam_role.this[0]: Destruction complete after 1s
+module.eks.aws_security_group_rule.node["ingress_cluster_kubelet"]: Destruction complete after 5s
+module.eks.aws_security_group_rule.node["ingress_nodes_ephemeral"]: Destruction complete after 6s
+module.eks.aws_security_group_rule.node["egress_all"]: Destruction complete after 7s
+module.eks.aws_security_group_rule.node["ingress_cluster_8443_webhook"]: Destruction complete after 6s
+module.eks.aws_security_group_rule.node["ingress_cluster_4443_webhook"]: Destruction complete after 7s
+module.eks.aws_security_group_rule.node["ingress_cluster_9443_webhook"]: Destruction complete after 8s
+module.eks.aws_security_group_rule.node["ingress_self_coredns_tcp"]: Destruction complete after 9s
+module.eks.aws_security_group_rule.node["ingress_self_coredns_udp"]: Destruction complete after 9s
+module.eks.aws_security_group.cluster[0]: Destroying... [id=sg-077cabc9092f591e0]
+module.eks.aws_security_group.node[0]: Destroying... [id=sg-0e93e57dc2ec4f7f1]
+module.eks.aws_security_group.cluster[0]: Destruction complete after 2s
+module.eks.aws_security_group.node[0]: Destruction complete after 2s
+
+Warning: Helm uninstall returned an information message
+
+These resources were kept due to the resource policy:
+[CustomResourceDefinition] applications.argoproj.io
+[CustomResourceDefinition] applicationsets.argoproj.io
+[CustomResourceDefinition] appprojects.argoproj.io
+
+Releasing state lock. This may take a few moments...
+
+Destroy complete! Resources: 46 destroyed.
+[05:10:23] [01-network] terraform destroy
+module.vpc.aws_vpc.this[0]: Refreshing state... [id=vpc-021161aa6d1618d82]
+module.vpc.aws_default_route_table.default[0]: Refreshing state... [id=rtb-066fb7e8e72c8ba83]
+module.vpc.aws_default_security_group.this[0]: Refreshing state... [id=sg-087603b6a307c44ff]
+module.vpc.aws_default_network_acl.this[0]: Refreshing state... [id=acl-087b3d08cbc03c8e1]
+module.vpc.aws_subnet.private[0]: Refreshing state... [id=subnet-01fd0299a24a9c281]
+module.vpc.aws_route_table.public[0]: Refreshing state... [id=rtb-0e20925c02822f960]
+module.vpc.aws_internet_gateway.this[0]: Refreshing state... [id=igw-0465ab27cf8324c33]
+module.vpc.aws_subnet.private[1]: Refreshing state... [id=subnet-0d4437684d9cbd194]
+module.vpc.aws_subnet.public[0]: Refreshing state... [id=subnet-04db64488eaa901fa]
+module.vpc.aws_route_table.private[0]: Refreshing state... [id=rtb-0f44d2cd612eec299]
+module.vpc.aws_subnet.public[1]: Refreshing state... [id=subnet-0d759a96ebb59b0ba]
+module.vpc.aws_eip.nat[0]: Refreshing state... [id=eipalloc-028c7bf0736497937]
+module.vpc.aws_route.public_internet_gateway[0]: Refreshing state... [id=r-rtb-0e20925c02822f9601080289494]
+module.vpc.aws_route_table_association.private[1]: Refreshing state... [id=rtbassoc-02dba7005101227d9]
+module.vpc.aws_route_table_association.private[0]: Refreshing state... [id=rtbassoc-086d363f69aafd47f]
+module.vpc.aws_route_table_association.public[1]: Refreshing state... [id=rtbassoc-07ce8d23695af2673]
+module.vpc.aws_route_table_association.public[0]: Refreshing state... [id=rtbassoc-0df7618a4e4515386]
+module.vpc.aws_nat_gateway.this[0]: Refreshing state... [id=nat-0b974ad684de5cf47]
+module.vpc.aws_route.private_nat_gateway[0]: Refreshing state... [id=r-rtb-0f44d2cd612eec2991080289494]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # module.vpc.aws_default_network_acl.this[0] will be destroyed
+  - resource "aws_default_network_acl" "this" {
+      - arn                    = "arn:aws:ec2:us-east-1:736508008585:network-acl/acl-087b3d08cbc03c8e1" -> null
+      - default_network_acl_id = "acl-087b3d08cbc03c8e1" -> null
+      - id                     = "acl-087b3d08cbc03c8e1" -> null
+      - owner_id               = "736508008585" -> null
+      - subnet_ids             = [
+          - "subnet-01fd0299a24a9c281",
+          - "subnet-04db64488eaa901fa",
+          - "subnet-0d4437684d9cbd194",
+          - "subnet-0d759a96ebb59b0ba",
+        ] -> null
+      - tags                   = {
+          - "Name" = "ecommerce-vpc-default"
+        } -> null
+      - tags_all               = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "ecommerce-vpc-default"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - vpc_id                 = "vpc-021161aa6d1618d82" -> null
+
+      - egress {
+          - action          = "allow" -> null
+          - from_port       = 0 -> null
+          - icmp_code       = 0 -> null
+          - icmp_type       = 0 -> null
+          - ipv6_cidr_block = "::/0" -> null
+          - protocol        = "-1" -> null
+          - rule_no         = 101 -> null
+          - to_port         = 0 -> null
+            # (1 unchanged attribute hidden)
+        }
+      - egress {
+          - action          = "allow" -> null
+          - cidr_block      = "0.0.0.0/0" -> null
+          - from_port       = 0 -> null
+          - icmp_code       = 0 -> null
+          - icmp_type       = 0 -> null
+          - protocol        = "-1" -> null
+          - rule_no         = 100 -> null
+          - to_port         = 0 -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      - ingress {
+          - action          = "allow" -> null
+          - from_port       = 0 -> null
+          - icmp_code       = 0 -> null
+          - icmp_type       = 0 -> null
+          - ipv6_cidr_block = "::/0" -> null
+          - protocol        = "-1" -> null
+          - rule_no         = 101 -> null
+          - to_port         = 0 -> null
+            # (1 unchanged attribute hidden)
+        }
+      - ingress {
+          - action          = "allow" -> null
+          - cidr_block      = "0.0.0.0/0" -> null
+          - from_port       = 0 -> null
+          - icmp_code       = 0 -> null
+          - icmp_type       = 0 -> null
+          - protocol        = "-1" -> null
+          - rule_no         = 100 -> null
+          - to_port         = 0 -> null
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+  # module.vpc.aws_default_route_table.default[0] will be destroyed
+  - resource "aws_default_route_table" "default" {
+      - arn                    = "arn:aws:ec2:us-east-1:736508008585:route-table/rtb-066fb7e8e72c8ba83" -> null
+      - default_route_table_id = "rtb-066fb7e8e72c8ba83" -> null
+      - id                     = "rtb-066fb7e8e72c8ba83" -> null
+      - owner_id               = "736508008585" -> null
+      - propagating_vgws       = [] -> null
+      - route                  = [] -> null
+      - tags                   = {
+          - "Name" = "ecommerce-vpc-default"
+        } -> null
+      - tags_all               = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "ecommerce-vpc-default"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - vpc_id                 = "vpc-021161aa6d1618d82" -> null
+
+      - timeouts {
+          - create = "5m" -> null
+          - update = "5m" -> null
+        }
+    }
+
+  # module.vpc.aws_default_security_group.this[0] will be destroyed
+  - resource "aws_default_security_group" "this" {
+      - arn                    = "arn:aws:ec2:us-east-1:736508008585:security-group/sg-087603b6a307c44ff" -> null
+      - description            = "default VPC security group" -> null
+      - egress                 = [] -> null
+      - id                     = "sg-087603b6a307c44ff" -> null
+      - ingress                = [] -> null
+      - name                   = "default" -> null
+      - owner_id               = "736508008585" -> null
+      - revoke_rules_on_delete = false -> null
+      - tags                   = {
+          - "Name" = "ecommerce-vpc-default"
+        } -> null
+      - tags_all               = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "ecommerce-vpc-default"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - vpc_id                 = "vpc-021161aa6d1618d82" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.vpc.aws_eip.nat[0] will be destroyed
+  - resource "aws_eip" "nat" {
+      - allocation_id            = "eipalloc-028c7bf0736497937" -> null
+      - arn                      = "arn:aws:ec2:us-east-1:736508008585:elastic-ip/eipalloc-028c7bf0736497937" -> null
+      - association_id           = "eipassoc-0a76053b9350e3d09" -> null
+      - domain                   = "vpc" -> null
+      - id                       = "eipalloc-028c7bf0736497937" -> null
+      - network_border_group     = "us-east-1" -> null
+      - network_interface        = "eni-0d827feb08c47d116" -> null
+      - private_dns              = "ip-10-0-101-102.ec2.internal" -> null
+      - private_ip               = "10.0.101.102" -> null
+      - public_dns               = "ec2-3-215-13-111.compute-1.amazonaws.com" -> null
+      - public_ip                = "3.215.13.111" -> null
+      - public_ipv4_pool         = "amazon" -> null
+      - tags                     = {
+          - "Name" = "ecommerce-vpc-us-east-1a"
+        } -> null
+      - tags_all                 = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "ecommerce-vpc-us-east-1a"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - vpc                      = true -> null
+        # (5 unchanged attributes hidden)
+    }
+
+  # module.vpc.aws_internet_gateway.this[0] will be destroyed
+  - resource "aws_internet_gateway" "this" {
+      - arn      = "arn:aws:ec2:us-east-1:736508008585:internet-gateway/igw-0465ab27cf8324c33" -> null
+      - id       = "igw-0465ab27cf8324c33" -> null
+      - owner_id = "736508008585" -> null
+      - tags     = {
+          - "Name" = "ecommerce-vpc"
+        } -> null
+      - tags_all = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "ecommerce-vpc"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - vpc_id   = "vpc-021161aa6d1618d82" -> null
+    }
+
+  # module.vpc.aws_nat_gateway.this[0] will be destroyed
+  - resource "aws_nat_gateway" "this" {
+      - allocation_id                      = "eipalloc-028c7bf0736497937" -> null
+      - association_id                     = "eipassoc-0a76053b9350e3d09" -> null
+      - connectivity_type                  = "public" -> null
+      - id                                 = "nat-0b974ad684de5cf47" -> null
+      - network_interface_id               = "eni-0d827feb08c47d116" -> null
+      - private_ip                         = "10.0.101.102" -> null
+      - public_ip                          = "3.215.13.111" -> null
+      - secondary_allocation_ids           = [] -> null
+      - secondary_private_ip_address_count = 0 -> null
+      - secondary_private_ip_addresses     = [] -> null
+      - subnet_id                          = "subnet-04db64488eaa901fa" -> null
+      - tags                               = {
+          - "Name" = "ecommerce-vpc-us-east-1a"
+        } -> null
+      - tags_all                           = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "ecommerce-vpc-us-east-1a"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+    }
+
+  # module.vpc.aws_route.private_nat_gateway[0] will be destroyed
+  - resource "aws_route" "private_nat_gateway" {
+      - destination_cidr_block      = "0.0.0.0/0" -> null
+      - id                          = "r-rtb-0f44d2cd612eec2991080289494" -> null
+      - nat_gateway_id              = "nat-0b974ad684de5cf47" -> null
+      - origin                      = "CreateRoute" -> null
+      - route_table_id              = "rtb-0f44d2cd612eec299" -> null
+      - state                       = "active" -> null
+        # (13 unchanged attributes hidden)
+
+      - timeouts {
+          - create = "5m" -> null
+        }
+    }
+
+  # module.vpc.aws_route.public_internet_gateway[0] will be destroyed
+  - resource "aws_route" "public_internet_gateway" {
+      - destination_cidr_block      = "0.0.0.0/0" -> null
+      - gateway_id                  = "igw-0465ab27cf8324c33" -> null
+      - id                          = "r-rtb-0e20925c02822f9601080289494" -> null
+      - origin                      = "CreateRoute" -> null
+      - route_table_id              = "rtb-0e20925c02822f960" -> null
+      - state                       = "active" -> null
+        # (13 unchanged attributes hidden)
+
+      - timeouts {
+          - create = "5m" -> null
+        }
+    }
+
+  # module.vpc.aws_route_table.private[0] will be destroyed
+  - resource "aws_route_table" "private" {
+      - arn              = "arn:aws:ec2:us-east-1:736508008585:route-table/rtb-0f44d2cd612eec299" -> null
+      - id               = "rtb-0f44d2cd612eec299" -> null
+      - owner_id         = "736508008585" -> null
+      - propagating_vgws = [] -> null
+      - route            = [
+          - {
+              - cidr_block                 = "0.0.0.0/0"
+              - nat_gateway_id             = "nat-0b974ad684de5cf47"
+                # (11 unchanged attributes hidden)
+            },
+        ] -> null
+      - tags             = {
+          - "Name" = "ecommerce-vpc-private"
+        } -> null
+      - tags_all         = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "ecommerce-vpc-private"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - vpc_id           = "vpc-021161aa6d1618d82" -> null
+    }
+
+  # module.vpc.aws_route_table.public[0] will be destroyed
+  - resource "aws_route_table" "public" {
+      - arn              = "arn:aws:ec2:us-east-1:736508008585:route-table/rtb-0e20925c02822f960" -> null
+      - id               = "rtb-0e20925c02822f960" -> null
+      - owner_id         = "736508008585" -> null
+      - propagating_vgws = [] -> null
+      - route            = [
+          - {
+              - cidr_block                 = "0.0.0.0/0"
+              - gateway_id                 = "igw-0465ab27cf8324c33"
+                # (11 unchanged attributes hidden)
+            },
+        ] -> null
+      - tags             = {
+          - "Name" = "ecommerce-vpc-public"
+        } -> null
+      - tags_all         = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "ecommerce-vpc-public"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+      - vpc_id           = "vpc-021161aa6d1618d82" -> null
+    }
+
+  # module.vpc.aws_route_table_association.private[0] will be destroyed
+  - resource "aws_route_table_association" "private" {
+      - id             = "rtbassoc-086d363f69aafd47f" -> null
+      - route_table_id = "rtb-0f44d2cd612eec299" -> null
+      - subnet_id      = "subnet-01fd0299a24a9c281" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.vpc.aws_route_table_association.private[1] will be destroyed
+  - resource "aws_route_table_association" "private" {
+      - id             = "rtbassoc-02dba7005101227d9" -> null
+      - route_table_id = "rtb-0f44d2cd612eec299" -> null
+      - subnet_id      = "subnet-0d4437684d9cbd194" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.vpc.aws_route_table_association.public[0] will be destroyed
+  - resource "aws_route_table_association" "public" {
+      - id             = "rtbassoc-0df7618a4e4515386" -> null
+      - route_table_id = "rtb-0e20925c02822f960" -> null
+      - subnet_id      = "subnet-04db64488eaa901fa" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.vpc.aws_route_table_association.public[1] will be destroyed
+  - resource "aws_route_table_association" "public" {
+      - id             = "rtbassoc-07ce8d23695af2673" -> null
+      - route_table_id = "rtb-0e20925c02822f960" -> null
+      - subnet_id      = "subnet-0d759a96ebb59b0ba" -> null
+        # (1 unchanged attribute hidden)
+    }
+
+  # module.vpc.aws_subnet.private[0] will be destroyed
+  - resource "aws_subnet" "private" {
+      - arn                                            = "arn:aws:ec2:us-east-1:736508008585:subnet/subnet-01fd0299a24a9c281" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "us-east-1a" -> null
+      - availability_zone_id                           = "use1-az1" -> null
+      - cidr_block                                     = "10.0.1.0/24" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-01fd0299a24a9c281" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "736508008585" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - tags                                           = {
+          - "Name"                                    = "ecommerce-vpc-private-us-east-1a"
+          - "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          - "kubernetes.io/role/internal-elb"         = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                             = "Dev"
+          - "Layer"                                   = "lab"
+          - "ManagedBy"                               = "Terraform"
+          - "Name"                                    = "ecommerce-vpc-private-us-east-1a"
+          - "Project"                                 = "idp-compliance-scorecard"
+          - "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          - "kubernetes.io/role/internal-elb"         = "1"
+        } -> null
+      - vpc_id                                         = "vpc-021161aa6d1618d82" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.vpc.aws_subnet.private[1] will be destroyed
+  - resource "aws_subnet" "private" {
+      - arn                                            = "arn:aws:ec2:us-east-1:736508008585:subnet/subnet-0d4437684d9cbd194" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "us-east-1b" -> null
+      - availability_zone_id                           = "use1-az2" -> null
+      - cidr_block                                     = "10.0.2.0/24" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0d4437684d9cbd194" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "736508008585" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - tags                                           = {
+          - "Name"                                    = "ecommerce-vpc-private-us-east-1b"
+          - "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          - "kubernetes.io/role/internal-elb"         = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                             = "Dev"
+          - "Layer"                                   = "lab"
+          - "ManagedBy"                               = "Terraform"
+          - "Name"                                    = "ecommerce-vpc-private-us-east-1b"
+          - "Project"                                 = "idp-compliance-scorecard"
+          - "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          - "kubernetes.io/role/internal-elb"         = "1"
+        } -> null
+      - vpc_id                                         = "vpc-021161aa6d1618d82" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.vpc.aws_subnet.public[0] will be destroyed
+  - resource "aws_subnet" "public" {
+      - arn                                            = "arn:aws:ec2:us-east-1:736508008585:subnet/subnet-04db64488eaa901fa" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "us-east-1a" -> null
+      - availability_zone_id                           = "use1-az1" -> null
+      - cidr_block                                     = "10.0.101.0/24" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-04db64488eaa901fa" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "736508008585" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - tags                                           = {
+          - "Name"                                    = "ecommerce-vpc-public-us-east-1a"
+          - "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          - "kubernetes.io/role/elb"                  = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                             = "Dev"
+          - "Layer"                                   = "lab"
+          - "ManagedBy"                               = "Terraform"
+          - "Name"                                    = "ecommerce-vpc-public-us-east-1a"
+          - "Project"                                 = "idp-compliance-scorecard"
+          - "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          - "kubernetes.io/role/elb"                  = "1"
+        } -> null
+      - vpc_id                                         = "vpc-021161aa6d1618d82" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.vpc.aws_subnet.public[1] will be destroyed
+  - resource "aws_subnet" "public" {
+      - arn                                            = "arn:aws:ec2:us-east-1:736508008585:subnet/subnet-0d759a96ebb59b0ba" -> null
+      - assign_ipv6_address_on_creation                = false -> null
+      - availability_zone                              = "us-east-1b" -> null
+      - availability_zone_id                           = "use1-az2" -> null
+      - cidr_block                                     = "10.0.102.0/24" -> null
+      - enable_dns64                                   = false -> null
+      - enable_lni_at_device_index                     = 0 -> null
+      - enable_resource_name_dns_a_record_on_launch    = false -> null
+      - enable_resource_name_dns_aaaa_record_on_launch = false -> null
+      - id                                             = "subnet-0d759a96ebb59b0ba" -> null
+      - ipv6_native                                    = false -> null
+      - map_customer_owned_ip_on_launch                = false -> null
+      - map_public_ip_on_launch                        = false -> null
+      - owner_id                                       = "736508008585" -> null
+      - private_dns_hostname_type_on_launch            = "ip-name" -> null
+      - tags                                           = {
+          - "Name"                                    = "ecommerce-vpc-public-us-east-1b"
+          - "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          - "kubernetes.io/role/elb"                  = "1"
+        } -> null
+      - tags_all                                       = {
+          - "Environment"                             = "Dev"
+          - "Layer"                                   = "lab"
+          - "ManagedBy"                               = "Terraform"
+          - "Name"                                    = "ecommerce-vpc-public-us-east-1b"
+          - "Project"                                 = "idp-compliance-scorecard"
+          - "kubernetes.io/cluster/ecommerce-cluster" = "shared"
+          - "kubernetes.io/role/elb"                  = "1"
+        } -> null
+      - vpc_id                                         = "vpc-021161aa6d1618d82" -> null
+        # (4 unchanged attributes hidden)
+    }
+
+  # module.vpc.aws_vpc.this[0] will be destroyed
+  - resource "aws_vpc" "this" {
+      - arn                                  = "arn:aws:ec2:us-east-1:736508008585:vpc/vpc-021161aa6d1618d82" -> null
+      - assign_generated_ipv6_cidr_block     = false -> null
+      - cidr_block                           = "10.0.0.0/16" -> null
+      - default_network_acl_id               = "acl-087b3d08cbc03c8e1" -> null
+      - default_route_table_id               = "rtb-066fb7e8e72c8ba83" -> null
+      - default_security_group_id            = "sg-087603b6a307c44ff" -> null
+      - dhcp_options_id                      = "dopt-0582bb7a1929678cc" -> null
+      - enable_dns_hostnames                 = true -> null
+      - enable_dns_support                   = true -> null
+      - enable_network_address_usage_metrics = false -> null
+      - id                                   = "vpc-021161aa6d1618d82" -> null
+      - instance_tenancy                     = "default" -> null
+      - ipv6_netmask_length                  = 0 -> null
+      - main_route_table_id                  = "rtb-066fb7e8e72c8ba83" -> null
+      - owner_id                             = "736508008585" -> null
+      - tags                                 = {
+          - "Name" = "ecommerce-vpc"
+        } -> null
+      - tags_all                             = {
+          - "Environment" = "Dev"
+          - "Layer"       = "lab"
+          - "ManagedBy"   = "Terraform"
+          - "Name"        = "ecommerce-vpc"
+          - "Project"     = "idp-compliance-scorecard"
+        } -> null
+        # (4 unchanged attributes hidden)
+    }
+
+Plan: 0 to add, 0 to change, 19 to destroy.
+
+Changes to Outputs:
+  - availability_zones    = [
+      - "us-east-1a",
+      - "us-east-1b",
+    ] -> null
+  - nat_gateway_public_ip = [
+      - "3.215.13.111",
+    ] -> null
+  - private_subnet_ids    = [
+      - "subnet-01fd0299a24a9c281",
+      - "subnet-0d4437684d9cbd194",
+    ] -> null
+  - public_subnet_ids     = [
+      - "subnet-04db64488eaa901fa",
+      - "subnet-0d759a96ebb59b0ba",
+    ] -> null
+  - vpc_cidr_block        = "10.0.0.0/16" -> null
+  - vpc_id                = "vpc-021161aa6d1618d82" -> null
+module.vpc.aws_default_security_group.this[0]: Destroying... [id=sg-087603b6a307c44ff]
+module.vpc.aws_default_network_acl.this[0]: Destroying... [id=acl-087b3d08cbc03c8e1]
+module.vpc.aws_route.public_internet_gateway[0]: Destroying... [id=r-rtb-0e20925c02822f9601080289494]
+module.vpc.aws_route.private_nat_gateway[0]: Destroying... [id=r-rtb-0f44d2cd612eec2991080289494]
+module.vpc.aws_route_table_association.private[1]: Destroying... [id=rtbassoc-02dba7005101227d9]
+module.vpc.aws_route_table_association.public[1]: Destroying... [id=rtbassoc-07ce8d23695af2673]
+module.vpc.aws_default_route_table.default[0]: Destroying... [id=rtb-066fb7e8e72c8ba83]
+module.vpc.aws_route_table_association.public[0]: Destroying... [id=rtbassoc-0df7618a4e4515386]
+module.vpc.aws_route_table_association.private[0]: Destroying... [id=rtbassoc-086d363f69aafd47f]
+module.vpc.aws_default_security_group.this[0]: Destruction complete after 0s
+module.vpc.aws_default_network_acl.this[0]: Destruction complete after 0s
+module.vpc.aws_default_route_table.default[0]: Destruction complete after 0s
+module.vpc.aws_route_table_association.private[0]: Destruction complete after 3s
+module.vpc.aws_route_table_association.public[0]: Destruction complete after 3s
+module.vpc.aws_route_table_association.public[1]: Destruction complete after 3s
+module.vpc.aws_route_table_association.private[1]: Destruction complete after 3s
+module.vpc.aws_subnet.private[0]: Destroying... [id=subnet-01fd0299a24a9c281]
+module.vpc.aws_subnet.private[1]: Destroying... [id=subnet-0d4437684d9cbd194]
+module.vpc.aws_route.private_nat_gateway[0]: Destruction complete after 3s
+module.vpc.aws_nat_gateway.this[0]: Destroying... [id=nat-0b974ad684de5cf47]
+module.vpc.aws_route_table.private[0]: Destroying... [id=rtb-0f44d2cd612eec299]
+module.vpc.aws_route.public_internet_gateway[0]: Destruction complete after 3s
+module.vpc.aws_route_table.public[0]: Destroying... [id=rtb-0e20925c02822f960]
+module.vpc.aws_subnet.private[1]: Destruction complete after 1s
+module.vpc.aws_subnet.private[0]: Destruction complete after 1s
+module.vpc.aws_route_table.private[0]: Destruction complete after 2s
+module.vpc.aws_route_table.public[0]: Destruction complete after 2s
+module.vpc.aws_nat_gateway.this[0]: Still destroying... [id=nat-0b974ad684de5cf47, 10s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still destroying... [id=nat-0b974ad684de5cf47, 20s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still destroying... [id=nat-0b974ad684de5cf47, 30s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still destroying... [id=nat-0b974ad684de5cf47, 40s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still destroying... [id=nat-0b974ad684de5cf47, 50s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Still destroying... [id=nat-0b974ad684de5cf47, 1m0s elapsed]
+module.vpc.aws_nat_gateway.this[0]: Destruction complete after 1m2s
+module.vpc.aws_subnet.public[1]: Destroying... [id=subnet-0d759a96ebb59b0ba]
+module.vpc.aws_eip.nat[0]: Destroying... [id=eipalloc-028c7bf0736497937]
+module.vpc.aws_subnet.public[0]: Destroying... [id=subnet-04db64488eaa901fa]
+module.vpc.aws_subnet.public[0]: Destruction complete after 1s
+module.vpc.aws_subnet.public[1]: Destruction complete after 2s
+module.vpc.aws_eip.nat[0]: Destruction complete after 3s
+module.vpc.aws_internet_gateway.this[0]: Destroying... [id=igw-0465ab27cf8324c33]
+module.vpc.aws_internet_gateway.this[0]: Destruction complete after 1s
+module.vpc.aws_vpc.this[0]: Destroying... [id=vpc-021161aa6d1618d82]
+module.vpc.aws_vpc.this[0]: Destruction complete after 1s
+Releasing state lock. This may take a few moments...
+
+Destroy complete! Resources: 19 destroyed.
+[05:11:53] 4. kiểm tra tài nguyên mồ côi
+[05:12:07] Không thấy ELB/EBS/ENI/NAT/EIP mồ côi.
+[05:12:07] aws-down xong (1923s). Lớp nền (S3 state, ECR, OIDC, SSM) được giữ.
+EXIT=0 DURATION=1926s

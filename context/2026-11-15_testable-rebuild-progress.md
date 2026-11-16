@@ -59,7 +59,8 @@
 - [x] `aws-foundation-up.sh`, `aws-up.sh`, `aws-down.sh`, `smoke.sh` (có `--dry-run`) — bash -n + dry-run không credential (máy); chưa chạy với AWS
 - [x] Tool trong WSL (2026-11-16, `scripts/wsl-tools.sh`): terraform 1.11.4, tflint 0.53.0, kubectl v1.35.0 (sha256 OK), aws-cli 2.22.0 ở `~/tools/bin`; PATH thêm vào `~/.bashrc`. AWS profile `idp` (us-east-1) do người dùng cấu hình trong WSL; STS 2026-11-16: account 736508008585, `arn:aws:iam::736508008585:user/idp`.
 - [x] Lớp nền trên AWS (2026-11-16, `aws-foundation-up.sh`, 174s) — kiểm bằng `aws iam get-role`, `ecr describe-repositories`, `s3 ls`, `ssm get-parameters-by-path`
-- [ ] Chạy thật trên EKS (chờ xác nhận: push branch → CI; merge main; dùng credential AWS)
+- [~] Chạy thật trên EKS (2026-11-16, lần 1): hạ tầng dựng/huỷ OK (up ~21 phút tới secret, down 32 phút); Argo CD chưa all Healthy, chưa chạy smoke — xem `context/2026-11-16_aws-lab-1-eks-first-run.md`
+- [ ] Smoke pass trên EKS (chờ xác nhận: push branch → CI; merge main; dùng credential AWS)
 
 ### Giai đoạn 4
 - [x] Viết lại `docs/SETUP.md` (troubleshooting mới có lỗi local; bổ sung lỗi AWS sau lần chạy đầu)
@@ -167,5 +168,5 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 2. **2026-11-16 04:00 UTC: người dùng đồng ý → `aws-up.sh --yes`** (WSL, AWS_PROFILE=idp). Tạo: VPC + NAT/EIP, EKS 1.35 + 2× t3.large, KMS, CloudWatch Logs, Argo CD + root app; sau sync: internal CLB + ~111 GB EBS. **Bắt đầu tính tiền ≈ $0.35/giờ** cho tới `aws-down.sh`. — hạ tầng xong (network 143s, EKS ~17m, secret 65s); Argo CD kẹt (chart cũ); người dùng dừng lúc ~04:32 UTC. Chi tiết: `context/2026-11-16_aws-lab-1-eks-first-run.md`.
 
 ## Bước tiếp theo (cập nhật 2026-11-16 04:35)
-1. **Đang làm:** `aws-down.sh --yes` theo yêu cầu người dùng (giữ lớp nền).
+1. [x] `aws-down.sh --yes` (04:40–05:12 UTC, 1923s, exit 0): 02 46 destroyed, 01 19 destroyed, không tài nguyên mồ côi (kiểm thêm bằng CLI). Lớp nền còn nguyên. Chi phí buổi ước tính < $1.
 2. Buổi sau: nâng Argo CD lên 3.x; Kyverno chart mới hoặc override image `bitnami/kubectl`; xử lý thiếu CPU request + autoscaler không scale; rà version trivy-operator/kps/loki; rồi `aws-up` → smoke. Xem `context/2026-11-16_aws-lab-1-eks-first-run.md` mục "Lỗi tìm được".

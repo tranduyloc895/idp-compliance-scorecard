@@ -38,11 +38,30 @@ Lần đầu chạy lớp tạo-huỷ trên AWS (account 736508008585, us-east-1
 4. trivy-operator: 2 pod `scan-vulnerabilityreport-*` Error (log cho thấy đang tải trivy-db 134 MiB lúc bị dừng — chưa rõ nguyên nhân). Chưa có VulnerabilityReport.
 5. Chưa chạy `smoke.sh` (dừng trước), chưa kiểm internal CLB `compliance-engine-internal`, workload A/B/C (app `experiments` chưa xuất hiện trong 19 app).
 
+### aws-down (04:40–05:12 UTC, 1923s, exit 0)
+| Bước | Mốc | Ghi chú |
+|---|---|---|
+| xoá Application | 04:40 → 04:56 | 18 → 1 app trong 3 phút; **`root` kẹt finalizer tới hết timeout 900s**, script gỡ finalizer |
+| LB/PVC | 04:56 | 0 Service LoadBalancer; 7 PVC (6 Bound, loki Pending) → PV về 0 |
+| destroy 05 | — | không có state, bỏ qua |
+| destroy 02-cluster-eks | 04:56 → 05:10 | 46 destroyed (~14 phút) |
+| destroy 01-network | 05:10 → 05:12 | 19 destroyed |
+| kiểm mồ côi | 05:12 | không có ELB/EBS/ENI/NAT/EIP |
+- Kiểm thêm bằng CLI sau khi down: không còn EKS cluster, VPC, NAT, EIP, ELB, EBS volume, EC2, ENI, CloudWatch log group `/aws/eks`. Lớp nền còn nguyên: S3 state (01/02 state rỗng, 03, 04), 6 ECR, role CI, 5 SSM.
+- Thời gian tính tiền theo giờ ≈ 04:01 → 05:12 (~71 phút) ≈ **$0.42** + KMS key (chờ xoá 7 ngày) + CloudWatch Logs ingest nhỏ; tổng buổi ước tính < $1.
+- Evidence: `docs/evidence/aws/20261116T044004Z-down/` (`aws-down.log`, `apps-before.txt`, `pvc-before.txt`, `orphans-*.txt`, `timings.txt`).
+
+### Phát hiện thêm khi down
+6. **Không có Service LoadBalancer nào** lúc down: internal CLB `compliance-engine-internal` không được tạo dù app `compliance-engine` Synced/Healthy → cần kiểm kustomization (`service-internal-lb.yaml` có được include?) và annotation cloud provider. (#24 vẫn chưa kiểm chứng.)
+7. `aws-down.sh`: xoá `root` cascade chờ tới timeout 900s (root Degraded, chờ child đang xoá) → nên xoá child app trước rồi mới xoá root, hoặc giảm timeout cho root.
+8. `aws-down.sh`: kiểm "orphans" **trước** destroy báo NAT gateway (do Terraform quản lý) → báo động giả; chỉ nên kiểm ELB/EBS/ENI do Kubernetes tạo ở bước này.
+
 ## Các file đã thay đổi
-- `docs/evidence/aws/20261116T035455Z-up/` (dry-run), `docs/evidence/aws/20261116T040049Z-up/` (lần chạy thật + snapshot)
+- `docs/evidence/aws/20261116T035455Z-up/` (dry-run), `docs/evidence/aws/20261116T040049Z-up/` (lần chạy thật + snapshot), `docs/evidence/aws/20261116T044004Z-down/`
+- `docs/SETUP.md` (Troubleshooting: lỗi thật trên EKS)
 - `context/2026-11-15_testable-rebuild-progress.md`, file này
 
 ## Ghi chú / Vấn đề còn lại
-- Người dùng dừng buổi ở đây (04:32 UTC) và yêu cầu `aws-down.sh`. Lớp nền giữ lại.
-- Thứ tự sửa đề xuất cho buổi sau: (1) Argo CD 3.x, (2) Kyverno chart mới / image cleanup, (3) CPU request + autoscaler, (4) kiểm trivy-operator, kps 58, loki 6.6 trên Argo CD mới, (5) smoke.
+- Người dùng dừng buổi ở đây (04:32 UTC) và yêu cầu `aws-down.sh`: **đã down xong, không còn tài nguyên tính tiền theo giờ**. Lớp nền giữ lại.
+- Thứ tự sửa đề xuất cho buổi sau: (1) Argo CD 3.x, (2) Kyverno chart mới / image cleanup, (3) CPU request + autoscaler, (4) kiểm trivy-operator, kps 58, loki 6.6 trên Argo CD mới, (5) internal CLB, (6) sửa 2 điểm của aws-down (mục 7, 8), (7) smoke.
 - Các chart 2024 còn lại (trivy-operator 0.24.1, kube-prometheus-stack 58, loki 6.6) nên rà version cùng lúc vì Argo CD v2.9 che mất lỗi phía sau.
