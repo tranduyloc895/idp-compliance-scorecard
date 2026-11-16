@@ -4,4 +4,4 @@
 # Giá trị ECR_REGISTRY_NOT_SET nghĩa là CI chưa build lần nào: scripts/aws-up.sh
 # dừng ở bước preflight với hướng dẫn chạy workflow "build-all".
 image:
-  registry: ECR_REGISTRY_NOT_SET
+  registry: 736508008585.dkr.ecr.us-east-1.amazonaws.com
