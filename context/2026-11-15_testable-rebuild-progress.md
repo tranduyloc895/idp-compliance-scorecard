@@ -133,6 +133,6 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 - Sửa (branch `fix/aws-lab-2`): `04-oidc` thêm `github_owner_id`/`github_repo_id`, `sub` StringLike nhận cả hai dạng. `terraform plan 04-oidc`: 0 add, 1 change (assume_role_policy), 0 destroy. validate-local PASS.
 
 ## Bước tiếp theo (cập nhật 2026-11-16 03:25)
-1. 2026-11-16 03:27 UTC: người dùng đồng ý → `terraform apply 04-oidc` (WSL, AWS_PROFILE=idp; chỉ đổi assume_role_policy, $0) — đang chạy.
+1. 2026-11-16 03:27 UTC: người dùng đồng ý → `terraform apply 04-oidc` (WSL, AWS_PROFILE=idp; chỉ đổi assume_role_policy, $0) — **xong**: 0 add, 1 change, 0 destroy; `aws iam get-role` xác nhận sub có cả hai dạng.
 2. Chạy lại 6 workflow build (hoặc `build-all`) trên main — hỏi người dùng.
 3. Merge PR `fix/aws-lab-2` (hỏi).
