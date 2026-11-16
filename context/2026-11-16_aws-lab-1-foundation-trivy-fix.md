@@ -20,3 +20,11 @@
 - trivy-action v0.36.0 mặc định cài Trivy v0.70.0 (trước đây ~0.56); DB lỗ hổng mới hơn nên gate CRITICAL có thể chặn image Retail Store.
 - State `00-bootstrap` chỉ nằm ở local (`infrastructure/00-bootstrap/terraform.tfstate`, git ignore).
 - Trust policy role CI cho mọi ref của repo (`repo:tranduyloc895/idp-compliance-scorecard:*`).
+
+## Cập nhật 03:25 UTC — OIDC immutable subject
+- CI build trên main (sau merge PR #2) fail ở `Configure AWS credentials`: repo bật immutable subject nên claim `sub` có owner/repo ID; trust policy không khớp. Sửa `infrastructure/04-oidc/{main,variables}.tf` nhận cả hai dạng `sub`; plan 0/1/0. Chưa apply.
+
+## Cập nhật — build-all lần 1 và Trivy report-only
+- `build-all` (run 43798460094): compliance-engine pass gate, push `f71fced`, CI commit `98dff48`. 5 service Retail Store bị gate chặn (9/10/10/1/6 CRITICAL; chi tiết trong progress file).
+- Người dùng chọn report-only cho Retail Store: `_build-push.yml` thêm input `trivy_gate` (mặc định true; `exit-code: ${{ inputs.trivy_gate && '1' || '0' }}`), 5 `ci-*.yml` + matrix `build-all` đặt false. validate-local PASS. Chưa kiểm trên CI (chạy khi merge vào main).
+- File: `.github/workflows/{_build-push,build-all,ci-ui,ci-cart,ci-catalog,ci-orders,ci-checkout}.yml`, `docs/SETUP.md`.

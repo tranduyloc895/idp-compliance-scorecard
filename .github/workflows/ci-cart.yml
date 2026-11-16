@@ -21,6 +21,7 @@ jobs:
     with:
       service: cart
       context: idp-microservices/src/cart
+      trivy_gate: false  # report-only (code mẫu upstream), xem _build-push.yml
     secrets:
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
       GITOPS_TOKEN: ${{ secrets.GITOPS_TOKEN }}

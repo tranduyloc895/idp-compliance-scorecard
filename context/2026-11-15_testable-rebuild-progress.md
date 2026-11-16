@@ -125,3 +125,32 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 1. [x] Sửa ref trivy-action → SHA v0.36.0 (commit b058f7b), PR `fix/aws-lab-1` → main.
 2. [x] 2026-11-16 03:17 UTC: `gh secret set AWS_ROLE_ARN` (người dùng đồng ý) = role ARN CI. Workflow permissions mặc định của repo = `read`, **không cần đổi**: `_build-push.yml`/`build-all.yml`/`ci-*.yml` khai báo `permissions: contents: write, id-token: write, security-events: write` ở cấp workflow (repo cá nhân, không có giới hạn org). `main` không có branch protection/ruleset nên `GITHUB_TOKEN` push được commit tag.
 3. Merge fix vào main (hỏi), rồi chạy `build-all` trên main (hỏi).
+
+## CI build trên main sau merge PR #2 (2026-11-16 03:20 UTC)
+- Merge PR #2 tự kích hoạt 6 workflow `CI — *` (path filter có `_build-push.yml`); người dùng đồng ý cho chạy thay `build-all`.
+- Kết quả: cả 6 qua *Set up job* (fix trivy-action OK) nhưng fail ở `Configure AWS credentials (OIDC)`: `Not authorized to perform sts:AssumeRoleWithWebIdentity`. Không có image nào lên ECR, không có commit nào của CI vào main.
+- Nguyên nhân: repo bật **immutable subject** (`use_immutable_subject: true`), `sub` = `repo:tranduyloc895@141894428/idp-compliance-scorecard@1405539355:...`; trust policy chỉ có `repo:tranduyloc895/idp-compliance-scorecard:*`.
+- Sửa (branch `fix/aws-lab-2`): `04-oidc` thêm `github_owner_id`/`github_repo_id`, `sub` StringLike nhận cả hai dạng. `terraform plan 04-oidc`: 0 add, 1 change (assume_role_policy), 0 destroy. validate-local PASS.
+
+## Bước tiếp theo (cập nhật 2026-11-16 03:25)
+1. 2026-11-16 03:27 UTC: người dùng đồng ý → `terraform apply 04-oidc` (WSL, AWS_PROFILE=idp; chỉ đổi assume_role_policy, $0) — **xong**: 0 add, 1 change, 0 destroy; `aws iam get-role` xác nhận sub có cả hai dạng.
+2. 2026-11-16 03:29 UTC: người dùng đồng ý → `gh workflow run build-all --ref main` (6 image → Trivy gate → push ECR → CI commit tag vào main). Chi phí: ECR ~$0.10/GB-tháng (ước tính 1–2 GB) + phút GitHub Actions (repo public, miễn phí) — **xong, run 43798460094: 1/6 pass**.
+3. Merge PR `fix/aws-lab-2` (hỏi).
+
+## Kết quả build-all lần 1 (run 43798460094, 2026-11-16 03:26–03:31 UTC)
+- OIDC/ECR login OK cho cả 6 (fix 04-oidc có hiệu lực).
+- `compliance-engine`: pass Trivy gate → push `retail-store/compliance-engine:f71fced` (~98 MB) → CI commit `98dff48` vào main (kustomization.yaml).
+- 5 service Retail Store **bị Trivy gate chặn** (CRITICAL có bản sửa; Trivy v0.70.0 qua trivy-action v0.36.0). Không push, không commit tag:
+  | Service | CRITICAL | Gói chính (cài → bản sửa) |
+  |---|---|---|
+  | ui (Java, Boot 3.5.5) | 9 | netty-handler 4.1.124 → 4.1.137; spring-webflux 6.2.10 → **chỉ có 7.0.9**; thymeleaf(+spring6) 3.1.3 → 3.1.5 |
+  | cart (Java, Boot 3.5.5) | 10 | netty-handler; tomcat-embed-core 10.1.44 → 10.1.58; spring-webmvc 6.2.10 → **chỉ có 7.0.9** |
+  | orders (Java, Boot 3.5.5) | 10 | như cart |
+  | catalog (Go) | 1 | google.golang.org/grpc v1.73.0 (indirect) → 1.79.3 |
+  | checkout (Node) | 6 | form-data 2.3.3, protobufjs 7.4.0, proxy-addr 2.0.7, tar 7.5.7 (+2) |
+- CVE của Spring Framework chỉ có bản sửa ở 7.0.x → cần Spring Boot 4 (đổi major). Chờ người dùng chọn hướng xử lý.
+- **Quyết định (2026-11-16, người dùng chọn):** Trivy gate **report-only** cho 5 service Retail Store (`trivy_gate: false` trong `ci-{ui,cart,catalog,orders,checkout}.yml` và matrix `build-all`); `compliance-engine` và template Golden Path vẫn gate. Lý do: code mẫu upstream, CVE Spring 6.2 chỉ sửa ở 7.x (cần Spring Boot 4, ngoài phạm vi); CVE còn lại thành dữ liệu thật cho miền Supply Chain qua Trivy Operator. SARIF vẫn upload.
+
+## Bước tiếp theo (cập nhật 2026-11-16)
+1. PR `fix/aws-lab-2` → main (OIDC immutable subject + Trivy report-only). Hỏi trước khi merge. Lưu ý: merge sửa `_build-push.yml` nên **tự kích hoạt 6 workflow `CI — *`** trên main (tương đương build-all) → theo dõi tới khi 6 image lên ECR và tag được commit.
+2. Kiểm `image-registry.yaml` + tag 5 service trong main; `aws-up.sh --dry-run`.

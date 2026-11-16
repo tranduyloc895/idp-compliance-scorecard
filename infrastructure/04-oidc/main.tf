@@ -27,6 +27,16 @@ data "aws_iam_openid_connect_provider" "github" {
 
 locals {
   oidc_provider_arn = var.create_oidc_provider ? aws_iam_openid_connect_provider.github[0].arn : data.aws_iam_openid_connect_provider.github[0].arn
+
+  # Claim `sub` có hai dạng:
+  #   - mặc định:          repo:<owner>/<repo>:<ref|environment|pull_request>
+  #   - immutable subject: repo:<owner>@<owner_id>/<repo>@<repo_id>:...
+  #     (repo này bật sẵn; xem gh api repos/<owner>/<repo>/actions/oidc/customization/sub)
+  # Chấp nhận cả hai để role không hỏng khi GitHub đổi cấu hình mặc định.
+  github_subjects = compact([
+    "repo:${var.github_org}/${var.github_repo}:*",
+    var.github_owner_id != "" && var.github_repo_id != "" ? "repo:${var.github_org}@${var.github_owner_id}/${var.github_repo}@${var.github_repo_id}:*" : "",
+  ])
 }
 
 # Lấy thumbprint tự động từ OIDC endpoint (tránh hardcode)
@@ -72,8 +82,8 @@ resource "aws_iam_role" "github_actions" {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
           }
           StringLike = {
-            # Giới hạn đúng repo monorepo, mọi branch/tag/PR
-            "token.actions.githubusercontent.com:sub" = "repo:${var.github_org}/${var.github_repo}:*"
+            # Giới hạn đúng repo monorepo, mọi branch/tag/PR (cả hai dạng sub)
+            "token.actions.githubusercontent.com:sub" = local.github_subjects
           }
         }
       }
