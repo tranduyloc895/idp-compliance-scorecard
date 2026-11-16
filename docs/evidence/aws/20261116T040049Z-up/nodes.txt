@@ -1,0 +1,2 @@
+ip-10-0-1-38.ec2.internal    Ready   <none>   21m   v1.35.9-eks-9adbfea   10.0.1.38    <none>   Amazon Linux 2023.12.20261112   6.12.115-140.210.amzn2023.x86_64   containerd://2.3.7+unknown
+ip-10-0-2-140.ec2.internal   Ready   <none>   21m   v1.35.9-eks-9adbfea   10.0.2.140   <none>   Amazon Linux 2023.12.20261112   6.12.115-140.210.amzn2023.x86_64   containerd://2.3.7+unknown

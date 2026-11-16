@@ -1,0 +1,62 @@
+== kyverno/kyverno-clean-reports-9mbmq
+  Warning  PolicyViolation  13m                  kyverno-scan       policy require-resource-limits/resource-limits-required fail: validation error: Container must have CPU and memory limits. Set resources.limits.cpu and resources.limits.memory. rule resource-limits-required failed at path /spec/containers/0/resources/limits/
+  Normal   Pulling          13m (x5 over 16m)    kubelet            spec.containers{kubectl}: Pulling image "bitnami/kubectl:1.28.5"
+  Warning  Failed           13m (x5 over 16m)    kubelet            spec.containers{kubectl}: Failed to pull image "bitnami/kubectl:1.28.5": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/bitnami/kubectl:1.28.5": failed to resolve reference "docker.io/bitnami/kubectl:1.28.5": docker.io/bitnami/kubectl:1.28.5: not found
+  Warning  Failed           13m (x5 over 16m)    kubelet            spec.containers{kubectl}: Error: ErrImagePull
+  Normal   BackOff          103s (x66 over 16m)  kubelet            spec.containers{kubectl}: Back-off pulling image "bitnami/kubectl:1.28.5"
+  Warning  Failed           103s (x66 over 16m)  kubelet            spec.containers{kubectl}: Error: ImagePullBackOff
+== kyverno/kyverno-cleanup-admission-reports-29913390-rrf8c
+  Warning  PolicyViolation  7m59s                   kyverno-scan       policy require-resource-limits/resource-limits-required fail: validation error: Container must have CPU and memory limits. Set resources.limits.cpu and resources.limits.memory. rule resource-limits-required failed at path /spec/containers/0/resources/limits/
+  Normal   Pulling          5m39s (x5 over 8m28s)   kubelet            spec.containers{cleanup}: Pulling image "bitnami/kubectl:1.28.5"
+  Warning  Failed           5m39s (x5 over 8m28s)   kubelet            spec.containers{cleanup}: Failed to pull image "bitnami/kubectl:1.28.5": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/bitnami/kubectl:1.28.5": failed to resolve reference "docker.io/bitnami/kubectl:1.28.5": docker.io/bitnami/kubectl:1.28.5: not found
+  Warning  Failed           5m39s (x5 over 8m28s)   kubelet            spec.containers{cleanup}: Error: ErrImagePull
+  Warning  Failed           3m27s (x20 over 8m28s)  kubelet            spec.containers{cleanup}: Error: ImagePullBackOff
+  Normal   BackOff          3m13s (x21 over 8m28s)  kubelet            spec.containers{cleanup}: Back-off pulling image "bitnami/kubectl:1.28.5"
+== kyverno/kyverno-cleanup-cluster-admission-reports-29913390-ckbh6
+  Warning  PolicyViolation  8m2s                    kyverno-scan       policy require-resource-limits/resource-limits-required fail: validation error: Container must have CPU and memory limits. Set resources.limits.cpu and resources.limits.memory. rule resource-limits-required failed at path /spec/containers/0/resources/limits/
+  Normal   Pulling          5m33s (x5 over 8m31s)   kubelet            spec.containers{cleanup}: Pulling image "bitnami/kubectl:1.28.5"
+  Warning  Failed           5m33s (x5 over 8m31s)   kubelet            spec.containers{cleanup}: Failed to pull image "bitnami/kubectl:1.28.5": rpc error: code = NotFound desc = failed to pull and unpack image "docker.io/bitnami/kubectl:1.28.5": failed to resolve reference "docker.io/bitnami/kubectl:1.28.5": docker.io/bitnami/kubectl:1.28.5: not found
+  Warning  Failed           5m33s (x5 over 8m31s)   kubelet            spec.containers{cleanup}: Error: ErrImagePull
+  Normal   BackOff          3m24s (x21 over 8m30s)  kubelet            spec.containers{cleanup}: Back-off pulling image "bitnami/kubectl:1.28.5"
+  Warning  Failed           3m24s (x21 over 8m30s)  kubelet            spec.containers{cleanup}: Error: ImagePullBackOff
+== monitoring/loki-0
+Events:
+  Type     Reason            Age                   From               Message
+  ----     ------            ----                  ----               -------
+  Warning  FailedScheduling  11m                   default-scheduler  0/2 nodes are available: 2 Insufficient cpu. no new claims to deallocate, preemption: 0/2 nodes are available: 2 No preemption victims found for incoming pod.
+  Warning  FailedScheduling  3m6s (x2 over 8m29s)  default-scheduler  0/2 nodes are available: 2 Insufficient cpu. no new claims to deallocate, preemption: 0/2 nodes are available: 2 No preemption victims found for incoming pod.
+== retail-store/cart-6cffb969b8-5vgqd
+  Warning  PolicyViolation   12m                   kyverno-admission  policy require-run-as-non-root/run-as-non-root fail: validation error: Container must not run as root. Set securityContext.runAsNonRoot: true. rule run-as-non-root[0] failed at path /spec/securityContext/runAsNonRoot/ rule run-as-non-root[1] failed at path /spec/containers/0/securityContext/
+  Warning  PolicyViolation   11m                   kyverno-scan       policy require-run-as-non-root/run-as-non-root fail: validation error: Container must not run as root. Set securityContext.runAsNonRoot: true. rule run-as-non-root[0] failed at path /spec/securityContext/runAsNonRoot/ rule run-as-non-root[1] failed at path /spec/containers/0/securityContext/
+  Warning  PolicyViolation   11m                   kyverno-scan       policy require-read-only-rootfs/read-only-rootfs fail: validation error: Container must have readOnlyRootFilesystem: true. Mount writable paths as emptyDir volumes. rule read-only-rootfs failed at path /spec/containers/0/securityContext/
+  Warning  PolicyViolation   11m                   kyverno-scan       policy disallow-privilege-escalation/deny-privilege-escalation fail: validation error: Privilege escalation is not allowed. Set securityContext.allowPrivilegeEscalation: false. rule deny-privilege-escalation failed at path /spec/containers/0/securityContext/
+  Warning  PolicyViolation   11m                   kyverno-scan       policy drop-all-capabilities/drop-capabilities fail: validation error: Container must drop ALL capabilities. Add securityContext.capabilities.drop: [ALL]. rule drop-capabilities failed at path /spec/containers/0/securityContext/
+  Warning  FailedScheduling  3m8s (x2 over 8m30s)  default-scheduler  0/2 nodes are available: 2 Insufficient cpu. no new claims to deallocate, preemption: 0/2 nodes are available: 2 No preemption victims found for incoming pod.
+== retail-store/cart-6cffb969b8-7j8jt
+  Warning  FailedScheduling  12m                    default-scheduler  0/2 nodes are available: 2 Insufficient cpu. no new claims to deallocate, preemption: 0/2 nodes are available: 2 No preemption victims found for incoming pod.
+  Warning  PolicyViolation   11m                    kyverno-scan       policy disallow-privilege-escalation/deny-privilege-escalation fail: validation error: Privilege escalation is not allowed. Set securityContext.allowPrivilegeEscalation: false. rule deny-privilege-escalation failed at path /spec/containers/0/securityContext/
+  Warning  PolicyViolation   11m                    kyverno-scan       policy drop-all-capabilities/drop-capabilities fail: validation error: Container must drop ALL capabilities. Add securityContext.capabilities.drop: [ALL]. rule drop-capabilities failed at path /spec/containers/0/securityContext/
+  Warning  PolicyViolation   11m                    kyverno-scan       policy require-run-as-non-root/run-as-non-root fail: validation error: Container must not run as root. Set securityContext.runAsNonRoot: true. rule run-as-non-root[0] failed at path /spec/securityContext/runAsNonRoot/ rule run-as-non-root[1] failed at path /spec/containers/0/securityContext/
+  Warning  PolicyViolation   11m                    kyverno-scan       policy require-read-only-rootfs/read-only-rootfs fail: validation error: Container must have readOnlyRootFilesystem: true. Mount writable paths as emptyDir volumes. rule read-only-rootfs failed at path /spec/containers/0/securityContext/
+  Warning  FailedScheduling  3m11s (x2 over 8m33s)  default-scheduler  0/2 nodes are available: 2 Insufficient cpu. no new claims to deallocate, preemption: 0/2 nodes are available: 2 No preemption victims found for incoming pod.
+== retail-store/catalog-69679cfc4d-csqrg
+  Warning  FailedScheduling  12m                    default-scheduler  0/2 nodes are available: 2 Insufficient cpu. no new claims to deallocate, preemption: 0/2 nodes are available: 2 No preemption victims found for incoming pod.
+  Warning  PolicyViolation   11m                    kyverno-scan       policy require-run-as-non-root/run-as-non-root fail: validation error: Container must not run as root. Set securityContext.runAsNonRoot: true. rule run-as-non-root[0] failed at path /spec/securityContext/runAsNonRoot/ rule run-as-non-root[1] failed at path /spec/containers/0/securityContext/
+  Warning  PolicyViolation   11m                    kyverno-scan       policy require-read-only-rootfs/read-only-rootfs fail: validation error: Container must have readOnlyRootFilesystem: true. Mount writable paths as emptyDir volumes. rule read-only-rootfs failed at path /spec/containers/0/securityContext/
+  Warning  PolicyViolation   11m                    kyverno-scan       policy disallow-privilege-escalation/deny-privilege-escalation fail: validation error: Privilege escalation is not allowed. Set securityContext.allowPrivilegeEscalation: false. rule deny-privilege-escalation failed at path /spec/containers/0/securityContext/
+  Warning  PolicyViolation   11m                    kyverno-scan       policy drop-all-capabilities/drop-capabilities fail: validation error: Container must drop ALL capabilities. Add securityContext.capabilities.drop: [ALL]. rule drop-capabilities failed at path /spec/containers/0/securityContext/
+  Warning  FailedScheduling  3m13s (x2 over 8m35s)  default-scheduler  0/2 nodes are available: 2 Insufficient cpu. no new claims to deallocate, preemption: 0/2 nodes are available: 2 No preemption victims found for incoming pod.
+== trivy-system/scan-vulnerabilityreport-74b9cf67dd-7w59n
+  Normal   Pulled           17m   kubelet            spec.initContainers{47e0c889-7dd1-4cda-9d9a-4147b6e53a56}: Successfully pulled image "ghcr.io/aquasecurity/trivy:0.53.0" in 4.707s (4.707s including waiting). Image size: 47933212 bytes.
+  Normal   Created          17m   kubelet            spec.initContainers{47e0c889-7dd1-4cda-9d9a-4147b6e53a56}: Container created
+  Normal   Started          17m   kubelet            spec.initContainers{47e0c889-7dd1-4cda-9d9a-4147b6e53a56}: Container started
+  Normal   Pulled           16m   kubelet            spec.containers{kube-proxy}: Container image "ghcr.io/aquasecurity/trivy:0.53.0" already present on machine and can be accessed by the pod
+  Normal   Created          16m   kubelet            spec.containers{kube-proxy}: Container created
+  Normal   Started          16m   kubelet            spec.containers{kube-proxy}: Container started
+== trivy-system/scan-vulnerabilityreport-978494f65-pp9lz
+  Normal   Started          17m   kubelet            spec.containers{node-driver-registrar}: Container started
+  Normal   Pulled           17m   kubelet            spec.containers{liveness-probe}: Container image "ghcr.io/aquasecurity/trivy:0.53.0" already present on machine and can be accessed by the pod
+  Normal   Created          17m   kubelet            spec.containers{liveness-probe}: Container created
+  Normal   Started          17m   kubelet            spec.containers{liveness-probe}: Container started
+  Normal   Started          17m   kubelet            spec.containers{ebs-plugin}: Container started
+  Normal   Created          17m   kubelet            spec.containers{ebs-plugin}: Container created

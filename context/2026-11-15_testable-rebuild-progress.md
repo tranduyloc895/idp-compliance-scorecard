@@ -164,4 +164,8 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 
 ## Bước tiếp theo (cập nhật 2026-11-16 03:52)
 1. [x] `aws-up.sh --dry-run` (03:55 UTC): exit 0; preflight pass (6 image f474fb2); 01-network plan 19 add/0/0; 02 chưa plan được. Evidence `docs/evidence/aws/20261116T035455Z-up/`.
-2. **2026-11-16 04:00 UTC: người dùng đồng ý → `aws-up.sh --yes`** (WSL, AWS_PROFILE=idp). Tạo: VPC + NAT/EIP, EKS 1.35 + 2× t3.large, KMS, CloudWatch Logs, Argo CD + root app; sau sync: internal CLB + ~111 GB EBS. **Bắt đầu tính tiền ≈ $0.35/giờ** cho tới `aws-down.sh`. — đang chạy.
+2. **2026-11-16 04:00 UTC: người dùng đồng ý → `aws-up.sh --yes`** (WSL, AWS_PROFILE=idp). Tạo: VPC + NAT/EIP, EKS 1.35 + 2× t3.large, KMS, CloudWatch Logs, Argo CD + root app; sau sync: internal CLB + ~111 GB EBS. **Bắt đầu tính tiền ≈ $0.35/giờ** cho tới `aws-down.sh`. — hạ tầng xong (network 143s, EKS ~17m, secret 65s); Argo CD kẹt (chart cũ); người dùng dừng lúc ~04:32 UTC. Chi tiết: `context/2026-11-16_aws-lab-1-eks-first-run.md`.
+
+## Bước tiếp theo (cập nhật 2026-11-16 04:35)
+1. **Đang làm:** `aws-down.sh --yes` theo yêu cầu người dùng (giữ lớp nền).
+2. Buổi sau: nâng Argo CD lên 3.x; Kyverno chart mới hoặc override image `bitnami/kubectl`; xử lý thiếu CPU request + autoscaler không scale; rà version trivy-operator/kps/loki; rồi `aws-up` → smoke. Xem `context/2026-11-16_aws-lab-1-eks-first-run.md` mục "Lỗi tìm được".

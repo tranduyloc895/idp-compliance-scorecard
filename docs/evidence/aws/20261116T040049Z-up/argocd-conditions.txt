@@ -1,0 +1,19 @@
+compliance-engine: 
+platform-cluster-autoscaler: 
+platform-kube-bench: 
+platform-kube-prometheus-stack: ComparisonError=Failed to compare desired state to live state: failed to calculate diff: error calculating structured merge diff: error building typed value from live resource: .status.terminatingReplicas: field not declared in schema | 
+platform-kyverno: ComparisonError=Failed to compare desired state to live state: failed to calculate diff: error calculating structured merge diff: error building typed value from live resource: .status.terminatingReplicas: field not declared in schema | 
+platform-kyverno-policies: 
+platform-loki: ComparisonError=Failed to compare desired state to live state: failed to calculate diff: error calculating structured merge diff: error building typed value from live resource: .status.terminatingReplicas: field not declared in schema | 
+platform-metrics-server: 
+platform-namespace: 
+platform-storageclass: 
+platform-trivy-operator: ComparisonError=Failed to compare desired state to live state: failed to calculate diff: error calculating structured merge diff: error building typed value from live resource: .status.terminatingReplicas: field not declared in schema | 
+retail-store-cart: 
+retail-store-catalog: 
+retail-store-checkout: 
+retail-store-databases: 
+retail-store-namespace: 
+retail-store-orders: 
+retail-store-ui: 
+root: 
