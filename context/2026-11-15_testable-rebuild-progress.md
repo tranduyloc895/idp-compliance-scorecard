@@ -123,5 +123,5 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 
 ## Bước tiếp theo (cập nhật 2026-11-16)
 1. [x] Sửa ref trivy-action → SHA v0.36.0 (commit b058f7b), PR `fix/aws-lab-1` → main.
-2. Hỏi người dùng: `gh secret set AWS_ROLE_ARN`, kiểm Workflow permissions = Read and write.
+2. [x] 2026-11-16 03:17 UTC: `gh secret set AWS_ROLE_ARN` (người dùng đồng ý) = role ARN CI. Workflow permissions mặc định của repo = `read`, **không cần đổi**: `_build-push.yml`/`build-all.yml`/`ci-*.yml` khai báo `permissions: contents: write, id-token: write, security-events: write` ở cấp workflow (repo cá nhân, không có giới hạn org). `main` không có branch protection/ruleset nên `GITHUB_TOKEN` push được commit tag.
 3. Merge fix vào main (hỏi), rồi chạy `build-all` trên main (hỏi).
