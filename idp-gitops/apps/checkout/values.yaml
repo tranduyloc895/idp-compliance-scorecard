@@ -1,10 +1,8 @@
 name: checkout
-
 image:
   # registry lấy từ apps/image-registry.yaml; tag do CI ghi (MANAGED BY CI)
   repository: retail-store/checkout
-  tag: "not-built"
-
+  tag: "f474fb2"
 resources:
   requests:
     cpu: 128m
@@ -12,7 +10,6 @@ resources:
   limits:
     cpu: 256m
     memory: 512Mi
-
 probes:
   readiness:
     path: /health
@@ -22,7 +19,6 @@ probes:
     path: /health
     initialDelaySeconds: 45
     periodSeconds: 15
-
 # Kết nối Redis dùng chung; checkout gọi orders để tạo đơn (qua Service ClusterIP port 80).
 env:
   - {name: RETAIL_CHECKOUT_PERSISTENCE_PROVIDER, value: "redis"}
