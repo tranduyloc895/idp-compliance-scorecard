@@ -87,6 +87,7 @@ Secret: copy `scripts/secrets.env.example` thành `scripts/secrets.env` (git ign
 Sau đó làm tay một lần:
 1. GitHub → Settings → Secrets → Actions: `AWS_ROLE_ARN` = output `role_arn` mà script in ra. `GITOPS_TOKEN` là tuỳ chọn; nếu không đặt, CI dùng `GITHUB_TOKEN` và cần Workflow permissions = Read and write.
 2. Chạy workflow **build-all** trên nhánh Argo CD theo dõi (`main`). CI ghi registry vào `idp-gitops/apps/image-registry.yaml` và tag vào `apps/<svc>/values.yaml` cùng `compliance/compliance-engine/kustomization.yaml`. Đây là các file "MANAGED BY CI".
+   Trivy gate (CRITICAL có bản sửa) chỉ **chặn** `compliance-engine`. 5 service Retail Store chạy report-only (`trivy_gate: false`): vẫn quét và upload SARIF (tab Security), nhưng image vẫn được push. Lý do: code mẫu upstream dùng Spring Boot 3.5 / Spring Framework 6.2, các CVE CRITICAL của Spring chỉ có bản sửa ở 7.x (cần Spring Boot 4). Các CVE này được Trivy Operator phát hiện trong cluster và trở thành dữ liệu cho miền Supply Chain của scorecard.
 
 ## 4. Vòng lab
 
@@ -162,6 +163,7 @@ Chỉ ghi các lỗi **đã gặp thật** trong quá trình làm. Lỗi trên A
 | CI build (`ci-*`, `build-all`) fail ở *Set up job*: `Unable to resolve action aquasecurity/trivy-action@0.28.0` | Tag không có tiền tố `v` của trivy-action đã bị xoá; toàn bộ tag được tạo lại ngày 2026-03-20 | Pin theo commit SHA: `aquasecurity/trivy-action@ed142fd… # v0.36.0` (`_build-push.yml`, template skeleton) |
 | `validate-local.sh`: `[03-ecr] init` báo *No valid credential sources found* sau khi đã chạy `aws-foundation-up` | `.terraform/` của module đã init backend S3; `init -backend=false` vẫn đọc backend đó | `terraform-validate.sh` dùng `TF_DATA_DIR` riêng trong `/tmp/tf-validate/<module>` |
 | CI: `Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity` | Repo bật *immutable subject*: `sub` = `repo:<owner>@<owner_id>/<repo>@<repo_id>:...`, không khớp pattern `repo:<owner>/<repo>:*` | `04-oidc` chấp nhận cả hai dạng (`github_owner_id`, `github_repo_id`); kiểm bằng `gh api repos/<owner>/<repo>/actions/oidc/customization/sub` |
+| `build-all`: 5 job Retail Store fail ở bước Trivy (`Total: 9–10 (CRITICAL)`), không push image | Trivy v0.70.0 (trivy-action v0.36.0) phát hiện CVE CRITICAL trong netty/tomcat/spring 6.2/thymeleaf, grpc-go, gói npm | Retail Store dùng `trivy_gate: false` (report-only); `compliance-engine` vẫn bị gate |
 
 ## 7. Chi phí (cấu hình thật trong Terraform, us-east-1)
 

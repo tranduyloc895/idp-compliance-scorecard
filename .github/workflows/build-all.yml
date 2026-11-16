@@ -16,16 +16,17 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { service: ui, context: idp-microservices/src/ui }
-          - { service: cart, context: idp-microservices/src/cart }
-          - { service: catalog, context: idp-microservices/src/catalog }
-          - { service: orders, context: idp-microservices/src/orders }
-          - { service: checkout, context: idp-microservices/src/checkout }
-          - { service: compliance-engine, context: compliance-engine }
+          - { service: ui, context: idp-microservices/src/ui, gate: false }
+          - { service: cart, context: idp-microservices/src/cart, gate: false }
+          - { service: catalog, context: idp-microservices/src/catalog, gate: false }
+          - { service: orders, context: idp-microservices/src/orders, gate: false }
+          - { service: checkout, context: idp-microservices/src/checkout, gate: false }
+          - { service: compliance-engine, context: compliance-engine, gate: true }
     uses: ./.github/workflows/_build-push.yml
     with:
       service: ${{ matrix.service }}
       context: ${{ matrix.context }}
+      trivy_gate: ${{ matrix.gate }}
     secrets:
       AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
       GITOPS_TOKEN: ${{ secrets.GITOPS_TOKEN }}

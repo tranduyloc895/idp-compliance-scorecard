@@ -1,5 +1,5 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# Reusable: build → Trivy (chặn CRITICAL) → push ECR → ghi tag vào GitOps.
+# Reusable: build → Trivy (chặn CRITICAL nếu trivy_gate) → push ECR → ghi tag vào GitOps.
 #
 # Gọi từ ci-<service>.yml (push main, path filter) và build-all.yml (thủ công).
 # Secret thống nhất (audit #10):
@@ -22,6 +22,13 @@ on:
         required: true
       update_gitops:
         description: "Ghi tag vào idp-gitops sau khi push"
+        type: boolean
+        default: true
+      trivy_gate:
+        # false = report-only: vẫn quét + SARIF nhưng không chặn push. Dùng cho
+        # 5 service Retail Store (code mẫu upstream; CVE Spring 6.2 chỉ sửa ở 7.x).
+        # CVE còn lại được Trivy Operator phát hiện trong cluster -> dữ liệu scorecard.
+        description: "Chặn push khi có CRITICAL đã có bản sửa"
         type: boolean
         default: true
     secrets:
@@ -85,13 +92,13 @@ jobs:
           cache-from: type=gha,scope=${{ inputs.service }}
           cache-to: type=gha,scope=${{ inputs.service }},mode=max
 
-      - name: "Trivy (fail on CRITICAL with fix)"
+      - name: "Trivy (CRITICAL with fix; fails only if trivy_gate)"
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ${{ steps.meta.outputs.image }}
           format: table
           severity: CRITICAL
-          exit-code: "1"
+          exit-code: ${{ inputs.trivy_gate && '1' || '0' }}
           ignore-unfixed: true
           vuln-type: "os,library"
 

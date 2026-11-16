@@ -149,3 +149,8 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
   | catalog (Go) | 1 | google.golang.org/grpc v1.73.0 (indirect) → 1.79.3 |
   | checkout (Node) | 6 | form-data 2.3.3, protobufjs 7.4.0, proxy-addr 2.0.7, tar 7.5.7 (+2) |
 - CVE của Spring Framework chỉ có bản sửa ở 7.0.x → cần Spring Boot 4 (đổi major). Chờ người dùng chọn hướng xử lý.
+- **Quyết định (2026-11-16, người dùng chọn):** Trivy gate **report-only** cho 5 service Retail Store (`trivy_gate: false` trong `ci-{ui,cart,catalog,orders,checkout}.yml` và matrix `build-all`); `compliance-engine` và template Golden Path vẫn gate. Lý do: code mẫu upstream, CVE Spring 6.2 chỉ sửa ở 7.x (cần Spring Boot 4, ngoài phạm vi); CVE còn lại thành dữ liệu thật cho miền Supply Chain qua Trivy Operator. SARIF vẫn upload.
+
+## Bước tiếp theo (cập nhật 2026-11-16)
+1. PR `fix/aws-lab-2` → main (OIDC immutable subject + Trivy report-only). Hỏi trước khi merge. Lưu ý: merge sửa `_build-push.yml` nên **tự kích hoạt 6 workflow `CI — *`** trên main (tương đương build-all) → theo dõi tới khi 6 image lên ECR và tag được commit.
+2. Kiểm `image-registry.yaml` + tag 5 service trong main; `aws-up.sh --dry-run`.
