@@ -164,6 +164,7 @@ Chỉ ghi các lỗi **đã gặp thật** trong quá trình làm. Lỗi trên A
 | `validate-local.sh`: `[03-ecr] init` báo *No valid credential sources found* sau khi đã chạy `aws-foundation-up` | `.terraform/` của module đã init backend S3; `init -backend=false` vẫn đọc backend đó | `terraform-validate.sh` dùng `TF_DATA_DIR` riêng trong `/tmp/tf-validate/<module>` |
 | CI: `Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity` | Repo bật *immutable subject*: `sub` = `repo:<owner>@<owner_id>/<repo>@<repo_id>:...`, không khớp pattern `repo:<owner>/<repo>:*` | `04-oidc` chấp nhận cả hai dạng (`github_owner_id`, `github_repo_id`); kiểm bằng `gh api repos/<owner>/<repo>/actions/oidc/customization/sub` |
 | `build-all`: 5 job Retail Store fail ở bước Trivy (`Total: 9–10 (CRITICAL)`), không push image | Trivy v0.70.0 (trivy-action v0.36.0) phát hiện CVE CRITICAL trong netty/tomcat/spring 6.2/thymeleaf, grpc-go, gói npm | Retail Store dùng `trivy_gate: false` (report-only); `compliance-engine` vẫn bị gate |
+| CI `update GitOps`: `remote: Permission to <repo>.git denied to github-actions[bot]` (403) ngay lần push đầu, dù token có `Contents: write` và job khác push được | Chưa rõ; gặp khi 6 workflow chạy đồng thời sau merge (2026-11-16), rerun thì hết | `gh run rerun <run-id> --failed` từng run một; nếu lặp lại, đặt secret `GITOPS_TOKEN` (PAT fine-grained, Contents: Read and write) |
 
 ## 7. Chi phí (cấu hình thật trong Terraform, us-east-1)
 

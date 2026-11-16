@@ -154,3 +154,13 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 ## Bước tiếp theo (cập nhật 2026-11-16)
 1. PR `fix/aws-lab-2` → main (OIDC immutable subject + Trivy report-only). Hỏi trước khi merge. Lưu ý: merge sửa `_build-push.yml` nên **tự kích hoạt 6 workflow `CI — *`** trên main (tương đương build-all) → theo dõi tới khi 6 image lên ECR và tag được commit.
 2. Kiểm `image-registry.yaml` + tag 5 service trong main; `aws-up.sh --dry-run`.
+
+## Merge PR #3 → 6 workflow CI trên main (2026-11-16 03:36–03:50 UTC)
+- PR #3 merge `f474fb2` (validate xanh trước khi merge). Tự kích hoạt 6 `CI — *`.
+- Build → Trivy → push: **6/6 pass** (Retail Store report-only, compliance-engine pass gate).
+- Update GitOps: chỉ ui push được; 5 job còn lại bị `remote: Permission to ... denied to github-actions[bot]` (403) ở **cả lần push đầu**, kể cả compliance-engine (03:41:52, trước khi ui push lúc 03:42:07, push fast-forward). Quyền token giống hệt nhau (Contents: write). Không xác định được nguyên nhân từ log; `gh run rerun --failed` lần lượt từng job → cả 5 push thành công (retry/rebase hoạt động). Coi là lỗi tạm thời phía GitHub; theo dõi nếu lặp lại (giải pháp dự phòng: `GITOPS_TOKEN` là PAT fine-grained, hoặc gộp commit tag vào một job).
+- main hiện tại: `5fa651c`. `image-registry.yaml` = `736508008585.dkr.ecr.us-east-1.amazonaws.com`; tag cả 6 service = `f474fb2`.
+- ECR (tag `f474fb2`): ui 168 MB, cart 235 MB, catalog 67 MB, orders 409 MB, checkout 162 MB, compliance-engine 98 MB (+ `f71fced` 98 MB) ≈ 1.2 GB ≈ $0.12/tháng.
+
+## Bước tiếp theo (cập nhật 2026-11-16 03:52)
+1. `aws-up.sh --dry-run` (preflight + plan 01-network) → tóm tắt cho người dùng → hỏi trước khi chạy thật (tính tiền theo giờ, ≈ $0.35/giờ).
