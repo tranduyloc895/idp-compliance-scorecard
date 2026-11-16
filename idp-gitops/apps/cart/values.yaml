@@ -1,10 +1,8 @@
 name: cart
-
 image:
   # registry lấy từ apps/image-registry.yaml; tag do CI ghi (MANAGED BY CI)
   repository: retail-store/cart
-  tag: "not-built"
-
+  tag: "f474fb2"
 resources:
   requests:
     cpu: 256m
@@ -12,7 +10,6 @@ resources:
   limits:
     cpu: 512m
     memory: 1Gi
-
 probes:
   readiness:
     path: /actuator/health/readiness
@@ -22,10 +19,8 @@ probes:
     path: /actuator/health/liveness
     initialDelaySeconds: 60
     periodSeconds: 15
-
 monitoring:
   path: /actuator/prometheus
-
 # Kết nối DynamoDB-local dùng chung; service tự tạo bảng (create-table=true).
 # AWS_* là giá trị dummy cho AWS SDK (DynamoDB-local không xác thực thật).
 env:
