@@ -1,5 +1,5 @@
 # 4 datastore dùng chung cho các service ghi dữ liệu (catalog, cart, orders, checkout).
-# sync-wave -5: sau namespace (-10), trước các microservice (mặc định 0) để DB lên trước.
+# sync-wave -5: sau namespace (-10), trước các microservice (wave 5) để DB lên trước.
 # directory.recurse: true — bắt buộc vì manifest nằm trong các thư mục con apps/databases/<db>/.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -8,12 +8,14 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "-5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://github.com/tranduyloc895/idp-gitops.git
+    repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
     targetRevision: main
-    path: apps/databases
+    path: idp-gitops/apps/databases
     directory:
       recurse: true
   destination:

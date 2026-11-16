@@ -3,17 +3,22 @@ kind: Application
 metadata:
   name: retail-store-cart
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   sources:
-    - repoURL: https://github.com/tranduyloc895/idp-gitops.git
+    - repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
       targetRevision: main
-      path: charts/microservice
+      path: idp-gitops/charts/microservice
       helm:
         releaseName: cart
         valueFiles:
-          - $values/apps/cart/values.yaml
-    - repoURL: https://github.com/tranduyloc895/idp-gitops.git
+          - $values/idp-gitops/apps/image-registry.yaml
+          - $values/idp-gitops/apps/cart/values.yaml
+    - repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
       targetRevision: main
       ref: values
   destination:

@@ -1,0 +1,22 @@
+# Đường đi Backstage EC2 -> Compliance Engine (audit #24).
+# Internal Classic LB (legacy cloud provider của EKS, không cần AWS LB Controller),
+# chỉ truy cập được trong VPC. Đây là LoadBalancer DUY NHẤT của hệ thống;
+# scripts/aws-down.sh xoá nó (cascade) và kiểm tra không còn ELB trước khi destroy VPC.
+# aws-up ghi DNS của LB vào SSM /idp/backstage/compliance-engine-url cho Backstage.
+apiVersion: v1
+kind: Service
+metadata:
+  name: compliance-engine-internal
+  namespace: compliance
+  labels:
+    app.kubernetes.io/name: compliance-engine
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: compliance-engine
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000

@@ -77,9 +77,8 @@ spec:
           language: ${{ parameters.language }}
           owner: ${{ parameters.owner }}
           description: ${{ parameters.description | default("") }}
-          ecrRegistry: "736508008585.dkr.ecr.us-east-1.amazonaws.com"
           ecrRepo: "retail-store/${{ parameters.serviceName }}"
-          gitopsRepo: "tranduyloc895/idp-gitops"
+          gitopsRepo: "tranduyloc895/idp-compliance-scorecard"
           githubOrg: "tranduyloc895"
 
     # Step 2: Create new GitHub repository
@@ -98,12 +97,12 @@ spec:
         requireCodeOwnerReviews: false
         requiredStatusCheckContexts: []
 
-    # Step 3: Open PR in idp-gitops to add Helm values + ArgoCD Application
+    # Step 3: Open PR in monorepo (idp-gitops/) to add Helm values + ArgoCD Application
     - id: gitops-pr
       name: Add ArgoCD Application to GitOps
       action: publish:github:pull-request
       input:
-        repoUrl: "github.com?owner=tranduyloc895&repo=idp-gitops"
+        repoUrl: "github.com?owner=tranduyloc895&repo=idp-compliance-scorecard"
         title: "feat: onboard ${{ parameters.serviceName }}"
         branchName: "onboard/${{ parameters.serviceName }}"
         description: |

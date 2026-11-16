@@ -200,8 +200,10 @@ class TestNormalizerMapper:
                 "resource_namespace": None,
             },
         )
-        invalid_raw = RawFinding(
-            source="unknown_source",  # type: ignore
+        # model_construct bỏ qua validation của Pydantic để mô phỏng một source lạ
+        # lọt vào pipeline; mục tiêu là kiểm tra normalizer bỏ qua nó.
+        invalid_raw = RawFinding.model_construct(
+            source="unknown_source",
             raw_data={"bad": "data"},
         )
 

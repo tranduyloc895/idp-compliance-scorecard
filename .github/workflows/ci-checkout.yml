@@ -1,0 +1,26 @@
+# CI — checkout: push main thay đổi idp-microservices/src/checkout/** → build/scan/push ECR → ghi tag GitOps.
+name: "CI — checkout"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "idp-microservices/src/checkout/**"
+      - ".github/workflows/ci-checkout.yml"
+      - ".github/workflows/_build-push.yml"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+  security-events: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/_build-push.yml
+    with:
+      service: checkout
+      context: idp-microservices/src/checkout
+    secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      GITOPS_TOKEN: ${{ secrets.GITOPS_TOKEN }}

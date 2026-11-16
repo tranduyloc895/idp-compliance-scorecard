@@ -22,3 +22,8 @@ output "nat_gateway_public_ip" {
   description = "Public IP of the NAT Gateway"
   value       = module.vpc.nat_public_ips
 }
+
+output "availability_zones" {
+  description = "AZ của các subnet"
+  value       = var.availability_zones
+}

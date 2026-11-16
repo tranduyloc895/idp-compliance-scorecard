@@ -1,4 +1,4 @@
-﻿/**
+/**
  * ScoreTrend — Line chart showing score history (Recharts).
  *
  * Displays overall score trend across last N scans with classification
@@ -19,7 +19,7 @@ import {
 } from 'recharts';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box, Typography } from '@material-ui/core';
-import type { ScoresResponse } from '../../api/ComplianceApi';
+import type { ScoreHistoryPoint } from '../../api/ComplianceApi';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -90,14 +90,14 @@ function CustomDot({ cx, cy, payload }: CustomDotProps) {
 }
 
 interface Props {
-  history: ScoresResponse[];
+  history: ScoreHistoryPoint[];
 }
 
 export function ScoreTrend({ history }: Props) {
   const classes = useStyles();
 
+  // Backend trả history theo thứ tự thời gian (cũ → mới), không cần đảo.
   const data = [...history]
-    .reverse()
     .slice(-10)
     .map((s, i) => ({
       scan: `Scan ${i + 1}`,

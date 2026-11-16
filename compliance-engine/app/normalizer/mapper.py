@@ -150,8 +150,13 @@ class NormalizerMapper:
             f"[Image: {image}]"
         ).strip()
 
+        # ID phải phân biệt container và package, không chỉ CVE + resource.
+        container = data.get("container_name", "")
         finding_id = self._make_finding_id(
-            "TRV", vuln_id, resource_namespace, resource_name
+            "TRV",
+            vuln_id,
+            resource_namespace,
+            f"{data.get('resource_kind', '')}/{resource_name}/{container}/{package}@{installed}",
         )
 
         return UnifiedComplianceFinding(

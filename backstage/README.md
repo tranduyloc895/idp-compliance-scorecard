@@ -13,7 +13,7 @@ Self-service developer portal chạy trên EC2, cung cấp Software Catalog, Gol
 │  │  (Docker)        │     └─────────────────────────────┘  │
 │  └──────────────────┘                                       │
 │         ▲                                                    │
-│   :3000 │ (UI)                                              │
+│   :7007 │ (UI)                                              │
 └─────────│────────────────────────────────────────────────────┘
           │
     Browser / Developer
@@ -49,7 +49,7 @@ cp .env.example .env
 docker compose up -d
 
 # 3. Open portal
-open http://localhost:3000
+open http://localhost:7007
 ```
 
 ## EC2 Deploy
@@ -157,7 +157,7 @@ terraform apply
 
 | Symptom | Fix |
 |---|---|
-| `http://<ip>:3000` not reachable | Check Security Group inbound port 3000 |
+| `http://<ip>:7007` not reachable | Check Security Group inbound port 7007 (allowed_http_cidrs) |
 | GitHub login fails | Verify OAuth callback URL matches Elastic IP |
 | Catalog not loading | Check `GITHUB_TOKEN` has `repo` scope |
 | ArgoCD tab empty | `ARGOCD_URL` / `ARGOCD_AUTH_TOKEN` not set, or EKS not up |

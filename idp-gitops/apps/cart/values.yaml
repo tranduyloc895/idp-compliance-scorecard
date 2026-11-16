@@ -1,8 +1,9 @@
 name: cart
 
 image:
-  repository: 736508008585.dkr.ecr.us-east-1.amazonaws.com/retail-store/cart
-  tag: "9b76f74"
+  # registry lấy từ apps/image-registry.yaml; tag do CI ghi (MANAGED BY CI)
+  repository: retail-store/cart
+  tag: "not-built"
 
 resources:
   requests:

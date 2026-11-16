@@ -16,3 +16,5 @@ spec:
     - ./cart.yaml
     - ./orders.yaml
     - ./checkout.yaml
+    # Golden Path template (audit #26) — hiện ở trang Create
+    - ../templates/new-microservice/template.yaml

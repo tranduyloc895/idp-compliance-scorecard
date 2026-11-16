@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.5.0"
+  required_version = ">= 1.10.0"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -7,10 +7,10 @@ terraform {
     }
   }
 
-  # ─── S3 Backend ───────────────────────────────────────────────────────────
-  # Reuses the same state bucket created for other modules.
+  # Backend S3 cấu hình một phần: bucket truyền lúc init
+  #   terraform init -backend-config="bucket=$TF_STATE_BUCKET"
+  # (scripts/lib.sh tự làm việc này). Một bucket duy nhất cho mọi module.
   backend "s3" {
-    bucket       = "idp-platform-tfstate-tranduyloc895"
     key          = "05-backstage-ec2/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true
@@ -25,6 +25,7 @@ provider "aws" {
       Project     = var.project
       Environment = var.environment
       ManagedBy   = "Terraform"
+      Layer       = "lab"
       Module      = "05-backstage-ec2"
     }
   }

@@ -15,7 +15,7 @@ set -euo pipefail
 
 ELASTIC_IP="${1:-}"
 APP_DIR="/opt/backstage"
-REPO_URL="https://github.com/tranduyloc895/idp-platform.git"  # adjust if needed
+REPO_URL="https://github.com/tranduyloc895/idp-compliance-scorecard.git"  # monorepo
 BACKSTAGE_SUBDIR="backstage"
 
 # ─── Validate ──────────────────────────────────────────────
@@ -53,9 +53,9 @@ if [ -d "${APP_DIR}/.git" ]; then
   git pull --rebase
 else
   echo "Cloning repository..."
-  git clone "${REPO_URL}" /tmp/idp-platform-clone
-  cp -r /tmp/idp-platform-clone/${BACKSTAGE_SUBDIR}/. "${APP_DIR}/"
-  rm -rf /tmp/idp-platform-clone
+  git clone "${REPO_URL}" /tmp/idp-clone
+  cp -r /tmp/idp-clone/${BACKSTAGE_SUBDIR}/. "${APP_DIR}/"
+  rm -rf /tmp/idp-clone
 fi
 EOF
 
@@ -112,7 +112,7 @@ echo ""
 echo "✅ Backstage is running!"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  UI:      http://${ELASTIC_IP}:3000"
+echo "  UI:      http://${ELASTIC_IP}:7007"
 echo "  API:     http://${ELASTIC_IP}:7007/api/health"
 echo "  Logs:    ssh ec2-user@${ELASTIC_IP} 'docker compose -f ${APP_DIR}/docker-compose.yml logs -f'"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

@@ -1,0 +1,171 @@
+# Kiểm tra tĩnh cho mọi push và PR (Giai đoạn 1) + smoke Compliance Engine (Giai đoạn 2).
+# Không cần AWS credential, không push image.
+name: validate
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TERRAFORM_VERSION: 1.11.4
+  TFLINT_VERSION: v0.53.0
+  HELM_VERSION: v3.16.3
+  KUSTOMIZE_VERSION: v5.5.0
+  KUBECONFORM_VERSION: v0.6.7
+  KYVERNO_VERSION: v1.12.5
+  PYTHON_VERSION: "3.12"
+  NODE_VERSION: "20.18.0"
+
+jobs:
+  placeholders:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - run: bash scripts/check-placeholders.sh
+      - name: Shell scripts syntax + LF
+        run: bash scripts/validate-local.sh sh yaml
+
+  terraform:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: hashicorp/setup-terraform@v3.1.2
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          terraform_wrapper: false
+      - uses: terraform-linters/setup-tflint@v4.1.0
+        with:
+          tflint_version: ${{ env.TFLINT_VERSION }}
+      - uses: actions/cache@v4.2.3
+        with:
+          path: |
+            ~/.terraform.d/plugin-cache
+            ~/.tflint.d/plugins
+          key: tf-${{ runner.os }}-${{ hashFiles('infrastructure/**/*.tf', 'infrastructure/.tflint.hcl') }}
+      - run: bash scripts/terraform-validate.sh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}   # tflint --init tải plugin aws từ GitHub
+
+  k8s-manifests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - name: Install helm, kustomize, kubeconform (pinned)
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/bin"
+          curl -fsSL "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz" | tar -xz -C /tmp
+          mv /tmp/linux-amd64/helm "$HOME/bin/"
+          curl -fsSL "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2F${KUSTOMIZE_VERSION}/kustomize_${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" | tar -xz -C "$HOME/bin"
+          curl -fsSL "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz" | tar -xz -C "$HOME/bin"
+          echo "$HOME/bin" >> "$GITHUB_PATH"
+      - run: bash scripts/k8s-render-check.sh
+      - uses: actions/upload-artifact@v4.4.3
+        if: always()
+        with:
+          name: rendered-manifests
+          path: .render/
+          retention-days: 7
+
+  kyverno-policies:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - name: Install kyverno CLI (pinned)
+        run: |
+          curl -fsSL "https://github.com/kyverno/kyverno/releases/download/${KYVERNO_VERSION}/kyverno-cli_${KYVERNO_VERSION}_linux_x86_64.tar.gz" | tar -xz -C /tmp
+          sudo mv /tmp/kyverno /usr/local/bin/kyverno
+          kyverno version
+      - name: "kyverno test: 8 policies x workload A/B/C"
+        run: kyverno test idp-gitops/platform/kyverno/tests --detailed-results
+
+  pytest:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: compliance-engine
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-python@v5.3.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: compliance-engine/pyproject.toml
+      - run: pip install -e ".[dev]"
+      - run: python -m pytest tests/ -q
+
+  tsc:
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: backstage/plugins/compliance-scorecard
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backstage/plugins/compliance-scorecard/package-lock.json
+      - run: npm ci --ignore-scripts --legacy-peer-deps --no-audit --no-fund
+      - run: npx tsc -p tsconfig.typecheck.json
+      - run: npx tsc -p tsconfig.contract.json
+
+  docker-build:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { service: ui, context: idp-microservices/src/ui }
+          - { service: cart, context: idp-microservices/src/cart }
+          - { service: catalog, context: idp-microservices/src/catalog }
+          - { service: orders, context: idp-microservices/src/orders }
+          - { service: checkout, context: idp-microservices/src/checkout }
+          - { service: compliance-engine, context: compliance-engine }
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: docker/setup-buildx-action@v3.7.1
+      - name: Build ${{ matrix.service }} (no push)
+        uses: docker/build-push-action@v6.9.0
+        with:
+          context: ${{ matrix.context }}
+          push: false
+          tags: validate/${{ matrix.service }}:${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,scope=${{ matrix.service }},mode=max
+
+  engine-smoke:
+    runs-on: ubuntu-24.04
+    needs: [pytest, tsc]
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-node@v4.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backstage/plugins/compliance-scorecard/package-lock.json
+      - name: Build plugin adapters for contract check
+        working-directory: backstage/plugins/compliance-scorecard
+        run: |
+          npm ci --ignore-scripts --legacy-peer-deps --no-audit --no-fund
+          npx tsc -p tsconfig.contract.json
+      - name: "Smoke: compose up -> scan -> scores/findings -> rule recommendation"
+        run: bash scripts/engine-smoke.sh
+        env:
+          EVIDENCE_DIR: ${{ github.workspace }}/engine-smoke-evidence
+      - name: "Contract: engine responses -> plugin types"
+        run: node scripts/contract-check.mjs engine-smoke-evidence | tee engine-smoke-evidence/contract-check.txt
+      - uses: actions/upload-artifact@v4.4.3
+        if: always()
+        with:
+          name: engine-smoke-evidence
+          path: engine-smoke-evidence/
+          retention-days: 30

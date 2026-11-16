@@ -60,3 +60,11 @@ CLAUDE.md
 *.pdf
 graphify-out/
 
+*.egg-info/
+.pytest_cache/
+
+# CI render output / smoke evidence (local runs)
+.render/
+engine-smoke-evidence/
+scripts/secrets.env
+docs/evidence/aws/*/kubeconfig*

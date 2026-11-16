@@ -1,5 +1,5 @@
 app:
-  baseUrl: http://${BACKSTAGE_HOST}:3000
+  baseUrl: http://${BACKSTAGE_HOST}:7007
 
 backend:
   baseUrl: http://${BACKSTAGE_HOST}:7007
@@ -7,7 +7,7 @@ backend:
     port: 7007
     host: 0.0.0.0
   cors:
-    origin: http://${BACKSTAGE_HOST}:3000
+    origin: http://${BACKSTAGE_HOST}:7007
   database:
     client: pg
     connection:

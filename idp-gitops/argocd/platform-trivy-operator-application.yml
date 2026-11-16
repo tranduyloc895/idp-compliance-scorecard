@@ -3,28 +3,30 @@ kind: Application
 metadata:
   name: platform-trivy-operator
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-5"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   labels:
-    app.kubernetes.io/name: platform-trivy-operator
     app.kubernetes.io/part-of: idp-platform
 spec:
   project: default
   sources:
     - repoURL: https://aquasecurity.github.io/helm-charts/
       chart: trivy-operator
-      targetRevision: "0.25.*"
+      targetRevision: 0.24.1
       helm:
         releaseName: trivy-operator
         valueFiles:
           - $values/idp-gitops/platform/trivy-operator/values.yaml
-    - repoURL: https://github.com/YOUR_ORG/idp-platform
-      targetRevision: HEAD
+    - repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
+      targetRevision: main
       ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: trivy-system
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+    automated: { prune: true, selfHeal: true }
     syncOptions:
       - CreateNamespace=true
+      - ServerSideApply=true

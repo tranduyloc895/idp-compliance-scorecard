@@ -1,23 +1,17 @@
-# Find VPC by name tag
-data "aws_vpc" "ecommerce" {
-  tags = {
-    Name = var.vpc_name
+# Đọc output của 01-network qua remote state (thay cho việc tra VPC theo tag
+# hoặc copy output bằng tay). Bucket truyền qua TF_VAR_state_bucket.
+data "terraform_remote_state" "network" {
+  backend = "s3"
+  config = {
+    bucket = var.state_bucket
+    key    = "01-network/terraform.tfstate"
+    region = var.aws_region
   }
 }
 
-# Find Private Subnets in the VPC with the tag "kubernetes.io/role/internal-elb" = "1"
-data "aws_subnets" "private" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.ecommerce.id]
-  }
+data "aws_caller_identity" "current" {}
 
-  tags = {
-    "kubernetes.io/role/internal-elb" = "1"
-  }
+locals {
+  vpc_id             = data.terraform_remote_state.network.outputs.vpc_id
+  private_subnet_ids = data.terraform_remote_state.network.outputs.private_subnet_ids
 }
-
-# Data sources for Jenkins Agent IAM role and Security Group were removed
-# after migrating to GitOps. Module 02-cluster-eks no longer references
-# anything from 03-jenkins-server, eliminating the cross-module dependency
-# that previously caused issues during teardown.

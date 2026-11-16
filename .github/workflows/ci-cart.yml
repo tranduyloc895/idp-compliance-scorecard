@@ -1,0 +1,26 @@
+# CI — cart: push main thay đổi idp-microservices/src/cart/** → build/scan/push ECR → ghi tag GitOps.
+name: "CI — cart"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "idp-microservices/src/cart/**"
+      - ".github/workflows/ci-cart.yml"
+      - ".github/workflows/_build-push.yml"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+  security-events: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/_build-push.yml
+    with:
+      service: cart
+      context: idp-microservices/src/cart
+    secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      GITOPS_TOKEN: ${{ secrets.GITOPS_TOKEN }}

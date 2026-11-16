@@ -1,0 +1,31 @@
+# Build + push cả 6 image và ghi tag vào GitOps. Chạy thủ công lần đầu (trước aws-up)
+# hoặc khi cần làm mới toàn bộ image. aws-up không build image (quyết định #6).
+name: build-all
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+  security-events: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { service: ui, context: idp-microservices/src/ui }
+          - { service: cart, context: idp-microservices/src/cart }
+          - { service: catalog, context: idp-microservices/src/catalog }
+          - { service: orders, context: idp-microservices/src/orders }
+          - { service: checkout, context: idp-microservices/src/checkout }
+          - { service: compliance-engine, context: compliance-engine }
+    uses: ./.github/workflows/_build-push.yml
+    with:
+      service: ${{ matrix.service }}
+      context: ${{ matrix.context }}
+    secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      GITOPS_TOKEN: ${{ secrets.GITOPS_TOKEN }}

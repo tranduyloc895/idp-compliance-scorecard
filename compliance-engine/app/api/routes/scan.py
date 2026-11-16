@@ -11,7 +11,7 @@ import logging
 from datetime import datetime
 from typing import Optional
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Body, HTTPException, Query
 from pydantic import BaseModel
 from sqlalchemy import select, func
 
@@ -58,17 +58,22 @@ class ScanDetailResponse(BaseModel):
 
 @router.post("", response_model=ScanResponse, status_code=202)
 async def trigger_scan(
-    request: ScanRequest,
     background_tasks: BackgroundTasks,
     db: DBSession,
     cache: CacheClient,
+    request: Optional[ScanRequest] = Body(default=None),
 ) -> ScanResponse:
     """
     Trigger a new compliance scan.
 
     Scan chạy background — response trả về ngay với scan_id.
     Poll GET /api/v1/scans/{scan_id} để theo dõi progress.
+
+    Client nên gửi `Content-Type: application/json` và body `{}` (cluster-wide)
+    hoặc `{"namespace": "compliance-test"}`. Body rỗng được coi như `{}` (audit #15).
     """
+    if request is None:
+        request = ScanRequest()
     # Tạo ScanRecord với status PENDING
     scan = ScanRecord(
         status=ScanStatus.PENDING,
@@ -179,15 +184,20 @@ async def _run_scan_background(
             scan.status = ScanStatus.RUNNING
             await db.commit()
 
-            # Get K8s client from module-level state
-            from app.main import app as _app
-            k8s_client = getattr(_app.state, "k8s_client", None)
+            from app.config import settings
 
-            if k8s_client is None:
-                raise RuntimeError("K8s client not available — are you running in-cluster?")
+            if settings.COLLECTOR_MODE == "fixtures":
+                aggregator = ComplianceAggregator(None, fixtures_dir=settings.FIXTURES_DIR)
+            else:
+                # Get K8s client from module-level state
+                from app.main import app as _app
+                k8s_client = getattr(_app.state, "k8s_client", None)
+
+                if k8s_client is None:
+                    raise RuntimeError("K8s client not available — are you running in-cluster?")
+                aggregator = ComplianceAggregator(k8s_client)
 
             # 1. Collect
-            aggregator = ComplianceAggregator(k8s_client)
             raw_findings = await aggregator.collect_all(namespace)
 
             # 2. Normalize

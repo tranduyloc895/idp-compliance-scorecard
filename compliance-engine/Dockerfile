@@ -13,8 +13,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 # Copy source code
 COPY app/ ./app/
-COPY alembic/ ./alembic/
-COPY alembic.ini .
+COPY fixtures/ ./fixtures/
 
 # Set ownership
 RUN chown -R appuser:appgroup /app

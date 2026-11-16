@@ -1,6 +1,6 @@
 [build-system]
 requires = ["setuptools>=70", "wheel"]
-build-backend = "setuptools.backends.legacy:build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "compliance-engine"
@@ -14,7 +14,6 @@ dependencies = [
     # Database
     "sqlalchemy[asyncio]>=2.0",
     "asyncpg>=0.30",
-    "alembic>=1.14",
     # Cache
     "redis>=5.0",
     # Kubernetes client

@@ -16,8 +16,22 @@ data "aws_ami" "amazon_linux_2023" {
   }
 }
 
+# VPC/subnet lấy từ remote state của 01-network (audit #4: không nhập tay vpc_id/subnet_id).
+data "terraform_remote_state" "network" {
+  backend = "s3"
+  config = {
+    bucket = var.state_bucket
+    key    = "01-network/terraform.tfstate"
+    region = var.aws_region
+  }
+}
+
+data "aws_caller_identity" "current" {}
+
 locals {
   resolved_ami = var.ami_id != "" ? var.ami_id : data.aws_ami.amazon_linux_2023.id
+  vpc_id       = data.terraform_remote_state.network.outputs.vpc_id
+  subnet_id    = data.terraform_remote_state.network.outputs.public_subnet_ids[0]
 }
 
 # ─── Security Group ────────────────────────────────────────────────────────
@@ -25,33 +39,28 @@ locals {
 resource "aws_security_group" "backstage" {
   name        = "backstage-sg"
   description = "Security group for Backstage IDP Portal EC2 instance"
-  vpc_id      = var.vpc_id
+  vpc_id      = local.vpc_id
 
-  # Backstage UI (served via nginx reverse proxy or direct)
+  # Backstage production build: backend phục vụ cả frontend trên MỘT port 7007
+  # (audit #23 — trước đây publish 3000:7007 nhưng URL/callback dùng 7007).
   ingress {
-    description = "Backstage UI"
-    from_port   = 3000
-    to_port     = 3000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Backstage backend API (internal auth callbacks)
-  ingress {
-    description = "Backstage Backend API"
+    description = "Backstage (frontend + backend)"
     from_port   = 7007
     to_port     = 7007
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.allowed_http_cidrs
   }
 
-  # SSH access
-  ingress {
-    description = "SSH"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = var.allowed_ssh_cidrs
+  # SSH chỉ mở khi có key pair; mặc định truy cập bằng SSM Session Manager.
+  dynamic "ingress" {
+    for_each = var.key_name != "" ? [1] : []
+    content {
+      description = "SSH"
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = var.allowed_ssh_cidrs
+    }
   }
 
   # All outbound traffic
@@ -95,6 +104,20 @@ resource "aws_iam_role_policy_attachment" "ecr_readonly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+# Đọc secret và URL compliance engine (do aws-up ghi) từ SSM Parameter Store.
+resource "aws_iam_role_policy" "ssm_params_read" {
+  name = "read-idp-ssm-parameters"
+  role = aws_iam_role.backstage_ec2.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = ["ssm:GetParameter", "ssm:GetParameters", "ssm:GetParametersByPath"]
+      Resource = "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter${var.ssm_prefix}/*"
+    }]
+  })
+}
+
 resource "aws_iam_instance_profile" "backstage_ec2" {
   name = "backstage-ec2-profile"
   role = aws_iam_role.backstage_ec2.name
@@ -105,7 +128,7 @@ resource "aws_iam_instance_profile" "backstage_ec2" {
 resource "aws_instance" "backstage" {
   ami                         = local.resolved_ami
   instance_type               = var.instance_type
-  subnet_id                   = var.subnet_id
+  subnet_id                   = local.subnet_id
   vpc_security_group_ids      = [aws_security_group.backstage.id]
   iam_instance_profile        = aws_iam_instance_profile.backstage_ec2.name
   key_name                    = var.key_name != "" ? var.key_name : null
@@ -124,10 +147,6 @@ resource "aws_instance" "backstage" {
     Name = "backstage-portal"
   }
 
-  lifecycle {
-    # Prevent destroy if instance type changes — just stop/start
-    create_before_destroy = false
-  }
 }
 
 # ─── Elastic IP ────────────────────────────────────────────────────────────

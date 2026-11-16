@@ -1,23 +1,28 @@
+# Compliance Engine API + PostgreSQL + Redis trong namespace compliance (Kustomize).
+# Secret compliance-engine-secrets KHÔNG nằm trong Git: scripts/k8s-secrets.sh tạo
+# từ SSM Parameter Store (audit #17).
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: compliance-engine
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   labels:
     app.kubernetes.io/name: compliance-engine
     app.kubernetes.io/part-of: idp-platform
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_ORG/idp-platform
-    targetRevision: HEAD
+    repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
+    targetRevision: main
     path: idp-gitops/compliance/compliance-engine
   destination:
     server: https://kubernetes.default.svc
     namespace: compliance
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+    automated: { prune: true, selfHeal: true }
     syncOptions:
       - CreateNamespace=true

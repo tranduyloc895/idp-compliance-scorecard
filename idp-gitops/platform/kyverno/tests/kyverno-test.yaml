@@ -1,0 +1,156 @@
+# kyverno test: 8 ClusterPolicy x workload A/B/C (kỳ vọng A vi phạm, B pass, C hỗn hợp).
+# Chạy: kyverno test idp-gitops/platform/kyverno/tests
+# Rule match Pod được Kyverno autogen cho Deployment với tên 'autogen-<rule>'.
+apiVersion: cli.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: experiments-abc
+policies:
+  - ../policies/disallow-latest-tag.yaml
+  - ../policies/disallow-privilege-escalation.yaml
+  - ../policies/drop-all-capabilities.yaml
+  - ../policies/require-labels.yaml
+  - ../policies/require-probes.yaml
+  - ../policies/require-read-only-rootfs.yaml
+  - ../policies/require-resource-limits.yaml
+  - ../policies/require-run-as-non-root.yaml
+resources:
+  - ../../../experiments/workload-a-poor/deployment.yaml
+  - ../../../experiments/workload-b-excellent/deployment.yaml
+  - ../../../experiments/workload-c-fair/deployment.yaml
+results:
+  - policy: disallow-latest-tag
+    rule: autogen-require-image-tag
+    kind: Deployment
+    resources: [workload-a-poor]
+    result: pass
+  - policy: disallow-latest-tag
+    rule: autogen-validate-image-tag
+    kind: Deployment
+    resources: [workload-a-poor]
+    result: fail
+  - policy: disallow-privilege-escalation
+    rule: autogen-deny-privilege-escalation
+    kind: Deployment
+    resources: [workload-a-poor]
+    result: fail
+  - policy: drop-all-capabilities
+    rule: autogen-drop-capabilities
+    kind: Deployment
+    resources: [workload-a-poor]
+    result: fail
+  - policy: require-labels
+    rule: app-labels-required
+    kind: Deployment
+    resources: [workload-a-poor]
+    result: fail
+  - policy: require-probes
+    rule: probes-required
+    kind: Deployment
+    resources: [workload-a-poor]
+    result: fail
+  - policy: require-read-only-rootfs
+    rule: autogen-read-only-rootfs
+    kind: Deployment
+    resources: [workload-a-poor]
+    result: fail
+  - policy: require-resource-limits
+    rule: autogen-resource-limits-required
+    kind: Deployment
+    resources: [workload-a-poor]
+    result: fail
+  - policy: require-run-as-non-root
+    rule: autogen-run-as-non-root
+    kind: Deployment
+    resources: [workload-a-poor]
+    result: fail
+  - policy: disallow-latest-tag
+    rule: autogen-require-image-tag
+    kind: Deployment
+    resources: [workload-b-excellent]
+    result: pass
+  - policy: disallow-latest-tag
+    rule: autogen-validate-image-tag
+    kind: Deployment
+    resources: [workload-b-excellent]
+    result: pass
+  - policy: disallow-privilege-escalation
+    rule: autogen-deny-privilege-escalation
+    kind: Deployment
+    resources: [workload-b-excellent]
+    result: pass
+  - policy: drop-all-capabilities
+    rule: autogen-drop-capabilities
+    kind: Deployment
+    resources: [workload-b-excellent]
+    result: pass
+  - policy: require-labels
+    rule: app-labels-required
+    kind: Deployment
+    resources: [workload-b-excellent]
+    result: pass
+  - policy: require-probes
+    rule: probes-required
+    kind: Deployment
+    resources: [workload-b-excellent]
+    result: pass
+  - policy: require-read-only-rootfs
+    rule: autogen-read-only-rootfs
+    kind: Deployment
+    resources: [workload-b-excellent]
+    result: pass
+  - policy: require-resource-limits
+    rule: autogen-resource-limits-required
+    kind: Deployment
+    resources: [workload-b-excellent]
+    result: pass
+  - policy: require-run-as-non-root
+    rule: autogen-run-as-non-root
+    kind: Deployment
+    resources: [workload-b-excellent]
+    result: pass
+  - policy: disallow-latest-tag
+    rule: autogen-require-image-tag
+    kind: Deployment
+    resources: [workload-c-fair]
+    result: pass
+  - policy: disallow-latest-tag
+    rule: autogen-validate-image-tag
+    kind: Deployment
+    resources: [workload-c-fair]
+    result: pass
+  - policy: disallow-privilege-escalation
+    rule: autogen-deny-privilege-escalation
+    kind: Deployment
+    resources: [workload-c-fair]
+    result: pass
+  - policy: drop-all-capabilities
+    rule: autogen-drop-capabilities
+    kind: Deployment
+    resources: [workload-c-fair]
+    result: fail
+  - policy: require-labels
+    rule: app-labels-required
+    kind: Deployment
+    resources: [workload-c-fair]
+    result: fail
+  - policy: require-probes
+    rule: probes-required
+    kind: Deployment
+    resources: [workload-c-fair]
+    result: pass
+  - policy: require-read-only-rootfs
+    rule: autogen-read-only-rootfs
+    kind: Deployment
+    resources: [workload-c-fair]
+    result: fail
+  - policy: require-resource-limits
+    rule: autogen-resource-limits-required
+    kind: Deployment
+    resources: [workload-c-fair]
+    result: pass
+  - policy: require-run-as-non-root
+    rule: autogen-run-as-non-root
+    kind: Deployment
+    resources: [workload-c-fair]
+    result: pass

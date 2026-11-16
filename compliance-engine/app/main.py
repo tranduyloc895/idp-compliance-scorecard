@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
 
     Startup:
       1. Init Database (PostgreSQL via asyncpg)
-      2. Run Alembic migrations
+      2. Tạo schema bằng Base.metadata.create_all (idempotent, chạy được từ DB trắng)
       3. Init Redis cache
       4. Init Kubernetes client (in-cluster or kubeconfig)
       5. Init AI Recommender (nếu GEMINI_API_KEY có)
@@ -42,12 +42,14 @@ async def lifespan(app: FastAPI):
 
     # 1. Init Database
     from app.database import init_db, get_engine, Base
+    # `import app.models` sẽ gán tên `app` (package) đè lên tham số `app` của lifespan.
+    import app.models as _all_models  # noqa: F401  — đăng ký mọi bảng trước create_all
     init_db(settings.DATABASE_URL)
 
     engine = get_engine()
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        logger.info("Database tables created/verified")
+        logger.info("Database schema ensured via create_all (no Alembic)")
 
     # 2. Init Redis
     from app.cache import ComplianceCache
@@ -86,11 +88,17 @@ async def lifespan(app: FastAPI):
 
 async def _init_k8s_client():
     """Init K8s client: in-cluster → kubeconfig fallback."""
+    if settings.COLLECTOR_MODE == "fixtures":
+        logger.info("Collector mode=fixtures (dir=%s): Kubernetes client not used", settings.FIXTURES_DIR)
+        return None
+
     try:
         from kubernetes_asyncio import client, config
 
         if settings.K8S_IN_CLUSTER:
-            await config.load_incluster_config()
+            # load_incluster_config() là hàm đồng bộ trong kubernetes-asyncio;
+            # await nó làm init lỗi và trả client None.
+            config.load_incluster_config()
             logger.info("Kubernetes: in-cluster config loaded")
         elif settings.KUBECONFIG:
             await config.load_kube_config(config_file=settings.KUBECONFIG)

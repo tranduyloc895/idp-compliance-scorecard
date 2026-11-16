@@ -94,6 +94,21 @@ export function EntityComplianceCard() {
     );
   }
 
+  if (!error && !scores) {
+    return (
+      <Card className={classes.card}>
+        <CardContent>
+          <Typography style={{ color: '#94a3b8', fontSize: '0.82rem' }}>
+            No compliance scan yet. Trigger a scan from the Compliance page.
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button size="small" onClick={refresh} className={classes.viewBtn}>Refresh</Button>
+        </CardActions>
+      </Card>
+    );
+  }
+
   if (error || !scores) {
     return (
       <Card className={classes.card}>
@@ -155,7 +170,7 @@ export function EntityComplianceCard() {
           />
         </Box>
 
-        <Box display="flex" justifyContent="center" gap={1} flexWrap="wrap">
+        <Box display="flex" justifyContent="center" style={{ gap: 8 }} flexWrap="wrap">
           <Chip
             label={`✅ ${scores.total_passed} Passed`}
             size="small"

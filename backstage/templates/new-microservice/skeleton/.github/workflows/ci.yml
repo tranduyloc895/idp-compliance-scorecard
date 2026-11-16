@@ -13,7 +13,6 @@ permissions:
 
 env:
   AWS_REGION: us-east-1
-  ECR_REGISTRY: ${{ values.ecrRegistry }}
   ECR_REPO: ${{ values.ecrRepo }}
   SERVICE: ${{ values.serviceName }}
   GITOPS_REPO: ${{ values.gitopsRepo }}
@@ -27,19 +26,25 @@ jobs:
     steps:
       # ─── Checkout ───────────────────────────────────────────────────
       - name: Checkout source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       # ─── OIDC Auth to AWS ───────────────────────────────────────────
       - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
-          role-to-assume: arn:aws:iam::736508008585:role/github-actions-oidc-role
+          # Cùng tên secret với CI monorepo (audit #10); giá trị = output role_arn của 04-oidc.
+          # Lưu ý: trust policy của role hiện chỉ cho repo monorepo; repo mới cần thêm vào github_repo.
+          role-to-assume: ${{ '{{' }} secrets.AWS_ROLE_ARN {{ '}}' }}
           aws-region: ${{ '{{' }} env.AWS_REGION {{ '}}' }}
 
       # ─── ECR Login ──────────────────────────────────────────────────
       - name: Login to Amazon ECR
         id: ecr-login
-        uses: aws-actions/amazon-ecr-login@v2
+        uses: aws-actions/amazon-ecr-login@v2.0.1
+
+      # Registry lấy từ output login, không ghi cứng account ID (quyết định #5)
+      - name: Export ECR registry
+        run: echo "ECR_REGISTRY=${{ '{{' }} steps.ecr-login.outputs.registry {{ '}}' }}" >> "$GITHUB_ENV"
 
       # ─── Docker Build ───────────────────────────────────────────────
       - name: Build Docker image
@@ -53,7 +58,7 @@ jobs:
 
       # ─── Security Scan (Trivy) ──────────────────────────────────────
       - name: Scan image with Trivy
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: "${{ '{{' }} env.ECR_REGISTRY {{ '}}' }}/${{ '{{' }} env.ECR_REPO {{ '}}' }}:${{ '{{' }} env.IMAGE_TAG {{ '}}' }}"
           format: sarif
@@ -62,7 +67,7 @@ jobs:
           exit-code: "0"   # Don't fail — upload results for visibility
 
       - name: Upload Trivy SARIF to GitHub Security
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v3.27.0
         if: always()
         with:
           sarif_file: trivy-results.sarif
@@ -92,7 +97,8 @@ jobs:
           git clone "https://x-access-token:${GITOPS_TOKEN}@github.com/${GITOPS_REPO}.git" gitops-repo
           cd gitops-repo
 
-          VALUES_FILE="apps/${SERVICE}/values.yaml"
+          # Monorepo: values nằm dưới idp-gitops/ (quyết định #1)
+          VALUES_FILE="idp-gitops/apps/${SERVICE}/values.yaml"
           if [ -f "${VALUES_FILE}" ]; then
             # --exit-status: fail nếu path .image.tag không tồn tại trong file
             # (tránh yq silently tạo key sai khi values.yaml có cấu trúc khác)

@@ -16,14 +16,15 @@ services:
       # Gemini AI (required for AI recommendations)
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_MODEL: gemini-2.5-flash
-      # Kubernetes (mount your local kubeconfig for dev)
-      KUBECONFIG: /root/.kube/config
+      # Collector: mặc định đọc fixture A/B/C (không cần cluster). Image không có
+      # AWS CLI nên không dùng được kubeconfig EKS (exec credential) trong container;
+      # muốn đọc cluster thật thì chạy API ngoài container (audit #16).
+      COLLECTOR_MODE: ${COLLECTOR_MODE:-fixtures}
+      FIXTURES_DIR: /app/fixtures/scenario-abc
       K8S_IN_CLUSTER: "false"
       # App settings
       LOG_LEVEL: INFO
       DEBUG: "false"
-    volumes:
-      - ~/.kube/config:/root/.kube/config:ro
     depends_on:
       db:
         condition: service_healthy

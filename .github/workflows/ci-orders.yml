@@ -1,0 +1,26 @@
+# CI — orders: push main thay đổi idp-microservices/src/orders/** → build/scan/push ECR → ghi tag GitOps.
+name: "CI — orders"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "idp-microservices/src/orders/**"
+      - ".github/workflows/ci-orders.yml"
+      - ".github/workflows/_build-push.yml"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+  security-events: write
+
+jobs:
+  build:
+    uses: ./.github/workflows/_build-push.yml
+    with:
+      service: orders
+      context: idp-microservices/src/orders
+    secrets:
+      AWS_ROLE_ARN: ${{ secrets.AWS_ROLE_ARN }}
+      GITOPS_TOKEN: ${{ secrets.GITOPS_TOKEN }}

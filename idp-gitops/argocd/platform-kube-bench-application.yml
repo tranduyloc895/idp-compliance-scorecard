@@ -1,23 +1,25 @@
+# kube-bench CronJob (CIS EKS benchmark) ghi kết quả vào ConfigMap
+# monitoring/kube-bench-results. ConfigMap KHÔNG nằm trong Git để selfHeal
+# không ghi đè kết quả (audit 5.5).
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-kube-bench
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   labels:
-    app.kubernetes.io/name: platform-kube-bench
     app.kubernetes.io/part-of: idp-platform
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_ORG/idp-platform
-    targetRevision: HEAD
+    repoURL: https://github.com/tranduyloc895/idp-compliance-scorecard.git
+    targetRevision: main
     path: idp-gitops/platform/kube-bench
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+    automated: { prune: true, selfHeal: true }

@@ -1,8 +1,9 @@
 name: orders
 
 image:
-  repository: 736508008585.dkr.ecr.us-east-1.amazonaws.com/retail-store/orders
-  tag: "192189a"
+  # registry lấy từ apps/image-registry.yaml; tag do CI ghi (MANAGED BY CI)
+  repository: retail-store/orders
+  tag: "not-built"
 
 resources:
   requests:

@@ -1,24 +1,24 @@
 # Values cho Helm chart cluster-autoscaler (repo kubernetes.github.io/autoscaler).
 # CA tự nâng/hạ desired_size của ASG node group "main_nodes" trong khoảng
-# min(2)–max(4) khi có pod Pending vì thiếu CPU/memory (đúng sự cố Prometheus đã gặp).
+# min–max của node group (biến node_min_size/node_max_size trong Terraform) khi có pod Pending vì thiếu CPU/memory (đúng sự cố Prometheus đã gặp).
 
 # Auto-discovery: EKS managed node group tự gắn tag k8s.io/cluster-autoscaler/<cluster>
 # lên ASG, nên chỉ cần khai báo tên cluster là CA tìm thấy node group.
 autoDiscovery:
   clusterName: ecommerce-cluster
 
-awsRegion: ap-southeast-1
+awsRegion: us-east-1
 
-# Image CA phải khớp minor version của cluster (EKS 1.31 -> CA v1.31.x).
+# Image CA phải khớp minor version của cluster (EKS 1.35 -> CA v1.35.x).
 image:
-  tag: v1.31.0
+  tag: v1.35.0
 
-# Service account gắn IRSA role (tạo ở infrastructure/02-cluster-eks/irsa-cluster-autoscaler.tf).
+# ServiceAccount do Terraform tạo (infrastructure/02-cluster-eks/irsa-cluster-autoscaler.tf)
+# kèm annotation role ARN lấy từ output IRSA — không ghi cứng account ID (audit #8).
 rbac:
   serviceAccount:
+    create: false
     name: cluster-autoscaler
-    annotations:
-      eks.amazonaws.com/role-arn: arn:aws:iam::736508008585:role/ecommerce-cluster-cluster-autoscaler
 
 extraArgs:
   balance-similar-node-groups: true

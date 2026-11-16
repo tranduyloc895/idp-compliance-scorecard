@@ -1,0 +1,6 @@
+# Giữ LF cho mọi file text để script chạy được trên Linux/CI và Git Bash.
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.png binary
+*.jpg binary
+*.pdf binary

@@ -8,7 +8,7 @@ metadata:
   annotations:
     github.com/project-slug: tranduyloc895/idp-microservices
     github.com/workflows: ci-orders.yml
-    argocd/app-name: orders
+    argocd/app-name: retail-store-orders
   tags:
     - java
     - spring-boot

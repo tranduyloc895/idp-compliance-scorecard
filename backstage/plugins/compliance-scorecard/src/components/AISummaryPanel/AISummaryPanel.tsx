@@ -166,7 +166,7 @@ export function AISummaryPanel() {
         <Typography variant="subtitle1" className={classes.headerTitle}>
           🤖 AI Security Assessment
         </Typography>
-        <Box display="flex" alignItems="center" gap={1}>
+        <Box display="flex" alignItems="center" style={{ gap: 8 }}>
           <Chip
             label={risk.label}
             size="small"

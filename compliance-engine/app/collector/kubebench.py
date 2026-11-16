@@ -106,7 +106,7 @@ class KubeBenchCollector(BaseCollector):
             )
             return None
 
-    def _parse_results(self, data: dict) -> list[RawFinding]:
+    def _parse_results(self, data: dict | list) -> list[RawFinding]:
         """
         Parse kube-bench JSON output → list[RawFinding].
 
@@ -135,12 +135,18 @@ class KubeBenchCollector(BaseCollector):
         """
         findings = []
 
-        # Handle both single result and list of results (kube-bench can output multiple nodes)
-        controls_list = data.get("Controls", [])
-        if not controls_list and isinstance(data, list):
-            # Multiple node results — flatten
+        # kube-bench có thể xuất 1 object {"Controls": [...]} hoặc list object (nhiều node).
+        # Kiểm tra kiểu trước khi gọi .get(): list không có .get().
+        controls_list: list = []
+        if isinstance(data, dict):
+            controls_list = list(data.get("Controls") or [])
+        elif isinstance(data, list):
             for node_data in data:
-                controls_list.extend(node_data.get("Controls", []))
+                if isinstance(node_data, dict):
+                    controls_list.extend(node_data.get("Controls") or [])
+        else:
+            logger.warning("Unexpected kube-bench JSON type: %s", type(data).__name__)
+            return findings
 
         for control_group in controls_list:
             group_id = str(control_group.get("id", "0"))

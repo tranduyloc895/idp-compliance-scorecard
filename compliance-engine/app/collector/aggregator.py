@@ -31,7 +31,23 @@ class ComplianceAggregator:
     Nếu cùng hash → chỉ giữ entry đầu tiên (latest PolicyReport wins).
     """
 
-    def __init__(self, k8s_client: ApiClient) -> None:
+    def __init__(self, k8s_client: Optional[ApiClient], fixtures_dir: Optional[str] = None) -> None:
+        if fixtures_dir:
+            # COLLECTOR_MODE=fixtures: đọc file JSON, không cần cluster.
+            from pathlib import Path
+
+            from app.collector.fixtures import (
+                FixtureKubeBenchCollector,
+                FixtureKyvernoCollector,
+                FixtureTrivyCollector,
+            )
+
+            base = Path(fixtures_dir)
+            self.kyverno = FixtureKyvernoCollector(base)
+            self.trivy = FixtureTrivyCollector(base)
+            self.kubebench = FixtureKubeBenchCollector(base)
+            return
+
         self.kyverno = KyvernoCollector(k8s_client)
         self.trivy = TrivyCollector(k8s_client)
         self.kubebench = KubeBenchCollector(k8s_client)
@@ -104,7 +120,17 @@ class ComplianceAggregator:
         if finding.source == "kyverno":
             key_str = f"kyverno:{data.get('policy', '')}:{data.get('resource_kind', '')}:{data.get('resource_name', '')}:{data.get('resource_namespace', '')}"
         elif finding.source == "trivy":
-            key_str = f"trivy:{data.get('vulnerability_id', '')}:{data.get('resource_name', '')}:{data.get('container_name', '')}"
+            # Cùng CVE có thể xuất hiện ở nhiều namespace/container/package khác nhau;
+            # thiếu thành phần nào thì các finding khác nhau bị gộp nhầm.
+            key_str = (
+                f"trivy:{data.get('vulnerability_id', '')}"
+                f":{data.get('resource_namespace', '')}"
+                f":{data.get('resource_kind', '')}"
+                f":{data.get('resource_name', '')}"
+                f":{data.get('container_name', '')}"
+                f":{data.get('package', '')}"
+                f":{data.get('installed_version', '')}"
+            )
         else:  # kube-bench
             key_str = f"kube-bench:{data.get('test_number', '')}"
 

@@ -33,3 +33,23 @@ output "cluster_autoscaler_iam_role_arn" {
   description = "ARN of the IRSA role for Cluster Autoscaler (annotate vào service account kube-system:cluster-autoscaler trong gitops)"
   value       = module.cluster_autoscaler_irsa.iam_role_arn
 }
+
+output "region" {
+  description = "AWS region của cluster"
+  value       = var.aws_region
+}
+
+output "account_id" {
+  description = "AWS account ID (không ghi cứng trong GitOps; scripts đọc output này)"
+  value       = data.aws_caller_identity.current.account_id
+}
+
+output "ecr_registry" {
+  description = "ECR registry host của account"
+  value       = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com"
+}
+
+output "kubeconfig_command" {
+  description = "Lệnh cập nhật kubeconfig"
+  value       = "aws eks update-kubeconfig --name ${module.eks.cluster_name} --region ${var.aws_region}"
+}
