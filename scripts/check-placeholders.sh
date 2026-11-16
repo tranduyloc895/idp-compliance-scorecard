@@ -5,6 +5,8 @@
 # Ngoại lệ có chủ đích:
 #  - Tài liệu ghi lại lịch sử/yêu cầu (audit, plan, context log) — mô tả chính các lỗi này.
 #  - File "MANAGED BY CI": dòng ECR registry do workflow ghi (quyết định #5).
+#  - Evidence buổi lab (docs/evidence/**): output thật của aws-*.sh/smoke.sh, có
+#    account ID trong ARN/ECR host. Không phải cấu hình, không được code đọc.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -14,6 +16,7 @@ EXCLUDES=(
   ':(exclude)docs/PROJECT_CONTEXT_AND_SETUP_AUDIT.md'
   ':(exclude)docs/plans/**'
   ':(exclude)context/**'
+  ':(exclude)docs/evidence/**'
   ':(exclude)scripts/check-placeholders.sh'
   ':(exclude)idp-microservices/src/**'
   ':(exclude)**/package-lock.json'
