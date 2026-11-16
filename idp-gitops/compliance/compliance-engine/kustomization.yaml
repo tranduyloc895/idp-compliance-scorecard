@@ -1,7 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: compliance
-
 resources:
   - clusterrole.yaml
   - postgres.yaml
@@ -10,10 +9,9 @@ resources:
   - service.yaml
   - service-internal-lb.yaml
   - cronjob-scan.yaml
-
 # MANAGED BY CI — workflow build/push compliance-engine ghi newName/newTag.
 # ECR_REGISTRY_NOT_SET/not-built = chưa build; scripts/aws-up.sh preflight sẽ dừng.
 images:
   - name: compliance-engine
-    newName: ECR_REGISTRY_NOT_SET/retail-store/compliance-engine
-    newTag: not-built
+    newName: 736508008585.dkr.ecr.us-east-1.amazonaws.com/retail-store/compliance-engine
+    newTag: f71fced
