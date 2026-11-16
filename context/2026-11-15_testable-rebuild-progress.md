@@ -107,3 +107,9 @@
 | CI — ui/cart/catalog/orders/checkout/compliance-engine | 43791263217 … 43791263366 | fail ở "Set up job" (4–8s) | `aquasecurity/trivy-action@0.28.0` không resolve được (không phải lỗi thiếu `AWS_ROLE_ARN` như dự đoán). Chặn `build-all`; cần sửa ref action trong `_build-push.yml` trước khi chạy build-all. |
 
 Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau khi merge) → cherry-pick sang `fix/aws-lab-1`.
+
+## Nhật ký lệnh AWS (buổi 2026-11-16)
+| Thời điểm (UTC) | Lệnh | Tạo gì | Chi phí ước tính | Kết quả |
+|---|---|---|---|---|
+| 2026-11-16 02:46 | `aws-foundation-up.sh --dry-run` (WSL, AWS_PROFILE=idp) | không | 0 | exit 0; 00-bootstrap plan 5 add/0/0; 03/04 chưa plan được (chưa có bucket); SSM would put 5 |
+| 2026-11-16 02:50 | `aws-foundation-up.sh --yes` (người dùng chọn chạy full) | S3 state bucket, 6 ECR repo, GitHub OIDC provider + IAM role CI, 5 SSM SecureString | < $0.01/tháng (S3) + ECR $0.10/GB-tháng khi có image; OIDC/IAM/SSM $0 | đang chạy |
