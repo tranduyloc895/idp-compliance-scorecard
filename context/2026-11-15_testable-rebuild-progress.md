@@ -58,6 +58,7 @@
 ### Giai đoạn 3
 - [x] `aws-foundation-up.sh`, `aws-up.sh`, `aws-down.sh`, `smoke.sh` (có `--dry-run`) — bash -n + dry-run không credential (máy); chưa chạy với AWS
 - [x] Tool trong WSL (2026-11-16, `scripts/wsl-tools.sh`): terraform 1.11.4, tflint 0.53.0, kubectl v1.35.0 (sha256 OK), aws-cli 2.22.0 ở `~/tools/bin`; PATH thêm vào `~/.bashrc`. AWS profile `idp` (us-east-1) do người dùng cấu hình trong WSL; STS 2026-11-16: account 736508008585, `arn:aws:iam::736508008585:user/idp`.
+- [x] Lớp nền trên AWS (2026-11-16, `aws-foundation-up.sh`, 174s) — kiểm bằng `aws iam get-role`, `ecr describe-repositories`, `s3 ls`, `ssm get-parameters-by-path`
 - [ ] Chạy thật trên EKS (chờ xác nhận: push branch → CI; merge main; dùng credential AWS)
 
 ### Giai đoạn 4
@@ -112,4 +113,15 @@ Ghi chú: commit `wsl-tools.sh` (e886670) không vào được PR #1 (push sau k
 | Thời điểm (UTC) | Lệnh | Tạo gì | Chi phí ước tính | Kết quả |
 |---|---|---|---|---|
 | 2026-11-16 02:46 | `aws-foundation-up.sh --dry-run` (WSL, AWS_PROFILE=idp) | không | 0 | exit 0; 00-bootstrap plan 5 add/0/0; 03/04 chưa plan được (chưa có bucket); SSM would put 5 |
-| 2026-11-16 02:50 | `aws-foundation-up.sh --yes` (người dùng chọn chạy full) | S3 state bucket, 6 ECR repo, GitHub OIDC provider + IAM role CI, 5 SSM SecureString | < $0.01/tháng (S3) + ECR $0.10/GB-tháng khi có image; OIDC/IAM/SSM $0 | đang chạy |
+| 2026-11-16 02:50 | `aws-foundation-up.sh --yes` (người dùng chọn chạy full) | S3 state bucket, 6 ECR repo, GitHub OIDC provider + IAM role CI, 5 SSM SecureString | < $0.01/tháng (S3) + ECR $0.10/GB-tháng khi có image; OIDC/IAM/SSM $0 | **exit 0, 174s**: 00-bootstrap 5 add, 03-ecr 12 add, 04-oidc 3 add; SSM put 5 (generated) |
+
+## Output lớp nền (2026-11-16, không chứa secret)
+- State bucket: `idp-tfstate-736508008585-us-east-1` (state 03-ecr, 04-oidc trong bucket; state 00-bootstrap **chỉ ở local** `infrastructure/00-bootstrap/terraform.tfstate`, git ignore — mất file thì script tự import lại)
+- ECR registry: `736508008585.dkr.ecr.us-east-1.amazonaws.com` — 6 repo `retail-store/{ui,cart,catalog,orders,checkout,compliance-engine}`, MUTABLE
+- CI role ARN: `arn:aws:iam::736508008585:role/github-actions-idp-compliance-scorecard`; trust: OIDC `token.actions.githubusercontent.com`, aud `sts.amazonaws.com`, sub `repo:tranduyloc895/idp-compliance-scorecard:*` (mọi branch/PR của repo)
+- SSM `/idp/...`: 5 SecureString tự sinh (postgres-password, catalog-db-password, catalog-db-root-password, orders-db-password, grafana-admin-password); chưa có gemini-api-key, telegram-bot-token
+
+## Bước tiếp theo (cập nhật 2026-11-16)
+1. Sửa ref `aquasecurity/trivy-action@0.28.0` trong `.github/workflows/_build-push.yml` (không resolve được) trên `fix/aws-lab-1`.
+2. Hỏi người dùng: `gh secret set AWS_ROLE_ARN`, kiểm Workflow permissions = Read and write.
+3. Merge fix vào main (hỏi), rồi chạy `build-all` trên main (hỏi).
