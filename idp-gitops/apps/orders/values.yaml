@@ -1,10 +1,8 @@
 name: orders
-
 image:
   # registry lấy từ apps/image-registry.yaml; tag do CI ghi (MANAGED BY CI)
   repository: retail-store/orders
-  tag: "not-built"
-
+  tag: "f474fb2"
 resources:
   requests:
     cpu: 256m
@@ -12,7 +10,6 @@ resources:
   limits:
     cpu: 512m
     memory: 1Gi
-
 probes:
   readiness:
     path: /actuator/health/readiness
@@ -22,16 +19,14 @@ probes:
     path: /actuator/health/liveness
     initialDelaySeconds: 60
     periodSeconds: 15
-
 monitoring:
   path: /actuator/prometheus
-
 # Kết nối PostgreSQL dùng chung; service dùng Flyway tự tạo schema khi khởi động.
 # messaging giữ mặc định in-memory (đã exclude RabbitAutoConfiguration) nên không cần message broker.
 env:
   - {name: RETAIL_ORDERS_PERSISTENCE_PROVIDER, value: "postgres"}
   - {name: RETAIL_ORDERS_PERSISTENCE_ENDPOINT, value: "orders-postgres:5432"}
-  - {name: RETAIL_ORDERS_PERSISTENCE_NAME,     value: "ordersdb"}
+  - {name: RETAIL_ORDERS_PERSISTENCE_NAME, value: "ordersdb"}
   - {name: RETAIL_ORDERS_PERSISTENCE_USERNAME, value: "orders_user"}
   - name: RETAIL_ORDERS_PERSISTENCE_PASSWORD
     valueFrom:
