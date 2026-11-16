@@ -14,4 +14,4 @@ resources:
 images:
   - name: compliance-engine
     newName: 736508008585.dkr.ecr.us-east-1.amazonaws.com/retail-store/compliance-engine
-    newTag: f71fced
+    newTag: f474fb2
